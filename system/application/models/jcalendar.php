@@ -14,7 +14,7 @@ class JCalendar extends Model{
 
   function select_events_by_criteria($event_name, $start_date, $end_date, $venue){
     $this->db->from('events left join venues using (venueid)');
-    if($name)
+    if($event_name)
       $this->db->like('eventname', $event_name);
     if($start_date)
       $this->db->where('start_date >= '.$start_date);
