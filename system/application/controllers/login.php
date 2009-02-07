@@ -8,14 +8,13 @@ class Login extends Controller{
   }
   
   function index(){
-    $this->logg();
+    redirect('/login/logg');
   }
       
   function logg(){
-    if ($this->session->userdata('login')){
+    if ($this->session->userdata('user')){
       redirect('/jcalendar2/index');
     }
-
     $rules['login'] = 'required';
     $rules['password'] = 'required|callback__login';
     $this->validation->set_rules($rules);
