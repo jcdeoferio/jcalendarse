@@ -7,11 +7,19 @@ div#header{
 margin-left: 41px;
 }
 div#body{
-min-width:1000px;
+max-width:890px;
 margin-left: 48px;
 }
-
+div#sidebar{
+min-width:170px;
+float:left;
+}
+div#bodymain{
+width:710px;
+float:right;
+}
 div#footer{
+clear:both;
 text-align:center;
 line-height:55px;
 color:#fff;
