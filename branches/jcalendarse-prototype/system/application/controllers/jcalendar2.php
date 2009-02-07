@@ -11,7 +11,7 @@ class jcalendar2 extends Controller{
   }
 
   function index(){
-    $events = $this->JCalendar->select_all_events();
+    $events = $this->JCalendar->select_all_events($this->user['userid']);
     $data['events'] = $events;
     $data['user'] = $this->user;
     $template['title'] = 'JCalendar';
@@ -28,20 +28,20 @@ class jcalendar2 extends Controller{
     $data = array('success' => FALSE);
 
     if($this->validation->run()){
-      $start_date = $_POST['start_year'] . '-' .
-	$_POST['start_month'] . '-' .
-	$_POST['start_day'] . ' ' .
-	$_POST['start_hour'] . ':' .
-	$_POST['start_minute'];
-      $end_date = $_POST['end_year'] . '-' .
-	$_POST['end_month'] . '-' .
-	$_POST['end_day'] . ' ' .
-	$_POST['end_hour'] . ':' .
-	$_POST['end_minute'];
-      $event_name = $_POST['event_name'];
+      $start_date = $this->input->post('start_year') . '-' .
+	$this->input->post('start_month') . '-' .
+	$this->input->post('start_day') . ' ' .
+	$this->input->post('start_hour') . ':' .
+	$this->input->post('start_minute');
+      $end_date = $this->input->post('end_year') . '-' .
+	$this->input->post('end_month') . '-' .
+	$this->input->post('end_day') . ' ' .
+	$this->input->post('end_hour') . ':' .
+	$this->input->post('end_minute');
+      $event_name = $this->input->post('event_name');
 
       $this->JCalendar->add_event($event_name, $start_date, $end_date);
-      $data['event_name'] = $event_name;
+      $data['event_name']= $event_name;
       $data['success'] = TRUE;
     }
     else{
@@ -64,17 +64,17 @@ class jcalendar2 extends Controller{
 
     $data['id'] = $id;
     if ($this->validation->run()){
-      $start_date = $_POST['start_year'] . '-' .
-	$_POST['start_month'] . '-' .
-	$_POST['start_day'] . ' ' .
-	$_POST['start_hour'] . ':' .
-	$_POST['start_minute'];
-      $end_date = $_POST['end_year'] . '-' .
-	$_POST['end_month'] . '-' .
-	$_POST['end_day'] . ' ' .
-	$_POST['end_hour'] . ':' .
-	$_POST['end_minute'];
-      $event_name = $_POST['event_name'];
+      $start_date = $this->input->post('start_year') . '-' .
+	$this->input->post('start_month') . '-' .
+	$this->input->post('start_day') . ' ' .
+	$this->input->post('start_hour') . ':' .
+	$this->input->post('start_minute');
+      $end_date = $this->input->post('end_year') . '-' .
+	$this->input->post('end_month') . '-' .
+	$this->input->post('end_day') . ' ' .
+	$this->input->post('end_hour') . ':' .
+	$this->input->post('end_minute');
+      $event_name = $this->input->post('event_name');
 
       $update_data = array(	'eventname'=>$event_name,
 				'start_date'=>$start_date,
@@ -84,19 +84,19 @@ class jcalendar2 extends Controller{
 
       $data['success'] = TRUE;
       $data['event_name'] = $event_name;
-      $data['start_year'] = $_POST['start_year'];
-      $data['start_month'] = $_POST['start_month'];
-      $data['start_day'] = $_POST['start_day'];
-      $data['start_hour'] = $_POST['start_hour'];
-      $data['start_minute'] = $_POST['start_minute'];
-      $data['end_year'] = $_POST['end_year'];
-      $data['end_month'] = $_POST['end_month'];
-      $data['end_day'] = $_POST['end_day'];
-      $data['end_hour'] = $_POST['end_hour'];
-      $data['end_minute'] = $_POST['end_minute'];
+      $data['start_year'] = $this->input->post('start_year');
+      $data['start_month'] = $this->input->post('start_month');
+      $data['start_day'] = $this->input->post('start_day');
+      $data['start_hour'] = $this->input->post('start_hour');
+      $data['start_minute'] = $this->input->post('start_minute');
+      $data['end_year'] = $this->input->post('end_year');
+      $data['end_month'] = $this->input->post('end_month');
+      $data['end_day'] = $this->input->post('end_day');
+      $data['end_hour'] = $this->input->post('end_hour');
+      $data['end_minute'] = $this->input->post('end_minute');
     }
     else{
-      $event = $this->JCalendar->select_event_by_id($id);
+      $event = $this->JCalendar->select_event_by_id($this->user['userid'], $id);
       $data['event_name'] = $event['eventname'];
       $start_timestamp = explode(' ', $event['start_date']);
       $start_date = explode('-', $start_timestamp[0]);
@@ -130,6 +130,15 @@ class jcalendar2 extends Controller{
     $data['user'] = $this->user;
     $template['title']  = 'Delete Event';
     $template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
+    $this->load->view('template', $template);
+  }
+
+  function event($eventid){
+    $event = $this->JCalendar->select_event_by_id($this->user['userid'], $eventid);
+    $data['event'] = $event;
+    $data['user'] = $this->user;
+    $template['title'] = $event['eventname'];
+    $template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
     $this->load->view('template', $template);
   }
 

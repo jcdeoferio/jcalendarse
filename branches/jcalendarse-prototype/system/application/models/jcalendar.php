@@ -4,16 +4,24 @@ class JCalendar extends Model{
     parent::Model();
   }
 
-  function select_event_by_id($id){
-    $this->db->from('events left join venues using (venueid)');
-    $this->db->where('eventid', $id);
+  function select_event_by_id($userid, $eventid){
+    $this->db->select('events.*, venues.venue_name');
+    //events with venues with permissions X group membership table
+    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
+    //selecting from that table
+    $this->db->where('p.groupid = m.groupid or p.userid = m.userid');
+    $this->db->where('eventid', $eventid);
+    //check permissions
+    $this->db->where('m.userid', $userid);
 
     $query = $this->db->get();
     return($query->row_array());
   }
 
-  function select_events_by_criteria($event_name, $start_date, $end_date, $venue){
-    $this->db->from('events left join venues using (venueid)');
+  function select_events_by_criteria($userid, $event_name, $start_date, $end_date, $venue){
+    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
+    $this->db->where('p.groupid = m.groupid or p.userid = m.userid');
+    $this->db->where('m.userid', $userid);
     if($event_name)
       $this->db->like('eventname', $event_name);
     if($start_date)
@@ -28,20 +36,20 @@ class JCalendar extends Model{
     return($query->result_array());
   }
 
-  function select_all_events(){
-    return($this->select_events_by_criteria(null, null, null, null));
+  function select_all_events($userid){
+    return($this->select_events_by_criteria($userid, null, null, null, null));
   }
       
-  function select_events_by_name($name){
-    return ($this->select_events_by_criteria($name, null, null, null));
+  function select_events_by_name($userid, $name){
+    return ($this->select_events_by_criteria($userid, $name, null, null, null));
   }
 
-  function select_events_by_range($start_date, $end_date){
-    return($this->select_events_by_criteria(null, $start_date, $end_date, null));
+  function select_events_by_range($userid, $start_date, $end_date){
+    return($this->select_events_by_criteria($userid, null, $start_date, $end_date, null));
   }
 
-  function select_events_by_venue($venue){
-    return($this->select_events_by_criteria(null, null, null, $venue));
+  function select_events_by_venue($userid, $venue){
+    return($this->select_events_by_criteria($userid, null, null, null, $venue));
   }
 
   function check_rss_data($data){
@@ -66,6 +74,7 @@ class JCalendar extends Model{
     $this->db->from('events inner join permissions p using (eventid), member_of m');
     //selecting from that table
     $this->db->where('p.groupid = m.groupid or p.userid = m.userid');
+    $this->db->where('eventid', $eventid);
     //does this user have permissions
     $this->db->where('m.userid', $userid);
 	
@@ -81,13 +90,13 @@ class JCalendar extends Model{
     $this->db->insert('events', $data);
   }
 
-  function update_event($id, $data){
-    $this->db->where('eventid', $id);
+  function update_event($eventid, $data){
+    $this->db->where('eventid', $eventid);
     $this->db->update('events', $data);
   }
 
-  function delete_event($id){
-    $this->db->where('eventid', $id);
+  function delete_event($eventid){
+    $this->db->where('eventid', $eventid);
     $this->db->delete('events');
   }
 

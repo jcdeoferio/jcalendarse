@@ -8,7 +8,7 @@
   </tr>
   <?php foreach ($events as $event): ?>
   <tr>
-    <td><?= $event['eventname'] ?></td>
+    <td><?= anchor('jcalendar2/event/'.$event['eventid'],$event['eventname']) ?></td>
     <td><?= $event['start_date'] ?></td>
     <td><?= $event['end_date'] ?></td>
     <td><?= anchor('jcalendar2/update/'. $event['eventid'], 'update') . '|' . anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) ?></td>
