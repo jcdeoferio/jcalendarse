@@ -8,12 +8,18 @@
 </head>
 
 <body>
-	<?= img('files/logo.png') ?>
-	<hr width="899px" align="left"/>
-	
+	<div id="header">
+		<?= img('files/logo.png') ?>
+		<hr width="902px" align="left"/>
+	</div>
+	<div id="body">
 	<!--<marquee><h1>JuanCalendar</h1></marquee> -->
 	<?= $sidebar?>
 	<?= $body?>
+	</div>
+	<!--<?= br(5)?>-->
+	<div id="footer">
+		<p id="footertext">Copyright &copy; 2009<?=nbs(20)?>•<?=nbs(2)?>jCalendar<?=nbs(2)?>•<?=nbs(20)?>jCalendar Team</p>
+	</div>
 </body>
-
 </html>
