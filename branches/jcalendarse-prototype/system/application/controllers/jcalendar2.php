@@ -15,6 +15,7 @@ class jcalendar2 extends Controller{
     $data['events'] = $events;
     $data['user'] = $this->user;
     $template['title'] = 'JCalendar';
+	$template['sidebar'] = '(Sidebar Placeholder)';
     $template['body'] = $this->load->view('/jcalendar/index', $data, TRUE);
     $this->load->view('template', $template);
   }
