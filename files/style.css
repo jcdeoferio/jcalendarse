@@ -1,0 +1,10 @@
+body{
+background: url(http://localhost/jCalendar/files/background.jpg);
+background-repeat: repeat-y;
+font-family: calibri;
+margin-left: 50px;
+}
+a{ 
+color: #25af00; 
+text-transform: normal;
+}
