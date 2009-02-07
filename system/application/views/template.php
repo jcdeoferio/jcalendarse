@@ -12,6 +12,7 @@
 	<hr width="899px" align="left"/>
 	
 	<!--<marquee><h1>JuanCalendar</h1></marquee> -->
+	<?= $sidebar?>
 	<?= $body?>
 </body>
 

@@ -34,7 +34,8 @@ class Login extends Controller{
     }
 
     $template['title'] = 'Login';
-    $template['body'] = $this->load->view('login/login', $data, TRUE);
+    $template['sidebar'] = $this->load->view('login/login', $data, TRUE);
+	$template['body'] = '(body placeholder)';
 	       
     $this->load->view('template', $template);
   }
