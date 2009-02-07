@@ -2,13 +2,14 @@
 <html>
 <head>
 	<title>JCalendar - <?= $title ?></title>
-	<link rel="shortcut icon" href="http://localhost/jCalendar/files/favicon.png" type="image/x-icon" />
-	<LINK rel="stylesheet" type="text/css" href="http://localhost/jCalendar/files/style.css">
+	<?= link_tag('files/favicon.png', 'shortcut icon', 'image/ico'); ?>
+	<?= link_tag('files/style.css') ?>
 </head>
 
 <body>
 	<?= img('files/logo.png') ?>
 	<hr width="899px" align="left"/>
+	
 	<!--<marquee><h1>JuanCalendar</h1></marquee> -->
 	<?= $body?>
 </body>
