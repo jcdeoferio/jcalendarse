@@ -2,10 +2,27 @@ body{
 background: url(background.jpg);
 background-repeat: repeat-y;
 font-family: calibri;
-margin-left: 50px;
-
 }
-a{ 
+div#header{
+margin-left: 41px;
+}
+div#body{
+min-width:1000px;
+margin-left: 48px;
+}
+
+div#footer{
+text-align:center;
+line-height:55px;
+color:#fff;
+position:relative;
+bottom:-500px;
+margin-left: 41px;
+width:902px;
+height:55px;
+background-color:#000;
+}
+a{
 color: #25af00; 
 text-transform: normal;
 }
