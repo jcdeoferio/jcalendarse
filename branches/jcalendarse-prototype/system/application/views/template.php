@@ -14,12 +14,15 @@
 	</div>
 	<div id="body">
 	<!--<marquee><h1>JuanCalendar</h1></marquee> -->
-	<?= $sidebar?>
-	<?= $body?>
+		<div id="sidebar">
+			<?= $sidebar?>
+		</div>
+		<div id="bodymain">
+			<?= $body?>
+		</div>
 	</div>
-	<!--<?= br(5)?>-->
 	<div id="footer">
-		<p id="footertext">Copyright &copy; 2009<?=nbs(20)?>•<?=nbs(2)?>jCalendar<?=nbs(2)?>•<?=nbs(20)?>jCalendar Team</p>
+		Copyright &copy; 2009<?=nbs(20)?>•<?=nbs(10)?>jCalendar<?=nbs(10)?>•<?=nbs(20)?>jCalendar Team
 	</div>
 </body>
 </html>
