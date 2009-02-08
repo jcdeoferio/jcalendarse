@@ -2,8 +2,8 @@ body{
 font-family: calibri;
 }
 div#header{
-background-color:yellow;
-border-bottom: 1px #000 solid;
+background-color:#ABC550;
+border-bottom: 0px #000 solid;
 width:902px;
 }
 div#main{
@@ -16,17 +16,19 @@ max-width:1000px;
 }
 div#sidebar{
 overflow:auto;
+padding-top:7px;
 padding-left:5px;
-background-color:orange;
-border-right: 1px #000 solid;
+background-color:#3EA63B;
+border-right: 0px #000 solid;
 width:175px;
 min-height:500px;
 float:left;
 }
 div#body{
 overflow:auto;
+padding-top:7px;
 padding-left:5px;
-background-color:#eeeeee;
+background-color:#fff;
 width:716px;
 min-height:500px;
 float:left;
@@ -41,7 +43,24 @@ width:902px;
 height:50px;
 background-color:#000;
 }
-a{
+div#body a{
 color: #25af00; 
 text-transform: normal;
+}
+div#sidebar a{
+color: #eee; 
+text-transform: normal;
+}
+table#events{
+border-spacing:2px;
+border-width:0px;
+}
+table#events th{
+background-color:#ccc;
+border-width:0px;
+}
+table#events td{
+background-color:#eee;
+border-width:0px;
+padding: 7px;
 }
