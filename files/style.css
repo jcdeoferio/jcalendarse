@@ -4,30 +4,38 @@ background-repeat: repeat-y;
 font-family: calibri;
 }
 div#header{
+/*background-color:yellow;*/
+border-bottom: 1px #000 solid;
+width:902px;
+}
+div#main{
+max-width:902px;
 margin-left: 41px;
 }
-div#body{
-max-width:890px;
-margin-left: 48px;
-}
 div#sidebar{
-min-width:170px;
+/*background-color:orange;*/
+border-right: 1px #000 solid;
+min-width:180px;
+max-width:180px;
+min-height:500px;
 float:left;
 }
-div#bodymain{
-width:710px;
+div#body{
+/*background-color:#eeeeee;*/
+width:715px;
+min-height:500px;
 float:right;
 }
 div#footer{
 clear:both;
+font-size: 10pt;
 text-align:center;
-line-height:55px;
+line-height:50px;
 color:#fff;
 position:relative;
-bottom:-500px;
-margin-left: 41px;
+bottom:-10px;
 width:902px;
-height:55px;
+height:50px;
 background-color:#000;
 }
 a{
