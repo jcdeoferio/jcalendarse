@@ -58,4 +58,3 @@
   <?php endforeach; ?>
 </table>
 <?php endif; ?>
-<?= anchor('jcalendar2/index', 'back to calendar') ?>
