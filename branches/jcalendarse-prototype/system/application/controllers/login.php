@@ -5,6 +5,7 @@ class Login extends Controller{
     parent::Controller();
     
     $this->load->model('User');
+    $this->load->model('JCalendar');
   }
   
   function index(){
@@ -33,16 +34,12 @@ class Login extends Controller{
 	$data = array();
       }
     }
-
+	
+    $events = $this->JCalendar->select_all_events(-1);
+    $data['events'] = $events;
     $template['title'] = 'Login';
     $template['sidebar'] = $this->load->view('login/login', $data, TRUE);
-	
-	//$events = $this->JCalendar->select_all_events($this->user['userid']);
-    //$data['events'] = $events;
-    //$data['user'] = $this->user;
-	
-	$template['body'] = $this->load->view('jcalendar/public',$data,TRUE);
-	       
+    $template['body'] = $this->load->view('jcalendar/public',$data,TRUE);
     $this->load->view('template', $template);
   }
 
