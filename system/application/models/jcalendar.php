@@ -13,13 +13,14 @@ class JCalendar extends Model{
     $this->db->where('eventid', $eventid);
     //check permissions
     $this->db->where('m.userid', $userid);
+    $this->db->or_where('m.userid', -1);
 
     $query = $this->db->get();
     return($query->row_array());
   }
 
   function select_events_by_criteria($userid, $event_name, $start_date, $end_date, $venue){
-    $query_str = 'select * from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where (p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid;
+    $query_str = 'select distinct events.*, venues.venue_name from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where (((p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid.') or p.userid = -1)';
 
     if($event_name)
       $query_str .= " and eventname like '%".$event_name."%' ";
