@@ -129,7 +129,7 @@ ALTER SEQUENCE events_eventid_seq OWNED BY events.eventid;
 -- Name: events_eventid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('events_eventid_seq', 6, true);
+SELECT pg_catalog.setval('events_eventid_seq', 7, true);
 
 
 --
@@ -286,6 +286,7 @@ COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FR
 3	event2	\N	2009-02-06 11:29:11.845751	2009-02-06 11:29:11.845751	\N
 5	event3	\N	2009-02-08 00:00:00	2009-02-08 12:00:00	\N
 6	event4	\N	2009-02-08 16:16:29.340524	2009-02-08 16:16:29.340524	\N
+7	event7	Details of the event are as follows.\n\nThis description intentionally left blank	2009-02-09 12:00:00	2009-02-09 11:55:00	\N
 \.
 
 
@@ -330,6 +331,8 @@ COPY permissions (eventid, groupid, userid) FROM stdin;
 3	\N	2
 5	\N	1
 6	\N	-1
+7	\N	1
+7	\N	-1
 \.
 
 

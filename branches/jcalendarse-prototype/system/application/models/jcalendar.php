@@ -5,17 +5,8 @@ class JCalendar extends Model{
   }
 
   function select_event_by_id($userid, $eventid){
-    $this->db->select('events.*, venues.venue_name');
-    //events with venues with permissions X group membership table
-    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
-    //selecting from that table
-    $this->db->where('p.groupid = m.groupid or p.userid = m.userid');
-    $this->db->where('eventid', $eventid);
-    //check permissions
-    $this->db->where('m.userid', $userid);
-    $this->db->or_where('m.userid', -1);
+    $query = $this->db->query('select events.*, venues.venue_name from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where ((p.groupid = m.groupid or p.userid = m.userid and m.userid = '.$userid.') or m.userid = -1) and eventid = '.$eventid);
 
-    $query = $this->db->get();
     return($query->row_array());
   }
 
@@ -82,10 +73,11 @@ class JCalendar extends Model{
     return($this->db->count_all_results() > 0);
   }
 
-  function add_event($userid, $event_name, $start_date, $end_date, $venue = null){
+  function add_event($userid, $event_name, $start_date, $end_date, $event_details = null, $venue = null){
     $this->db->set('eventname', $event_name);
     $this->db->set('start_date', $start_date);
     $this->db->set('end_date', $end_date);
+    $this->db->set('eventdetails', $event_details);
     $this->db->set('venueid', $venue);
     $this->db->insert('events');
 
@@ -106,10 +98,6 @@ class JCalendar extends Model{
   function delete_event($eventid){
     $this->db->where('eventid', $eventid);
     $this->db->delete('events');
-  }
-
-  function add_user($login, $password){
-    
   }
 }
 ?>
