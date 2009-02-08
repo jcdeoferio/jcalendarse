@@ -33,6 +33,7 @@ class jcalendar2 extends Controller{
     $this->form_validation->set_rules('end_day', 'End Day', 'required');
     $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
     $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
+    $this->form_validation->set_rules('event_details', 'Event Details', '');
 
     $data = array('success' => FALSE);
 
@@ -48,8 +49,9 @@ class jcalendar2 extends Controller{
 	$this->input->post('end_hour') . ':' .
 	$this->input->post('end_minute');
       $event_name = $this->input->post('event_name');
+      $event_details = $this->input->post('event_details');
 
-      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date);
+      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date, $event_details);
       $data['event_name']= $event_name;
       $data['success'] = TRUE;
     }

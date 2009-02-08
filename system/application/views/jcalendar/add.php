@@ -41,6 +41,10 @@
     </td>
   </tr>
   <tr>
+    <th>Event Details:</th>
+    <td><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>set_value('event_details'))) ?></td>
+  </tr>
+  <tr>
     <td></td>
     <td><?= form_submit('submit', 'Add Event') ?></td>
   </tr>
