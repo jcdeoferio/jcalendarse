@@ -15,7 +15,7 @@ class jcalendar2 extends Controller{
     $data['events'] = $events;
     $data['user'] = $this->user;
     $template['title'] = 'jCalendar';
-    $template['sidebar'] = '(Sidebar Placeholder)';
+    $template['sidebar'] = anchor('jcalendar2/add', 'add event') . br(1) . anchor('jcalendar2/adsearch', 'advanced search') . br(1) . anchor('login/logout', 'logout');
     $template['body'] = $this->load->view('/jcalendar/index', $data, TRUE);
     $this->load->view('template', $template);
   }
