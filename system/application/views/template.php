@@ -21,7 +21,7 @@
 			<?= $body?>
 		</div>
 		<div id="footer">
-			Copyright &copy; 2009<?=nbs(20)?>•<?=nbs(10)?>jCalendar<?=nbs(10)?>•<?=nbs(20)?>jCalendar Team
+			Copyright &copy; 2009 • jCalendar • jCalendar Team
 		</div>
 	</div>
 </body>
