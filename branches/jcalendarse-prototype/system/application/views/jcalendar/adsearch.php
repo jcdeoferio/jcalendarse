@@ -1,10 +1,4 @@
-<h2>Add Event</h2>
-<?php
-   if ($success){
-   echo 'Event ' . $event_name .' added';
-   }
-?>
-<?= form_open('jcalendar2/add') ?>
+<?= form_open('jcalendar2/adsearch') ?>
 <?= validation_errors() ?>
 <table>
   <tr>
@@ -42,8 +36,26 @@
   </tr>
   <tr>
     <td></td>
-    <td><?= form_submit('submit', 'Add Event') ?></td>
+    <td><?= form_submit('submit', 'Search') ?></td>
   </tr>
 </table>
 <?= form_close() ?>
+<?php if(isset($events)): ?>
+<table border=1 cellpadding=4>
+  <tr>
+    <th>Event Name</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Action</th>
+  </tr>
+  <?php foreach ($events as $event): ?>
+  <tr>
+    <td><?= anchor('jcalendar2/event/'.$event['eventid'],$event['eventname']) ?></td>
+    <td><?= $event['start_date'] ?></td>
+    <td><?= $event['end_date'] ?></td>
+    <td><?= anchor('jcalendar2/update/'. $event['eventid'], 'update') . '|' . anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) ?></td>
+  </tr>
+  <?php endforeach; ?>
+</table>
+<?php endif; ?>
 <?= anchor('jcalendar2/index', 'back to calendar') ?>

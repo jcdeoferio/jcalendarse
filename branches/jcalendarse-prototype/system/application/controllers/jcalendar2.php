@@ -14,21 +14,29 @@ class jcalendar2 extends Controller{
     $events = $this->JCalendar->select_all_events($this->user['userid']);
     $data['events'] = $events;
     $data['user'] = $this->user;
-    $template['title'] = 'JCalendar';
-	$template['sidebar'] = '(Sidebar Placeholder)';
+    $template['title'] = 'jCalendar';
+    $template['sidebar'] = '(Sidebar Placeholder)';
     $template['body'] = $this->load->view('/jcalendar/index', $data, TRUE);
     $this->load->view('template', $template);
   }
 
   function add(){
-    $this->validation->set_error_delimiters('<font color=red><b>','</b></font>');
-    $rules['event_name'] = 'required';
-    $rules['end_year'] = 'callback__date_check';
-    $this->validation->set_rules($rules);
+    $this->form_validation->set_error_delimiters('<font color=red><b>','</b></font>');
+    $this->form_validation->set_rules('event_name', 'Event Name', 'required');
+    $this->form_validation->set_rules('start_year', 'Start Year', 'required');
+    $this->form_validation->set_rules('start_month', 'Start Month', 'required');
+    $this->form_validation->set_rules('start_day', 'Start Day', 'required');
+    $this->form_validation->set_rules('start_hour', 'Start Hour', 'required');
+    $this->form_validation->set_rules('start_minute', 'Start Minute', 'required');
+    $this->form_validation->set_rules('end_year', 'End Year', 'required');
+    $this->form_validation->set_rules('end_month', 'End Month', 'required');    
+    $this->form_validation->set_rules('end_day', 'End Day', 'required');
+    $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
+    $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
 
     $data = array('success' => FALSE);
 
-    if($this->validation->run()){
+    if($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
 	$this->input->post('start_month') . '-' .
 	$this->input->post('start_day') . ' ' .
@@ -41,14 +49,13 @@ class jcalendar2 extends Controller{
 	$this->input->post('end_minute');
       $event_name = $this->input->post('event_name');
 
-      $this->JCalendar->add_event($event_name, $start_date, $end_date);
+      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date);
       $data['event_name']= $event_name;
       $data['success'] = TRUE;
     }
     else{
-      if (!empty($_POST)){
+      if (!empty($_POST))
 	$data['error'] = TRUE;
-      }
     }
 
     $data['user'] = $this->user;
@@ -58,13 +65,21 @@ class jcalendar2 extends Controller{
   }
 
   function update($id){
-    $this->validation->set_error_delimiters('<font color=red><b>', '</b></font>');
-    $rules['event_name'] = 'required';
-    $rules['end_year'] = 'callback__date_check';
-    $this->validation->set_rules($rules);
+    $this->form_validation->set_error_delimiters('<font color=red><b>', '</b></font>');
+    $this->form_validation->set_rules('event_name', 'Event Name', 'required');
+    $this->form_validation->set_rules('start_year', 'Start Year', 'required');
+    $this->form_validation->set_rules('start_month', 'Start Month', 'required');
+    $this->form_validation->set_rules('start_day', 'Start Day', 'required');
+    $this->form_validation->set_rules('start_hour', 'Start Hour', 'required');
+    $this->form_validation->set_rules('start_minute', 'Start Minute', 'required');
+    $this->form_validation->set_rules('end_year', 'End Year', 'required');
+    $this->form_validation->set_rules('end_month', 'End Month', 'required');    
+    $this->form_validation->set_rules('end_day', 'End Day', 'required');
+    $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
+    $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
 
     $data['id'] = $id;
-    if ($this->validation->run()){
+    if ($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
 	$this->input->post('start_month') . '-' .
 	$this->input->post('start_day') . ' ' .
@@ -139,10 +154,63 @@ class jcalendar2 extends Controller{
     $data['event'] = $event;
     $data['user'] = $this->user;
     $template['title'] = $event['eventname'];
+    $template['sidebar'] = '(Sidebar Placeholder)';
     $template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
     $this->load->view('template', $template);
   }
 
+  function adsearch(){
+    $this->form_validation->set_error_delimiters('<font color=red><b>', '</b></font>');    
+    $this->form_validation->set_rules('event_name', 'Event Name', '');
+    $this->form_validation->set_rules('start_year', 'Start Year', '');
+    $this->form_validation->set_rules('start_month', 'Start Month', '');
+    $this->form_validation->set_rules('start_day', 'Start Day', '');
+    $this->form_validation->set_rules('start_hour', 'Start Hour', '');
+    $this->form_validation->set_rules('start_minute', 'Start Minute', '');
+    $this->form_validation->set_rules('end_year', 'End Year', '');
+    $this->form_validation->set_rules('end_month', 'End Month', '');    
+    $this->form_validation->set_rules('end_day', 'End Day', '');
+    $this->form_validation->set_rules('end_hour', 'End Hour', '');
+    $this->form_validation->set_rules('end_day', 'End Minute', 'callback__date_check');
+
+    $events = null;
+
+    if($this->form_validation->run()){
+      $event_name = null;
+      if($this->input->post('event_name') != '')
+	$event_name = $this->input->post('event_name');
+      
+      $start_date = null;
+      if($this->input->post('start_year') != ''){
+	$start_date = $this->input->post('start_year') . '-' .
+	  $this->input->post('start_month') . '-' .
+	  $this->input->post('start_day') . ' ' .
+	  $this->input->post('start_hour') . ':' .
+	  $this->input->post('start_minute');
+      }
+
+      $end_date = null;
+      if($this->input->post('end_year') != ''){
+	$end_date = $this->input->post('end_year') . '-' .
+	  $this->input->post('end_month') . '-' .
+	  $this->input->post('end_day') . ' ' .
+	  $this->input->post('end_hour') . ':' .
+	  $this->input->post('end_minute');
+      }
+
+      $events = $this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null);
+    }
+
+    $data['events'] = $events;
+    $data['user'] = $this->user;
+    $template['title'] = 'Advanced Search';
+    $template['sidebar'] = 'Sidebar placeholder';
+    $template['body'] = $this->load->view('jcalendar/adsearch', $data, true);
+    $this->load->view('template', $template);
+  }
+
+  //will check if end date is on or after start date and may check other date things
+  //like which months have 30 days etc
   function _date_check(){      	       
     return TRUE;
   }

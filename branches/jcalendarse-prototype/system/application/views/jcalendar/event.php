@@ -3,3 +3,4 @@
 <?= $event['end_date'] . '<br/>' ?>
 <?= $event['eventdetails'] . '<br/>' ?>
 <?= $event['venue_name'] . '<br/>' ?>
+<?= anchor('jcalendar2/index', 'back to calendar') ?>

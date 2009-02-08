@@ -1,4 +1,5 @@
 <?= form_open('login/logg') ?>
+<?= validation_errors() ?>
 <table>
 	<tr>
 		<td>login</td>

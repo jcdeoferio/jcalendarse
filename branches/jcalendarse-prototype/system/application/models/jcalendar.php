@@ -19,20 +19,20 @@ class JCalendar extends Model{
   }
 
   function select_events_by_criteria($userid, $event_name, $start_date, $end_date, $venue){
-    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
-    $this->db->where('p.groupid = m.groupid or p.userid = m.userid');
-    $this->db->where('m.userid', $userid);
-    if($event_name)
-      $this->db->like('eventname', $event_name);
-    if($start_date)
-      $this->db->where('start_date >= '.$start_date);
-    if($end_date)
-      $this->db->where('end_date <= '.$end_date);
-    if($venue)
-      $this->db->where('venueid', $venue);
-    $this->db->order_by('start_date', 'asc');
+    $query_str = 'select * from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where (p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid;
 
-    $query = $this->db->get();
+    if($event_name)
+      $query_str .= " and eventname like '%".$event_name."%' ";
+    if($start_date)
+      $query_str .= " and start_date >= '".$start_date."'";
+    if($end_date)
+      $query_str .= " and end_date <= '".$end_date."'";
+    if($venue)
+      $query_str .= ' and venueid = '.$venue;
+    
+    $query_str .= ' order by start_date asc';
+
+    $query = $this->db->query($query_str);
     return($query->result_array());
   }
 
@@ -81,13 +81,20 @@ class JCalendar extends Model{
     return($this->db->count_all_results() > 0);
   }
 
-  function add_event($event_name, $start_date, $end_date, $venue = null){
-    $data = array('eventname' => $event_name,
-		  'start_date' => $start_date,
-		  'end_date' => $end_date,
-		  'venueid' => $venue);
+  function add_event($userid, $event_name, $start_date, $end_date, $venue = null){
+    $this->db->set('eventname', $event_name);
+    $this->db->set('start_date', $start_date);
+    $this->db->set('end_date', $end_date);
+    $this->db->set('venueid', $venue);
+    $this->db->insert('events');
 
-    $this->db->insert('events', $data);
+    $eventid_query = $this->db->query('select eventid from events where eventid in (select max(eventid) from events)');
+    $eventid = $eventid_query->row_array();
+    $eventid = $eventid['eventid'];
+    
+    $this->db->set('eventid', $eventid);
+    $this->db->set('userid', $userid);
+    $this->db->insert('permissions');
   }
 
   function update_event($eventid, $data){
