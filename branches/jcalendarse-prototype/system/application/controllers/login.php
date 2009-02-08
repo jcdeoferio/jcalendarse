@@ -36,7 +36,12 @@ class Login extends Controller{
 
     $template['title'] = 'Login';
     $template['sidebar'] = $this->load->view('login/login', $data, TRUE);
-	$template['body'] = '(body placeholder)';
+	
+	//$events = $this->JCalendar->select_all_events($this->user['userid']);
+    //$data['events'] = $events;
+    //$data['user'] = $this->user;
+	
+	$template['body'] = $this->load->view('jcalendar/public',$data,TRUE);
 	       
     $this->load->view('template', $template);
   }

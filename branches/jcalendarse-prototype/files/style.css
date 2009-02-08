@@ -18,7 +18,7 @@ div#sidebar{
 overflow:auto;
 padding-top:7px;
 padding-left:5px;
-background-color:#3EA63B;
+
 border-right: 0px #000 solid;
 width:175px;
 min-height:500px;
@@ -45,11 +45,9 @@ background-color:#000;
 }
 div#body a{
 color: #25af00; 
-text-transform: normal;
 }
 div#sidebar a{
-color: #eee; 
-text-transform: normal;
+color: #666; 
 }
 table#events{
 border-spacing:2px;
@@ -63,4 +61,19 @@ table#events td{
 background-color:#eee;
 border-width:0px;
 padding: 7px;
+}
+span#eventName a{
+color: #555;
+font-size: 16pt;
+}
+span#eventDate{
+font-size: 9pt;
+color: #222;
+}
+span#eventVenue{
+font-size: 9pt;
+color: #666;
+}
+span#eventDetails{
+font-size: 12pt;
 }
