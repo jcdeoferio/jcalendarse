@@ -5,7 +5,7 @@
    }
 ?>
 <?= form_open('jcalendar2/update/' . $id) ?>
-<?= $this->validation->error_string ?>
+<?= validation_errors() ?>
 <table>
   <tr>
     <th>Event name: </th>
@@ -46,4 +46,3 @@
   </tr>
 </table>
 <?= form_close() ?>
-<?= anchor('jcalendar2/index', 'back to calendar') ?>

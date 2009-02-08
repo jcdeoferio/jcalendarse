@@ -60,6 +60,7 @@ class jcalendar2 extends Controller{
 
     $data['user'] = $this->user;
     $template['title'] = 'Add Event';
+    $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
     $template['body'] = $this->load->view('/jcalendar/add', $data, TRUE);
     $this->load->view('template', $template);
   }
@@ -135,6 +136,7 @@ class jcalendar2 extends Controller{
 
     $data['user'] = $this->user;
     $template['title'] = 'Update Entry';
+    $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
     $template['body'] = $this->load->view('jcalendar/update', $data, TRUE);
     $this->load->view('template', $template);
   }
@@ -154,7 +156,10 @@ class jcalendar2 extends Controller{
     $data['event'] = $event;
     $data['user'] = $this->user;
     $template['title'] = $event['eventname'];
-    $template['sidebar'] = '(Sidebar Placeholder)';
+    $template['sidebar'] = 
+      anchor('jcalendar2/update/'. $event['eventid'], 'update event').br(1).
+      anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1).
+      anchor('jcalendar2/index', 'back to calendar');
     $template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
     $this->load->view('template', $template);
   }
@@ -204,7 +209,7 @@ class jcalendar2 extends Controller{
     $data['events'] = $events;
     $data['user'] = $this->user;
     $template['title'] = 'Advanced Search';
-    $template['sidebar'] = 'Sidebar placeholder';
+    $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
     $template['body'] = $this->load->view('jcalendar/adsearch', $data, true);
     $this->load->view('template', $template);
   }

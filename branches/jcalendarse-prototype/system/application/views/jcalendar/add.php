@@ -46,4 +46,3 @@
   </tr>
 </table>
 <?= form_close() ?>
-<?= anchor('jcalendar2/index', 'back to calendar') ?>
