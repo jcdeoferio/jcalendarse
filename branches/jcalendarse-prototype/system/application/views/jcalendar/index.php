@@ -1,5 +1,5 @@
 <h2>EVENTS</h2>
-<table border=1 cellpadding=4>
+<table border=1 id="events">
   <tr>
     <th>Event Name</th>
     <th>Start Date</th>

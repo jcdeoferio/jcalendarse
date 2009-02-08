@@ -11,10 +11,8 @@
 	<div id="main">
 		<div id="header">
 			<?= img('files/logo.png') ?>
-<!--			<hr width="902px" align="left"/>-->
 		</div>
 		<div id="sidebar">
-			<?= br(1)?>
 			<?= $sidebar?>
 		</div>
 		<div id="body">
