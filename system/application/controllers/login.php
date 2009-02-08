@@ -15,11 +15,12 @@ class Login extends Controller{
     if ($this->session->userdata('user')){
       redirect('/jcalendar2/index');
     }
-    $rules['login'] = 'required';
-    $rules['password'] = 'required|callback__login';
-    $this->validation->set_rules($rules);
+    $this->form_validation->set_error_delimiters('<font color=red><b>','</b></font>');
 
-    if ($this->validation->run()){
+    $this->form_validation->set_rules('login', 'Login', 'required');
+    $this->form_validation->set_rules('password', 'Password', 'required|callback__login');
+
+    if ($this->form_validation->run()){
       $login = $this->input->post('login');
       $this->session->set_userdata(array('login'=>$login));
       redirect('/jcalendar2/index');
@@ -55,7 +56,7 @@ class Login extends Controller{
       return (TRUE);
     }
     else{
-      $this->validation->set_message('_login', 'Login Fail');
+      $this->form_validation->set_message('_login', 'Login Fail');
       return (FALSE);
     }
   }

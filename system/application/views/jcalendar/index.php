@@ -34,4 +34,4 @@
 </table>
 <?= form_close() ?>-->
 <br/>
-<?= anchor('jcalendar2/add', 'add event') . '|' . anchor('login/logout', 'logout') ?>
+<?= anchor('jcalendar2/add', 'add event') . '|' . anchor('jcalendar2/adsearch', 'advanced search') . '|' . anchor('login/logout', 'logout') ?>
