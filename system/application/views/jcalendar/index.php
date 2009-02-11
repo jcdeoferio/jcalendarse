@@ -16,8 +16,8 @@
   <?php endforeach; ?>
 </table>
 <br/>
-<?= form_open('jcalendar2/index') ?>
-<!--View queries<br/>
+<!--<?= form_open('jcalendar2/index') ?>
+View queries<br/>
 <table>
   <tr>
     <td>starting from:</td>

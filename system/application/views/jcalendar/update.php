@@ -41,6 +41,14 @@
     </td>
   </tr>
   <tr>
+    <th>Event Details:</th>
+    <td><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>$event_details)) ?></td>
+  </tr>
+  <tr>
+    <th>Venue:</th>
+    <td><?= form_dropdown('venue', $venues, $venue) ?></td>
+  </tr>
+  <tr>
     <td></td>
     <td><?= form_submit('submit', 'Update Event') ?></td>
   </tr>

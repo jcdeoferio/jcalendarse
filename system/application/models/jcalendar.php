@@ -5,7 +5,7 @@ class JCalendar extends Model{
   }
 
   function select_event_by_id($userid, $eventid){
-    $query = $this->db->query('select events.*, venues.venue_name from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where ((p.groupid = m.groupid or p.userid = m.userid and m.userid = '.$userid.') or m.userid = -1) and eventid = '.$eventid);
+    $query = $this->db->query('select events.*, venues.venue_name from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where ((p.groupid = m.groupid or p.userid = m.userid and m.userid = '.$userid.') or p.userid = -1) and eventid = '.$eventid);
 
     return($query->row_array());
   }
@@ -14,7 +14,7 @@ class JCalendar extends Model{
     $query_str = 'select distinct events.*, venues.venue_name from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where (((p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid.') or p.userid = -1)';
 
     if($event_name)
-      $query_str .= " and eventname like '%".$event_name."%' ";
+      $query_str .= " and eventname ilike '%".$event_name."%' ";
     if($start_date)
       $query_str .= " and start_date >= '".$start_date."'";
     if($end_date)
@@ -30,6 +30,13 @@ class JCalendar extends Model{
 
   function select_all_events($userid){
     return($this->select_events_by_criteria($userid, null, null, null, null));
+  }
+
+  function select_all_venues(){
+    $this->db->from('venues');
+    $query = $this->db->get();
+
+    return($query->result_array());
   }
       
   function get_user_from_rss_data($data){
