@@ -15,8 +15,8 @@ class jcalendar2 extends Controller{
     $data['events'] = $events;
     $data['user'] = $this->user;
     $template['title'] = 'jCalendar';
-    $template['sidebar'] = anchor('jcalendar2/add', 'add event') . br(1) . anchor('jcalendar2/adsearch', 'advanced search') . br(1) . anchor('login/logout', 'logout');
-    $template['body'] = $this->load->view('/jcalendar/index', $data, TRUE);
+    $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', '', true);
+    $template['body'] = $this->load->view('/jcalendar/index', $data, true);
     $this->load->view('template', $template);
   }
 
@@ -69,8 +69,8 @@ class jcalendar2 extends Controller{
     $data['venues'] = $venues;
     $data['user'] = $this->user;
     $template['title'] = 'Add Event';
-    $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
-    $template['body'] = $this->load->view('/jcalendar/add', $data, TRUE);
+    $template['sidebar'] = $this->load->view('/jcalendar/add_sidebar', '', true);
+    $template['body'] = $this->load->view('/jcalendar/add', $data, true);
     $this->load->view('template', $template);
   }
 
@@ -160,8 +160,8 @@ class jcalendar2 extends Controller{
     $data['venues'] = $venues;
     $data['user'] = $this->user;
     $template['title'] = 'Update Entry';
-    $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
-    $template['body'] = $this->load->view('jcalendar/update', $data, TRUE);
+    $template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
+    $template['body'] = $this->load->view('jcalendar/update', $data, true);
     $this->load->view('template', $template);
   }
 

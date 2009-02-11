@@ -1,0 +1,4 @@
+<?= anchor('jcalendar2/add', 'add event').br(1).
+    anchor('jcalendar2/adsearch', 'advanced search').br(1).
+    anchor('admin', 'admin control center').br(1).
+    anchor('login/logout', 'logout') ?>
