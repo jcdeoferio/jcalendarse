@@ -1,6 +1,6 @@
 <?= form_open('jcalendar2/adsearch') ?>
 <?= validation_errors() ?>
-<table>
+<table events>
   <tr>
     <th>Event name: </th>
     <td><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>set_value('event_name'))) ?></td>
@@ -41,7 +41,7 @@
 </table>
 <?= form_close() ?>
 <?php if(isset($events)): ?>
-<table border=1 cellpadding=4>
+<table id='events'>
   <tr>
     <th>Event Name</th>
     <th>Start Date</th>

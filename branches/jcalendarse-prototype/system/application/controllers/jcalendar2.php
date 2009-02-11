@@ -34,6 +34,7 @@ class jcalendar2 extends Controller{
     $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
     $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
     $this->form_validation->set_rules('event_details', 'Event Details', '');
+    $this->form_validation->set_rules('venue', 'Venue', '');
 
     $data = array('success' => FALSE);
 
@@ -50,16 +51,22 @@ class jcalendar2 extends Controller{
 	$this->input->post('end_minute');
       $event_name = $this->input->post('event_name');
       $event_details = $this->input->post('event_details');
+      $venue = $this->input->post('venue');
 
-      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date, $event_details);
+      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date, $event_details, $venue);
       $data['event_name']= $event_name;
-      $data['success'] = TRUE;
+      $data['success'] = true;
     }
     else{
       if (!empty($_POST))
-	$data['error'] = TRUE;
+	$data['error'] = true;
     }
 
+    $venues = array('' => '');
+    foreach($this->JCalendar->select_all_venues() as $venue)
+      $venues[$venue['venueid']] = $venue['venue_name'];
+
+    $data['venues'] = $venues;
     $data['user'] = $this->user;
     $template['title'] = 'Add Event';
     $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
@@ -80,6 +87,8 @@ class jcalendar2 extends Controller{
     $this->form_validation->set_rules('end_day', 'End Day', 'required');
     $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
     $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
+    $this->form_validation->set_rules('event_details', 'Event Details', '');
+    $this->form_validation->set_rules('venue', 'Venue', '');
 
     $data['id'] = $id;
     if ($this->form_validation->run()){
@@ -94,10 +103,14 @@ class jcalendar2 extends Controller{
 	$this->input->post('end_hour') . ':' .
 	$this->input->post('end_minute');
       $event_name = $this->input->post('event_name');
+      $event_details = $this->input->post('event_details');
+      $venue = $this->input->post('venue');
 
       $update_data = array(	'eventname'=>$event_name,
 				'start_date'=>$start_date,
-				'end_date'=>$end_date);
+				'end_date'=>$end_date,
+				'eventdetails'=>$event_details,
+				'venueid'=>$venue==''?null:$venue);
 			
       $this->JCalendar->update_event($id, $update_data);
 
@@ -113,6 +126,8 @@ class jcalendar2 extends Controller{
       $data['end_day'] = $this->input->post('end_day');
       $data['end_hour'] = $this->input->post('end_hour');
       $data['end_minute'] = $this->input->post('end_minute');
+      $data['event_details'] = $this->input->post('event_details');
+      $data['venue'] = $this->input->post('venue');
     }
     else{
       $event = $this->JCalendar->select_event_by_id($this->user['userid'], $id);
@@ -132,10 +147,17 @@ class jcalendar2 extends Controller{
       $data['end_day'] = $end_date[2];
       $end_time = explode(':', $end_timestamp[1]);
       $data['end_hour'] = $end_time[0];
-      $data['end_minute'] = $end_time[1];
+      $data['end_minute'] = $end_time[1];      
+      $data['event_details'] = $event['eventdetails'];
+      $data['venue'] = $event['venueid'];
       $data['success'] = FALSE;
     }
 
+    $venues = array('' => '');
+    foreach($this->JCalendar->select_all_venues() as $venue)
+      $venues[$venue['venueid']] = $venue['venue_name'];
+
+    $data['venues'] = $venues;
     $data['user'] = $this->user;
     $template['title'] = 'Update Entry';
     $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
