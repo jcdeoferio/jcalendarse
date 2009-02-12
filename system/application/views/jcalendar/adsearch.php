@@ -1,3 +1,11 @@
+<script type="text/javascript" src=<?='"'.base_url()."files/calendarDateInput.js".'"'?>>
+/***********************************************
+* Jason's Date Input Calendar- By Jason Moon http://calendar.moonscript.com/dateinput.cfm
+* Script featured on and available at http://www.dynamicdrive.com
+* Keep this notice intact for use.
+***********************************************/
+</script>
+
 <?= form_open('jcalendar2/adsearch') ?>
 <?= validation_errors() ?>
 <table events>
@@ -8,9 +16,13 @@
   <tr>
     <th>Start date: </th>
     <td>
+	<script>DateInput('start', true, 'DD-MON-YYYY')</script>
+<!--	<input type="button" onClick="alert(this.form.start.value)" value="Show date value passed">
       <?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month')) ?>
       <?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day')) ?>
-      <?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year')) ?></td>
+      <?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year')) ?>
+-->	    
+	</td>
   </tr>
   <tr>
     <th>Start time: </th>
@@ -22,9 +34,12 @@
   <tr>
     <th>End date: </th>
     <td>
+	<script>DateInput('end', true, 'DD-MON-YYYY')</script>
+	<!--
       <?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month')) ?>
       <?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day')) ?>
       <?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_year')) ?>
+	 -->
     </td>
   </tr>
   <tr>

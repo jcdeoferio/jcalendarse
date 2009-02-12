@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>jCalendar - <?= $title ?></title>
-
 	<?= link_tag('files/favicon.png', 'shortcut icon', 'image/ico'); ?>
 	<?= link_tag('files/style.css') ?>
 </head>
