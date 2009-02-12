@@ -1,3 +1,11 @@
+<script type="text/javascript" src=<?='"'.base_url()."files/calendarDateInput.js".'"'?>>
+/***********************************************
+* Jason's Date Input Calendar- By Jason Moon http://calendar.moonscript.com/dateinput.cfm
+* Script featured on and available at http://www.dynamicdrive.com
+* Keep this notice intact for use.
+***********************************************/
+</script>
+
 <h2>Update Event</h2>
 <?php
    if($success){
@@ -14,9 +22,13 @@
   <tr>
     <th>Start date: </th>
     <td>
-      <?= form_dropdown('start_month', array(''=>'') + months_array(), $start_month) ?>
-      <?= form_dropdown('start_day', array(''=>'') + days_array(), $start_day) ?>
-      <?= form_dropdown('start_year', array(''=>'') + years_array(), $start_year) ?></td>
+	<script>DateInput('start', true, 'YYYYMMDD',<?= $start_year.$start_month.$start_day?>)</script>
+<!--	<input type="button" onClick="alert(this.form.start.value)" value="Show date value passed">
+      <?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month')) ?>
+      <?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day')) ?>
+      <?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year')) ?>
+-->	  
+	  </td>
   </tr>
   <tr>
     <th>Start time: </th>
@@ -28,9 +40,12 @@
   <tr>
     <th>End date: </th>
     <td>
-      <?= form_dropdown('end_month', array(''=>'') + months_array(), $end_month) ?>
-      <?= form_dropdown('end_day', array(''=>'') + days_array(), $end_day) ?>
-      <?= form_dropdown('end_year', array(''=>'') + years_array(), $end_year) ?>
+	<script>DateInput('end', true, 'YYYYMMDD',<?= $end_year.$end_month.$end_day?>)</script>
+	<!--
+      <?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month')) ?>
+      <?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day')) ?>
+      <?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_year')) ?>
+	 -->
     </td>
   </tr>
   <tr>

@@ -40,12 +40,12 @@ class jcalendar2 extends Controller{
 
     if($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
-	$this->input->post('start_month') . '-' .
+	($this->input->post('start_month')+1) . '-' .
 	$this->input->post('start_day') . ' ' .
 	$this->input->post('start_hour') . ':' .
 	$this->input->post('start_minute');
       $end_date = $this->input->post('end_year') . '-' .
-	$this->input->post('end_month') . '-' .
+	($this->input->post('end_month')+1) . '-' .
 	$this->input->post('end_day') . ' ' .
 	$this->input->post('end_hour') . ':' .
 	$this->input->post('end_minute');
@@ -93,12 +93,12 @@ class jcalendar2 extends Controller{
     $data['id'] = $id;
     if ($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
-	$this->input->post('start_month') . '-' .
+	($this->input->post('start_month')+1) . '-' .
 	$this->input->post('start_day') . ' ' .
 	$this->input->post('start_hour') . ':' .
 	$this->input->post('start_minute');
       $end_date = $this->input->post('end_year') . '-' .
-	$this->input->post('end_month') . '-' .
+	($this->input->post('end_month')+1) . '-' .
 	$this->input->post('end_day') . ' ' .
 	$this->input->post('end_hour') . ':' .
 	$this->input->post('end_minute');
@@ -212,7 +212,7 @@ class jcalendar2 extends Controller{
       $start_date = null;
       if($this->input->post('start_year') != ''){
 	$start_date = $this->input->post('start_year') . '-' .
-	  $this->input->post('start_month') . '-' .
+	  ($this->input->post('start_month')+1) . '-' .
 	  $this->input->post('start_day') . ' ' .
 	  $this->input->post('start_hour') . ':' .
 	  $this->input->post('start_minute');
@@ -221,7 +221,7 @@ class jcalendar2 extends Controller{
       $end_date = null;
       if($this->input->post('end_year') != ''){
 	$end_date = $this->input->post('end_year') . '-' .
-	  $this->input->post('end_month') . '-' .
+	  ($this->input->post('end_month')+1) . '-' .
 	  $this->input->post('end_day') . ' ' .
 	  $this->input->post('end_hour') . ':' .
 	  $this->input->post('end_minute');
