@@ -22,7 +22,7 @@
   <tr>
     <th>Start date: </th>
     <td>
-	<script>DateInput('start', true, 'YYYYMMDD',<?= $start_year.$start_month.$start_day?>)</script>
+	<script>DateInput('start', true, 'YYYYMMDD')</script>
 <!--	<input type="button" onClick="alert(this.form.start.value)" value="Show date value passed">
       <?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month')) ?>
       <?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day')) ?>
@@ -40,7 +40,9 @@
   <tr>
     <th>End date: </th>
     <td>
-	<script>DateInput('end', true, 'YYYYMMDD',<?= $end_year.$end_month.$end_day?>)</script>
+	<?= ((100/10 < 1) ? 'XD':'LOL').'X' ?>
+	<?= $end_year.$end_month.$end_day ?>
+	<script>DateInput('end', true, 'YYYYMMDD')<!--,<?= $end_year.$end_month.$end_day?>--></script>
 	<!--
       <?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month')) ?>
       <?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day')) ?>

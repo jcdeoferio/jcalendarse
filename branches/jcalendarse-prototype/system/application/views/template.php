@@ -11,11 +11,15 @@
 		<div id="header">
 			<?= img('files/logo.png') ?>
 		</div>
-		<div id="sidebar">
-			<?= $sidebar?>
-		</div>
-		<div id="body">
-			<?= $body?>
+		<div id="content">
+			<div id="sidebar">
+				<?= $sidebar?>
+				<?= br(4)?>
+			</div>
+			<div id="body">
+				<?= $body?>
+				<?= br(4)?>
+			</div>
 		</div>
 		<div id="footer">
 			Copyright &copy; 2009 • jCalendar • jCalendar Team

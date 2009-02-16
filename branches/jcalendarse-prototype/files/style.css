@@ -1,53 +1,78 @@
 body{
 font-family: calibri;
+text-align:center;
 }
 div#header{
-background-color:#ABC550;
+padding:10px;
+background: url(headerbg.png); /*#ABC550*/
+background-repeat: no-repeat;
 border-bottom: 0px #000 solid;
-width:902px;
+}
+div#content{
+padding:10px;
 }
 div#main{
-background: url(background.jpg);
-background-repeat: repeat-y;
-padding-left: 49px;
-margin-top:-8px;
-margin-bottom:-8px;
-max-width:1000px;
+background: url(bodybg.png) repeat-y top;
+margin: auto;
+width: 922px;
+text-align:left;
 }
 div#sidebar{
 overflow:auto;
 padding-top:7px;
 padding-left:5px;
-
 border-right: 0px #000 solid;
 width:175px;
-min-height:500px;
 float:left;
 }
 div#body{
 overflow:auto;
 padding-top:7px;
 padding-left:5px;
-background-color:#fff;
-width:716px;
-min-height:500px;
+width:717px;
 float:left;
 }
 div#footer{
+padding:10px;
+background: url(footerbg.png) no-repeat;
 clear:both;
-font-size: 10pt;
+font-size: 9pt;
 text-align:center;
-line-height:50px;
-color:#fff;
-width:902px;
-height:50px;
-background-color:#000;
+line-height:32px;
+color:#ccc;
+height:40px;
 }
 div#body a{
-color: #25af00; 
+color: #27abff; 
 }
 div#sidebar a{
 color: #666; 
+}
+table#groups{
+border-spacing:2px;
+border-width:0px;
+}
+table#groups th{
+background-color:#ccc;
+border-width:0px;
+}
+table#groups td{
+background-color:#eee;
+border-width:0px;
+padding: 7px;
+}
+table#users{
+border-spacing:2px;
+border-width:0px;
+}
+table#users th{
+background-color:#ccc;
+border-width:0px;
+}
+table#users td{
+background-color:#eee;
+border-width:0px;
+padding: 7px;
 }
 table#events{
 border-spacing:2px;
