@@ -460,7 +460,7 @@ function calendarObject(DateName, DateFormat, DefaultDate) {
    }
    function SetGoodDate(CalObj, Notify) { // Notifies the user about their bad default date, and sets the current system date
       CalObj.setPicked(Today.getFullYear(), Today.getMonth(), Today.getDate());
-      if (Notify) alert('WARNING: The supplied date is not in valid \'' + DateFormat + '\' format: ' + DefaultDate + '.\nTherefore, the current system date will be used instead: ' + CalObj.picked.formatted);
+      //if (Notify) alert('WARNING: The supplied date is not in valid \'' + DateFormat + '\' format: ' + DefaultDate + '.\nTherefore, the current system date will be used instead: ' + CalObj.picked.formatted);
    }
    // Main part of the constructor
    if (DefaultDate != '') {
