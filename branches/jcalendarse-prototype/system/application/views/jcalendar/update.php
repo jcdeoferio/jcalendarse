@@ -5,8 +5,6 @@
 * Keep this notice intact for use.
 ***********************************************/
 </script>
-
-<h2>Update Event</h2>
 <?php
    if($success){
    echo 'Event ' . $event_name . ' updated';
@@ -14,6 +12,20 @@
 ?>
 <?= form_open('jcalendar2/update/' . $id) ?>
 <?= validation_errors() ?>
+<fieldset>
+<legend>Update Event</legend>
+Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>$event_name)) ?><br/>
+Start date: <br/><script>DateInput('start', true, 'YYYYMMDD',<?= $start_year.$start_month.$start_day?>)</script>
+Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), $start_hour) ?>:
+      <?= form_dropdown('start_minute', array(''=>'') + minutes_array(), $start_minute) ?><br/>
+End date: <br/><script>DateInput('end', true, 'YYYYMMDD',<?= $end_year.$end_month.$end_day ?>)<!--,<?= $end_year.$end_month.$end_day?>--></script>
+End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), $end_hour) ?>:
+      <?= form_dropdown('end_minute', array(''=>'') + minutes_array(), $end_minute) ?><br/>
+Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>$event_details)) ?> <br/>
+Venue: <br/><?= form_dropdown('venue', $venues, $venue) ?><br/><br/>
+<?= form_submit('submit', 'Update Event') ?> <br/>
+</fieldset>
+<!--
 <table>
   <tr>
     <th>Event name: </th>
@@ -22,12 +34,7 @@
   <tr>
     <th>Start date: </th>
     <td>
-	<script>DateInput('start', true, 'YYYYMMDD')</script>
-<!--	<input type="button" onClick="alert(this.form.start.value)" value="Show date value passed">
-      <?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month')) ?>
-      <?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day')) ?>
-      <?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year')) ?>
--->	  
+	<script>DateInput('start', true, 'YYYYMMDD',<?= $start_year.$start_month.$start_day?>)</script>  
 	  </td>
   </tr>
   <tr>
@@ -40,14 +47,7 @@
   <tr>
     <th>End date: </th>
     <td>
-	<?= ((100/10 < 1) ? 'XD':'LOL').'X' ?>
-	<?= $end_year.$end_month.$end_day ?>
-	<script>DateInput('end', true, 'YYYYMMDD')<!--,<?= $end_year.$end_month.$end_day?>--></script>
-	<!--
-      <?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month')) ?>
-      <?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day')) ?>
-      <?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_year')) ?>
-	 -->
+	<script>DateInput('end', true, 'YYYYMMDD',<?= $end_year.$end_month.$end_day ?>)</script>
     </td>
   </tr>
   <tr>
@@ -70,4 +70,5 @@
     <td><?= form_submit('submit', 'Update Event') ?></td>
   </tr>
 </table>
+-->
 <?= form_close() ?>

@@ -38,6 +38,23 @@ class JCalendar extends Model{
 
     return($query->result_array());
   }
+  
+  function select_courses($college){
+	$query_str = "SELECT courses.* FROM courses";
+	if($college)
+	$query_str .= ",colleges,course_member_of WHERE colleges.collegename ilike '%".$college."%' AND colleges.collegeid = course_member_of.collegeid AND courses.courseid = course_member_of.courseid";
+	$res = $this->db->query($query_str);
+	return $res->result_array();
+  }
+  function select_colleges($college){
+	$query_str = "SELECT colleges.* FROM colleges";
+	if($college)
+	$query_str .= " WHERE colleges.collegename ilike '%".$college."%'";
+	$res = $this->db->query($query_str);
+	return $res->result_array();
+  }
+  
+  
       
   function get_user_from_rss_data($data){
     $this->db->from('users');

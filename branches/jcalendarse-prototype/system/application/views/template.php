@@ -5,7 +5,6 @@
 	<?= link_tag('files/favicon.png', 'shortcut icon', 'image/ico'); ?>
 	<?= link_tag('files/style.css') ?>
 </head>
-
 <body>
 	<div id="main">
 		<div id="header">

@@ -1,5 +1,5 @@
 body{
-font-family: calibri;
+font-family: calibri,arial,sans-serif;
 text-align:center;
 }
 div#header{
@@ -9,7 +9,7 @@ background-repeat: no-repeat;
 border-bottom: 0px #000 solid;
 }
 div#content{
-padding:10px;
+padding:16px;
 }
 div#main{
 background: url(bodybg.png) repeat-y top;
@@ -22,14 +22,14 @@ overflow:auto;
 padding-top:7px;
 padding-left:5px;
 border-right: 0px #000 solid;
-width:175px;
+width:172px;
 float:left;
 }
 div#body{
 overflow:auto;
 padding-top:7px;
 padding-left:5px;
-width:717px;
+width:700px;
 float:left;
 }
 div#footer{
