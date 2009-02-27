@@ -5,10 +5,6 @@
 * Keep this notice intact for use.
 ***********************************************/
 </script>
-
-
-
-<h2>Add Event</h2>
 <?php
    if ($success){
    echo 'Event ' . $event_name .' added';
@@ -16,6 +12,21 @@
 ?>
 <?= form_open('jcalendar2/add') ?>
 <?= validation_errors() ?>
+<fieldset>
+<legend>Add Event</legend>
+Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>set_value('event_name'))) ?><br/>
+Start date: <br/><script>DateInput('start', true, 'DD-MON-YYYY')</script>
+Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), set_value('start_hour')) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array(), set_value('start_minute')) ?><br/>
+End date: <br/><script>DateInput('end', true, 'DD-MON-YYYY')</script>
+End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute')) ?><br/>
+Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>set_value('event_details'))) ?> <br/>
+Venue: <br/><?= form_dropdown('venue', $venues, set_value('venue')) ?><br/><br/>
+<?= form_submit('submit', 'Add Event') ?> <br/>
+</fieldset>
+
+<?= form_close() ?>
+
+<!--
 <table>
   <tr>
     <th>Event name: </th>
@@ -25,11 +36,6 @@
     <th>Start date: </th>
     <td>
 	<script>DateInput('start', true, 'DD-MON-YYYY')</script>
-<!--	<input type="button" onClick="alert(this.form.start.value)" value="Show date value passed">
-      <?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month')) ?>
-      <?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day')) ?>
-      <?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year')) ?>
--->	  
 	  </td>
   </tr>
   <tr>
@@ -43,11 +49,6 @@
     <th>End date: </th>
     <td>
 	<script>DateInput('end', true, 'DD-MON-YYYY')</script>
-	<!--
-      <?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month')) ?>
-      <?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day')) ?>
-      <?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_year')) ?>
-	 -->
     </td>
   </tr>
   <tr>
@@ -69,5 +70,4 @@
     <td></td>
     <td><?= form_submit('submit', 'Add Event') ?></td>
   </tr>
-</table>
-<?= form_close() ?>
+</table> -->
