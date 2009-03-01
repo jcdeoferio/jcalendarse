@@ -1,4 +1,4 @@
-<table border='1' cellpadding='4'>
+<table border='1' cellpadding='4' id='events'>
   <tr>
     <th>groupid</th>
     <th>group name</th>

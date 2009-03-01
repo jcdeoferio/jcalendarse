@@ -5,8 +5,18 @@ class Administration extends Model{
   }
 
   function select_all_users(){
-    $this->db->select('userid, login');
-    $this->db->from('users');
+    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, courseid, year, registered');
+    $this->db->from('users left join userdetails using (userid)');
+    $this->db->order_by('login', 'asc');
+    
+    $query = $this->db->get();
+    return($query->result_array());
+  }
+
+  function select_user($userid){
+    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, courseid, year, registered');
+    $this->db->from('users left join userdetails using (userid)');
+    $this->db->where('userid', $userid);
     
     $query = $this->db->get();
     return($query->result_array());
@@ -16,6 +26,7 @@ class Administration extends Model{
     $this->db->select('userid, login');
     $this->db->from('users inner join member_of using (groupid)');
     $this->db->where('groupid', $groupid);
+    $this->db->order_by('userid', 'asc');
 
     $query = $this->db->get();
     return($query->result_array());
@@ -24,9 +35,18 @@ class Administration extends Model{
   function select_all_groups(){
     $this->db->select('groupid, groupname');
     $this->db->from('groups');
+    $this->db->order_by('groupname', 'asc');
 
     $query = $this->db->get();
     return($query->result_array());
+  }
+
+  function member_of($userid, $groupid){
+    $this->db->from('member_of');
+    $this->db->where('userid', $userid);
+    $this->db->where('groupid', $groupid);
+
+    return($this->db->count_all_results());
   }
   
   function add_user($login, $password, $groups = null){
@@ -49,6 +69,37 @@ class Administration extends Model{
 	$this->db->insert('member_of');
       }
     }
+  }
+
+  function update_user($userid, $login, $password, $studentnumber, $firstname, $middlename, $lastname, $courseid, $registered, $groups){
+    $this->db->set('studentnumber', $studentnumber);
+    $this->db->set('firstname', $firstname);
+    $this->db->set('middlename', $middlename);
+    $this->db->set('lastname', $lastname);
+    $this->db->set('courseid', $courseid);
+    $this->db->set('registerd', $registered?'true':'false', false);
+    $this->db->where('userid', $userid);
+    $this->db->update('userdetails');
+
+    $this->db->set('login', $login);
+    $this->db->set('password', $password);
+    $this->db->where('userid', $userid);
+    $this->db->update('users');
+
+    $this->db->where('userid', $userid);
+    $this->db->delete('member_of');
+
+    foreach($groups as $group){
+      $this->db->set('userid', $userid);
+      $this->db->set('groupid', $group);
+      $this->db->insert('member_of');
+    }
+  }
+
+  function flip_activation($userid){
+    $this->db->set('registered', 'not registered', false);
+    $this->db->where('userid', $userid);
+    $this->db->update('userdetails');
   }
   
   function delete_user($userid){
@@ -80,7 +131,7 @@ class Administration extends Model{
 
     $this->db_maintenance();
   }
-  
+
   function db_maintenance(){
     //when no one can see an event
     $query = $this->db->query('select e.eventid from events e where (select count(p.eventid) from permissions p where p.eventid = e.eventid) = 0');

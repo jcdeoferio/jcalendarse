@@ -45,7 +45,6 @@ class JCalendar extends Model{
 	$query_str .= ",colleges,course_member_of WHERE colleges.collegename ilike '%".$college."%' AND colleges.collegeid = course_member_of.collegeid AND courses.courseid = course_member_of.courseid";
 	$res = $this->db->query($query_str);
 	return $res->result_array();
-  
   }
   function select_courses_byid($college){
 	$query_str = "SELECT courses.* FROM courses";
@@ -76,26 +75,27 @@ class JCalendar extends Model{
     $query = $this->db->get();
     return($query->row_array());
   }
+
   function add_user($login,$password,$studentnumber,$firstname,$middlename,$lastname,$courseid,$registered){
-	$this->db->set('login',$login);
-	$this->db->set('password',$password);
-	$this->db->insert('users');
-	$userid = $this->db->query('SELECT userid from users WHERE userid in (SELECT max(userid) FROM USERS)')->row_array();
-	$userid = $userid['userid'];
-	$this->db->set('userid',$userid);
-	$this->db->set('firstname',$firstname);
-	if($middlename)
-		$this->db->set('middlename',$middlename);
-	$this->db->set('lastname',$lastname);
-	$this->db->set('courseid',$courseid);
-	$year = 2;
-	$this->db->set('year',$year);
-	$this->db->set('studentnumber',$studentnumber);
-	$this->db->set('rssfeed',random_string('unique'));
-	if($registered)
-		$this->db->set('registered',$registered);
-	$this->db->insert('userdetails');
+    $this->db->set('login',$login);
+    $this->db->set('password',$password);
+    $this->db->insert('users');
+    $userid = $this->db->query('SELECT userid from users WHERE userid in (SELECT max(userid) FROM USERS)')->row_array();
+    $userid = $userid['userid'];
+    $this->db->set('userid',$userid);
+    $this->db->set('firstname',$firstname);
+    if($middlename)
+      $this->db->set('middlename',$middlename);
+    $this->db->set('lastname',$lastname);
+    $this->db->set('courseid',$courseid);
+    $year = 2;
+    $this->db->set('year',$year);
+    $this->db->set('studentnumber',$studentnumber);
+    if($registered)
+      $this->db->set('registered',$registered);
+    $this->db->insert('userdetails');
   }
+
   function add_event($userid, $event_name, $start_date, $end_date, $event_details = null, $venue = null){
     $this->db->set('eventname', $event_name);
     $this->db->set('start_date', $start_date);
