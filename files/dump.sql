@@ -8,6 +8,70 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
+SET search_path = public, pg_catalog;
+
+ALTER TABLE ONLY public.userdetails DROP CONSTRAINT userdetails_userid_fkey;
+ALTER TABLE ONLY public.userdetails DROP CONSTRAINT userdetails_courseid_fkey;
+ALTER TABLE ONLY public.permissions DROP CONSTRAINT permissions_userid_fk;
+ALTER TABLE ONLY public.permissions DROP CONSTRAINT permissions_groupid_fk;
+ALTER TABLE ONLY public.permissions DROP CONSTRAINT permissions_eventid_fk;
+ALTER TABLE ONLY public.member_of DROP CONSTRAINT member_of_userid_fk;
+ALTER TABLE ONLY public.member_of DROP CONSTRAINT member_of_grouproleid_fk;
+ALTER TABLE ONLY public.member_of DROP CONSTRAINT member_of_groupid_fk;
+ALTER TABLE ONLY public.events DROP CONSTRAINT events_venueid_fk;
+ALTER TABLE ONLY public.course_member_of DROP CONSTRAINT course_member_of_courseid_fkey;
+ALTER TABLE ONLY public.course_member_of DROP CONSTRAINT course_member_of_collegeid_fkey;
+ALTER TABLE ONLY public.venues DROP CONSTRAINT venues_pkey;
+ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
+ALTER TABLE ONLY public.userdetails DROP CONSTRAINT userdetails_userid_key;
+ALTER TABLE ONLY public.userdetails DROP CONSTRAINT userdetails_rssfeed_key;
+ALTER TABLE ONLY public.member_of DROP CONSTRAINT member_of_pk;
+ALTER TABLE ONLY public.groups DROP CONSTRAINT groups_pkey;
+ALTER TABLE ONLY public.grouproles DROP CONSTRAINT grouproles_pkey;
+ALTER TABLE ONLY public.events DROP CONSTRAINT events_pkey;
+ALTER TABLE ONLY public.courses DROP CONSTRAINT courses_pkey;
+ALTER TABLE ONLY public.colleges DROP CONSTRAINT colleges_pkey;
+ALTER TABLE public.venues ALTER COLUMN venueid DROP DEFAULT;
+ALTER TABLE public.users ALTER COLUMN userid DROP DEFAULT;
+ALTER TABLE public.groups ALTER COLUMN groupid DROP DEFAULT;
+ALTER TABLE public.grouproles ALTER COLUMN grouproleid DROP DEFAULT;
+ALTER TABLE public.events ALTER COLUMN eventid DROP DEFAULT;
+DROP SEQUENCE public.venues_venueid_seq;
+DROP SEQUENCE public.users_userid_seq;
+DROP SEQUENCE public.groups_groupid_seq;
+DROP SEQUENCE public.grouproles_grouproleid_seq;
+DROP SEQUENCE public.events_eventid_seq;
+DROP TABLE public.venues;
+DROP TABLE public.users;
+DROP TABLE public.userdetails;
+DROP TABLE public.permissions;
+DROP TABLE public.member_of;
+DROP TABLE public.groups;
+DROP TABLE public.grouproles;
+DROP TABLE public.events;
+DROP TABLE public.courses;
+DROP SEQUENCE public.courses_courseid_seq;
+DROP TABLE public.course_member_of;
+DROP TABLE public.colleges;
+DROP SEQUENCE public.colleges_collegeid_seq;
+DROP PROCEDURAL LANGUAGE plpgsql;
+DROP SCHEMA public;
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
 --
 -- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
 --
@@ -171,13 +235,14 @@ ALTER TABLE public.permissions OWNER TO postgres;
 
 CREATE TABLE userdetails (
     userid integer NOT NULL,
-    studentnumber integer NOT NULL,
-    firstname character varying NOT NULL,
+    studentnumber integer,
+    firstname character varying,
     middlename character varying,
-    lastname character varying NOT NULL,
-    courseid integer NOT NULL,
-    year integer NOT NULL,
-    registered boolean DEFAULT false NOT NULL
+    lastname character varying,
+    courseid integer,
+    year integer,
+    registered boolean DEFAULT false NOT NULL,
+    rssfeed character varying
 );
 
 
@@ -313,7 +378,7 @@ ALTER SEQUENCE users_userid_seq OWNED BY users.userid;
 -- Name: users_userid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('users_userid_seq', 4, true);
+SELECT pg_catalog.setval('users_userid_seq', 12, true);
 
 
 --
@@ -382,136 +447,119 @@ ALTER TABLE venues ALTER COLUMN venueid SET DEFAULT nextval('venues_venueid_seq'
 -- Data for Name: colleges; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY colleges (collegeid, collegename) FROM stdin;
-1	College of Engineering
-2	College of Science
-\.
+INSERT INTO colleges VALUES (1, 'College of Engineering');
+INSERT INTO colleges VALUES (2, 'College of Science');
 
 
 --
 -- Data for Name: course_member_of; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY course_member_of (collegeid, courseid) FROM stdin;
-1	1
-1	2
-2	3
-\.
+INSERT INTO course_member_of VALUES (1, 1);
+INSERT INTO course_member_of VALUES (1, 2);
+INSERT INTO course_member_of VALUES (2, 3);
 
 
 --
 -- Data for Name: courses; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY courses (courseid, coursename) FROM stdin;
-1	BS Computer Science
-2	MS Computer Science
-3	BS Physics
-\.
+INSERT INTO courses VALUES (1, 'BS Computer Science');
+INSERT INTO courses VALUES (2, 'MS Computer Science');
+INSERT INTO courses VALUES (3, 'BS Physics');
 
 
 --
 -- Data for Name: events; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FROM stdin;
-3	event2	\N	2009-02-06 11:29:11.845751	2009-02-06 11:29:11.845751	\N
-5	event3	\N	2009-02-08 00:00:00	2009-02-08 12:00:00	\N
-8	event8	\N	2009-02-11 14:22:08.108659	2009-02-11 14:22:08.108659	\N
-9	lkj		2009-02-15 01:05:00	2009-02-15 18:00:00	1
-2	event1	Ooooo event 1	2009-02-15 10:10:00	2009-12-15 10:10:00	4
-7	event7	Details of the event are as follows.\n\nThis description intentionally left blank	2009-02-15 12:00:00	2009-02-15 11:55:00	4
-10	llj		2009-02-15 00:00:00	2009-02-03 17:05:00	1
-6	event4	This is a publicly viewable event	2009-02-08 16:15:00	2009-02-08 16:15:00	1
-11	1	test	2009-02-26 00:00:00	2009-02-26 17:05:00	1
-1	CS 165 MP2 due	OMG XIOU LI	2009-01-30 00:00:00	2009-01-30 12:00:00	1
-\.
+INSERT INTO events VALUES (3, 'event2', NULL, '2009-02-06 11:29:11.845751', '2009-02-06 11:29:11.845751', NULL);
+INSERT INTO events VALUES (5, 'event3', NULL, '2009-02-08 00:00:00', '2009-02-08 12:00:00', NULL);
+INSERT INTO events VALUES (8, 'event8', NULL, '2009-02-11 14:22:08.108659', '2009-02-11 14:22:08.108659', NULL);
+INSERT INTO events VALUES (9, 'lkj', '', '2009-02-15 01:05:00', '2009-02-15 18:00:00', 1);
+INSERT INTO events VALUES (2, 'event1', 'Ooooo event 1', '2009-02-15 10:10:00', '2009-12-15 10:10:00', 4);
+INSERT INTO events VALUES (7, 'event7', 'Details of the event are as follows.
+
+This description intentionally left blank', '2009-02-15 12:00:00', '2009-02-15 11:55:00', 4);
+INSERT INTO events VALUES (10, 'llj', '', '2009-02-15 00:00:00', '2009-02-03 17:05:00', 1);
+INSERT INTO events VALUES (6, 'event4', 'This is a publicly viewable event', '2009-02-08 16:15:00', '2009-02-08 16:15:00', 1);
+INSERT INTO events VALUES (11, '1', 'test', '2009-02-26 00:00:00', '2009-02-26 17:05:00', 1);
+INSERT INTO events VALUES (1, 'CS 165 MP2 due', 'OMG XIOU LI', '2009-01-30 00:00:00', '2009-01-30 12:00:00', 1);
 
 
 --
 -- Data for Name: grouproles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY grouproles (grouproleid, grouprolename) FROM stdin;
-1	Group Admin
-2	Group Moderator
-\.
+INSERT INTO grouproles VALUES (1, 'Group Admin');
+INSERT INTO grouproles VALUES (2, 'Group Moderator');
 
 
 --
 -- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY groups (groupid, groupname) FROM stdin;
-1	admin
-2	student
-\.
+INSERT INTO groups VALUES (1, 'admin');
+INSERT INTO groups VALUES (2, 'student');
 
 
 --
 -- Data for Name: member_of; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY member_of (groupid, userid, grouproleid) FROM stdin;
-1	1	\N
-2	2	\N
-\.
+INSERT INTO member_of VALUES (1, 1, NULL);
+INSERT INTO member_of VALUES (2, 2, NULL);
 
 
 --
 -- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY permissions (eventid, groupid, userid) FROM stdin;
-1	1	\N
-2	1	\N
-2	2	\N
-3	\N	2
-5	\N	1
-6	\N	-1
-7	\N	1
-7	\N	-1
-9	\N	1
-10	\N	1
-11	\N	1
-\.
+INSERT INTO permissions VALUES (1, 1, NULL);
+INSERT INTO permissions VALUES (2, 1, NULL);
+INSERT INTO permissions VALUES (2, 2, NULL);
+INSERT INTO permissions VALUES (3, NULL, 2);
+INSERT INTO permissions VALUES (5, NULL, 1);
+INSERT INTO permissions VALUES (6, NULL, -1);
+INSERT INTO permissions VALUES (7, NULL, 1);
+INSERT INTO permissions VALUES (7, NULL, -1);
+INSERT INTO permissions VALUES (9, NULL, 1);
+INSERT INTO permissions VALUES (10, NULL, 1);
+INSERT INTO permissions VALUES (11, NULL, 1);
 
 
 --
 -- Data for Name: userdetails; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY userdetails (userid, studentnumber, firstname, middlename, lastname, courseid, year, registered) FROM stdin;
-4	200701323	Juan Carlo	Uytiepo	Deoferio	1	2	f
-\.
+INSERT INTO userdetails VALUES (-1, NULL, NULL, NULL, NULL, NULL, NULL, false, '62bdbefd1fecf993e951b419e82a6499');
+INSERT INTO userdetails VALUES (2, NULL, NULL, NULL, NULL, NULL, NULL, false, 'be13cbacdb98c076df1992f5a1081c0c');
+INSERT INTO userdetails VALUES (3, 200701323, 'Juan Carlo', 'Uytiepo', 'Deoferio', 1, 2, true, '933c7a1bce93a4ea47949df03f6b3b82');
+INSERT INTO userdetails VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, true, '0e8abb204f18f19c24d68e1e02c8c687');
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY users (userid, login, password) FROM stdin;
-1	root	5f4dcc3b5aa765d61d8327deb882cf99
-2	jc	5f4dcc3b5aa765d61d8327deb882cf99
--1	public	\N
-4	juancd	5f4dcc3b5aa765d61d8327deb882cf99
-\.
+INSERT INTO users VALUES (1, 'root', '5f4dcc3b5aa765d61d8327deb882cf99');
+INSERT INTO users VALUES (2, 'jc', '5f4dcc3b5aa765d61d8327deb882cf99');
+INSERT INTO users VALUES (-1, 'public', NULL);
+INSERT INTO users VALUES (3, 'juancd', '5f4dcc3b5aa765d61d8327deb882cf99');
 
 
 --
 -- Data for Name: venues; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY venues (venueid, venue_name) FROM stdin;
-1	Lecture Hall
-2	Classroom 1
-3	Classroom 2
-4	Classroom 3
-5	Classroom 4
-6	Teaching Lab 1
-7	Teaching Lab 2
-8	Teaching Lab 3
-\.
+INSERT INTO venues VALUES (1, 'Lecture Hall');
+INSERT INTO venues VALUES (2, 'Classroom 1');
+INSERT INTO venues VALUES (3, 'Classroom 2');
+INSERT INTO venues VALUES (4, 'Classroom 3');
+INSERT INTO venues VALUES (5, 'Classroom 4');
+INSERT INTO venues VALUES (6, 'Teaching Lab 1');
+INSERT INTO venues VALUES (7, 'Teaching Lab 2');
+INSERT INTO venues VALUES (8, 'Teaching Lab 3');
 
 
 --
@@ -563,11 +611,11 @@ ALTER TABLE ONLY member_of
 
 
 --
--- Name: userdetails_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: userdetails_rssfeed_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY userdetails
-    ADD CONSTRAINT userdetails_pkey PRIMARY KEY (studentnumber);
+    ADD CONSTRAINT userdetails_rssfeed_key UNIQUE (rssfeed);
 
 
 --

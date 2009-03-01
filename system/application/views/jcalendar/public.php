@@ -5,6 +5,5 @@
 	<span id="eventDetails"><?= $event['eventdetails']?></span>
 	<?= br(2) ?>
   <?php endforeach; ?>
-<?= form_open('jcalendar2/index') ?>
-
+<?php echo $this->pagination->create_links();?>
 <br/>
