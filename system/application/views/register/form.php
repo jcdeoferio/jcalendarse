@@ -1,4 +1,4 @@
-<?= form_open('register/reg') ?>
+<?= form_open($submit_url, '', array('new_user' => $new_user)) ?>
 <?= validation_errors() ?>
 <fieldset>
 <legend>register</legend>

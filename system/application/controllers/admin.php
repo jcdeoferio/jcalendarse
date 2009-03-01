@@ -4,6 +4,11 @@ class Admin extends Controller{
     parent::Controller();
 
     $this->load->model('Administration');
+
+    $this->user = $this->session->userdata('user');
+    
+    if(!$this->user || !$this->Administration->member_of($this->user['userid'], 1))
+      redirect('/login');
   }
 
   function index(){
@@ -18,11 +23,31 @@ class Admin extends Controller{
   }
 
   function add_user(){
-
+    redirect('/register/reg');
   }
 
-  function update_user(){
-    
+  function update_user($userid = null){
+    if($userid){
+      $courses = array('' => '');
+      foreach($this->JCalendar->select_courses(null) as $course)
+	$courses[$course['courseid']] = $course['coursename'];
+      $colleges = array('' => '');
+      foreach($this->JCalendar->select_colleges(null) as $college)
+	$colleges[$college['collegeid']] = $college['collegename'];
+
+      $data['new_user'] = true;
+      $data['user_data'] = $this->Administration->select_user($userid);
+      $data['courses'] = $courses;
+      $data['colleges'] = $colleges;
+      $data['submit_url'] = 'register/reg';
+      $template['title'] = 'Register';
+      $template['body'] = $this->load->view('register/form', $data ,TRUE);
+      $template['sidebar'] = '';
+      $this->load->view('template', $template);
+    }
+    else{
+      
+    }
   }
 
   function manage_users(){
@@ -32,6 +57,12 @@ class Admin extends Controller{
     $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
     $template['body'] = $this->load->view('admin/manage_users', $data, true);
     $this->load->view('template', $template);
+  }
+
+  function flip_activation($userid){
+    $this->Administration->flip_activation($userid);
+
+    redirect('/admin/manage_users');
   }
 
   function add_group(){

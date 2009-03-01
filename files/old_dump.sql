@@ -1,0 +1,483 @@
+--
+-- PostgreSQL database dump
+--
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: events; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE events (
+    eventid integer NOT NULL,
+    eventname text,
+    eventdetails text,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    venueid integer
+);
+
+
+ALTER TABLE public.events OWNER TO postgres;
+
+--
+-- Name: events_eventid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE events_eventid_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.events_eventid_seq OWNER TO postgres;
+
+--
+-- Name: events_eventid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE events_eventid_seq OWNED BY events.eventid;
+
+
+--
+-- Name: events_eventid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('events_eventid_seq', 8, true);
+
+
+--
+-- Name: grouproles; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE grouproles (
+    grouproleid integer NOT NULL,
+    grouprolename character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.grouproles OWNER TO postgres;
+
+--
+-- Name: grouproles_grouproleid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE grouproles_grouproleid_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.grouproles_grouproleid_seq OWNER TO postgres;
+
+--
+-- Name: grouproles_grouproleid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE grouproles_grouproleid_seq OWNED BY grouproles.grouproleid;
+
+
+--
+-- Name: grouproles_grouproleid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('grouproles_grouproleid_seq', 2, true);
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE groups (
+    groupid integer NOT NULL,
+    groupname character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.groups OWNER TO postgres;
+
+--
+-- Name: groups_groupid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE groups_groupid_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.groups_groupid_seq OWNER TO postgres;
+
+--
+-- Name: groups_groupid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE groups_groupid_seq OWNED BY groups.groupid;
+
+
+--
+-- Name: groups_groupid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('groups_groupid_seq', 2, true);
+
+
+--
+-- Name: member_of; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE member_of (
+    groupid integer NOT NULL,
+    userid integer NOT NULL,
+    grouproleid integer
+);
+
+
+ALTER TABLE public.member_of OWNER TO postgres;
+
+--
+-- Name: permissions; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE permissions (
+    eventid integer NOT NULL,
+    groupid integer,
+    userid integer
+);
+
+
+ALTER TABLE public.permissions OWNER TO postgres;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users (
+    userid integer NOT NULL,
+    login character varying(20) NOT NULL,
+    password character varying(50)
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_userid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_userid_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_userid_seq OWNER TO postgres;
+
+--
+-- Name: users_userid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE users_userid_seq OWNED BY users.userid;
+
+
+--
+-- Name: users_userid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_userid_seq', 2, true);
+
+
+--
+-- Name: venues; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE venues (
+    venueid integer NOT NULL,
+    venue_name text NOT NULL
+);
+
+
+ALTER TABLE public.venues OWNER TO postgres;
+
+--
+-- Name: venues_venueid_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE venues_venueid_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.venues_venueid_seq OWNER TO postgres;
+
+--
+-- Name: venues_venueid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE venues_venueid_seq OWNED BY venues.venueid;
+
+
+--
+-- Name: venues_venueid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('venues_venueid_seq', 8, true);
+
+
+--
+-- Name: eventid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE events ALTER COLUMN eventid SET DEFAULT nextval('events_eventid_seq'::regclass);
+
+
+--
+-- Name: grouproleid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE grouproles ALTER COLUMN grouproleid SET DEFAULT nextval('grouproles_grouproleid_seq'::regclass);
+
+
+--
+-- Name: groupid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE groups ALTER COLUMN groupid SET DEFAULT nextval('groups_groupid_seq'::regclass);
+
+
+--
+-- Name: userid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE users ALTER COLUMN userid SET DEFAULT nextval('users_userid_seq'::regclass);
+
+
+--
+-- Name: venueid; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE venues ALTER COLUMN venueid SET DEFAULT nextval('venues_venueid_seq'::regclass);
+
+
+--
+-- Data for Name: events; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FROM stdin;
+3	event2	\N	2009-02-06 11:29:11.845751	2009-02-06 11:29:11.845751	\N
+5	event3	\N	2009-02-08 00:00:00	2009-02-08 12:00:00	\N
+7	event7	Details of the event are as follows.\n\nThis description intentionally left blank	2009-02-09 12:00:00	2009-02-09 11:55:00	\N
+1	CS 165 MP2 due	OMG XIAHOU LI	2009-01-30 00:00:00	2009-01-30 12:00:00	1
+6	event4	This is a publicly viewable event	2009-02-08 16:15:00	2009-02-08 16:15:00	1
+2	event1	Ooooo event 1	2009-02-06 10:10:00	2009-02-06 10:10:00	4
+8	event8	\N	2009-02-11 14:22:08.108659	2009-02-11 14:22:08.108659	\N
+\.
+
+
+--
+-- Data for Name: grouproles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY grouproles (grouproleid, grouprolename) FROM stdin;
+1	Group Admin
+2	Group Moderator
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY groups (groupid, groupname) FROM stdin;
+1	admin
+2	student
+\.
+
+
+--
+-- Data for Name: member_of; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY member_of (groupid, userid, grouproleid) FROM stdin;
+1	1	\N
+2	2	\N
+\.
+
+
+--
+-- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY permissions (eventid, groupid, userid) FROM stdin;
+1	1	\N
+2	1	\N
+2	2	\N
+3	\N	2
+5	\N	1
+6	\N	-1
+7	\N	1
+7	\N	-1
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY users (userid, login, password) FROM stdin;
+1	root	5f4dcc3b5aa765d61d8327deb882cf99
+2	jc	5f4dcc3b5aa765d61d8327deb882cf99
+-1	public	\N
+\.
+
+
+--
+-- Data for Name: venues; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY venues (venueid, venue_name) FROM stdin;
+1	Lecture Hall
+2	Classroom 1
+3	Classroom 2
+4	Classroom 3
+5	Classroom 4
+6	Teaching Lab 1
+7	Teaching Lab 2
+8	Teaching Lab 3
+\.
+
+
+--
+-- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (eventid);
+
+
+--
+-- Name: grouproles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY grouproles
+    ADD CONSTRAINT grouproles_pkey PRIMARY KEY (grouproleid);
+
+
+--
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (groupid);
+
+
+--
+-- Name: member_of_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY member_of
+    ADD CONSTRAINT member_of_pk PRIMARY KEY (groupid, userid);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (userid);
+
+
+--
+-- Name: venues_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY venues
+    ADD CONSTRAINT venues_pkey PRIMARY KEY (venueid);
+
+
+--
+-- Name: events_venueid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_venueid_fk FOREIGN KEY (venueid) REFERENCES venues(venueid);
+
+
+--
+-- Name: member_of_groupid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY member_of
+    ADD CONSTRAINT member_of_groupid_fk FOREIGN KEY (groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: member_of_grouproleid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY member_of
+    ADD CONSTRAINT member_of_grouproleid_fk FOREIGN KEY (grouproleid) REFERENCES grouproles(grouproleid);
+
+
+--
+-- Name: member_of_userid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY member_of
+    ADD CONSTRAINT member_of_userid_fk FOREIGN KEY (userid) REFERENCES users(userid);
+
+
+--
+-- Name: permissions_eventid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY permissions
+    ADD CONSTRAINT permissions_eventid_fk FOREIGN KEY (eventid) REFERENCES events(eventid);
+
+
+--
+-- Name: permissions_groupid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY permissions
+    ADD CONSTRAINT permissions_groupid_fk FOREIGN KEY (groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: permissions_userid_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY permissions
+    ADD CONSTRAINT permissions_userid_fk FOREIGN KEY (userid) REFERENCES users(userid);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
