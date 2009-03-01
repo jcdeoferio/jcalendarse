@@ -8,7 +8,7 @@
 Student number:
 </td>
 <td>
-<?= form_input(array('name'=>'studentnumber', 'size'=>'10')) ?>
+<?= form_input(array('name'=>'studentnumber', 'size'=>'10', 'value'=>set_value('studentnumber'))) ?>
 </td>
 </tr>
 <tr>
@@ -16,7 +16,7 @@ Student number:
 First name:
 </td>
 <td>
-<?= form_input(array('name'=>'firstname', 'size'=>'10')) ?>
+<?= form_input(array('name'=>'firstname', 'size'=>'10', 'value'=>set_value('firstname'))) ?>
 </td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@ First name:
 Middle name:
 </td>
 <td>
-<?= form_input(array('name'=>'middlename', 'size'=>'10')) ?>
+<?= form_input(array('name'=>'middlename', 'size'=>'10', 'value'=>set_value('middlename'))) ?>
 </td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@ Middle name:
 Last name:
 </td>
 <td>
-<?= form_input(array('name'=>'lastname', 'size'=>'10')) ?>
+<?= form_input(array('name'=>'lastname', 'size'=>'10', 'value'=>set_value('lastname'))) ?>
 </td>
 </tr>
 <tr>
@@ -40,7 +40,7 @@ Last name:
 Username:
 </td>
 <td>
-<?= form_input(array('name'=>'login', 'size'=>'10')) ?>
+<?= form_input(array('name'=>'login', 'size'=>'10', 'value'=>set_value('login'))) ?>
 </td>
 </tr>
 <tr>
@@ -56,7 +56,7 @@ Password:
 Re-type password:
 </td>
 <td>
-<?= form_password(array('name'=>'password2', 'size'=>'10')) ?>
+<?= form_password(array('name'=>'PasswordConfirmation', 'size'=>'10')) ?>
 </td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ Re-type password:
 College:
 </td>
 <td>
-<?= form_dropdown('college', $colleges, null) ?>
+<?= form_dropdown('college', $colleges, set_value('college')) ?>
 </td>
 </tr>
 <tr>
@@ -72,7 +72,7 @@ College:
 Course:
 </td>
 <td>
-<?= form_dropdown('course', $courses, null) ?>
+<?= form_dropdown('course', $courses, set_value('course')) ?>
 </td>
 </tr>
 <tr>

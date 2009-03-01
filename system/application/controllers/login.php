@@ -16,7 +16,7 @@ class Login extends Controller{
     if ($this->session->userdata('user')){
       redirect('/jcalendar2/index');
     }
-    $this->form_validation->set_error_delimiters('<font color=red><b>','</b></font>');
+    $this->form_validation->set_error_delimiters('<span id="formError"><b>','</b></span>');
 
     $this->form_validation->set_rules('login', 'Login', 'required');
     $this->form_validation->set_rules('password', 'Password', 'required|callback__login');
@@ -53,9 +53,15 @@ class Login extends Controller{
     $password = md5($this->input->post('password'));
 
     if ($user = $this->User->authenticate($login, $password)){
-      unset($user['password']);
-      $this->session->set_userdata('user', $user);
-      return (TRUE);
+		extract($user);
+		if($registered == 't'){
+		  unset($user['password']);
+		  $this->session->set_userdata('user', $user);
+		  return (TRUE);
+		}else{
+			$this->form_validation->set_message('_login', 'User not yet active, Contact Staff');
+			return (FALSE);
+		}
     }
     else{
       $this->form_validation->set_message('_login', 'Login Fail');

@@ -102,3 +102,7 @@ color: #666;
 span#eventDetails{
 font-size: 12pt;
 }
+span#formError{
+font-size: 10pt;
+color: #f00;
+}
