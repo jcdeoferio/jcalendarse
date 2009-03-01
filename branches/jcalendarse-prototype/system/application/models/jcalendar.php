@@ -91,6 +91,7 @@ class JCalendar extends Model{
 	$year = 2;
 	$this->db->set('year',$year);
 	$this->db->set('studentnumber',$studentnumber);
+	$this->db->set('rssfeed',random_string('unique'));
 	if($registered)
 		$this->db->set('registered',$registered);
 	$this->db->insert('userdetails');
