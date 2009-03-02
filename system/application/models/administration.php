@@ -5,7 +5,7 @@ class Administration extends Model{
   }
 
   function select_all_users($limit = 10, $offset = 0){
-    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, collegename, coursename, registered');
+    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, collegename, coursename, collegeid, courseid, registered');
     $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
     $this->db->order_by('login', 'asc');
     $this->db->limit($limit, $offset);
@@ -21,12 +21,12 @@ class Administration extends Model{
   }
 
   function select_user($userid){
-    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, courseid, year, registered');
-    $this->db->from('users left join userdetails using (userid)');
+    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, collegename, coursename, collegeid, courseid, registered');
+    $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
     $this->db->where('userid', $userid);
     
     $query = $this->db->get();
-    return($query->result_array());
+    return($query->row_array());
   }
 
   function select_all_users_of_group($groupid){
@@ -84,12 +84,13 @@ class Administration extends Model{
     $this->db->set('middlename', $middlename);
     $this->db->set('lastname', $lastname);
     $this->db->set('courseid', $courseid);
-    $this->db->set('registerd', $registered?'true':'false', false);
+    $this->db->set('registered', $registered?'true':'false', false);
     $this->db->where('userid', $userid);
     $this->db->update('userdetails');
 
     $this->db->set('login', $login);
-    $this->db->set('password', $password);
+    if($password != md5(''))
+      $this->db->set('password', $password);
     $this->db->where('userid', $userid);
     $this->db->update('users');
 

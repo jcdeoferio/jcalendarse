@@ -4,9 +4,7 @@
    <th>Student Number</th>
    <th>Login</th>
    <th>Name</th>
-   <th>College</th>
-   <th>Course</th>
-   <th>Activation</th>
+   <th>Action</th>
    </tr>
   <?php foreach($users as $user): ?>
    <tr>
@@ -14,9 +12,7 @@
    <td><?= $user['studentnumber'] ?></td>
    <td><?= $user['login'] ?></td>
    <td><?= $user['lastname'].', '.$user['firstname'].' '.$user['middlename'] ?></td>
-   <td><?= $user['collegename'] ?></td>
-   <td><?= $user['coursename'] ?></td>
-   <td><?= anchor('/admin/flip_activation/'.$user['userid'], ($user['registered']=='t'?'Deactivate':'Activate')) ?></td>
+   <td><?= anchor('/admin/update_user/'.$user['userid'], 'Update').' | '.anchor('/admin/flip_activation/'.$user['userid'], ($user['registered']=='t'?'Deactivate':'Activate')) ?></td>
    </tr>
   <?php endforeach; ?>
 </table>
