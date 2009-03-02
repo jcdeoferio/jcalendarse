@@ -79,7 +79,7 @@ class Login extends Controller{
 
     if ($user = $this->User->authenticate($login, $password)){
 		extract($user);
-		if($registered == 't'){
+		if($registered == 't' || $registered == '1'){
 		  unset($user['password']);
 		  $this->session->set_userdata('user', $user);
 		  return (TRUE);
