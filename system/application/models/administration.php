@@ -4,13 +4,20 @@ class Administration extends Model{
     parent::Model();
   }
 
-  function select_all_users(){
-    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, courseid, year, registered');
-    $this->db->from('users left join userdetails using (userid)');
+  function select_all_users($limit = 10, $offset = 0){
+    $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, collegename, coursename, registered');
+    $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
     $this->db->order_by('login', 'asc');
+    $this->db->limit($limit, $offset);
     
     $query = $this->db->get();
     return($query->result_array());
+  }
+
+  function count_all_users(){
+    $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
+    
+    return($this->db->count_all_results());
   }
 
   function select_user($userid){

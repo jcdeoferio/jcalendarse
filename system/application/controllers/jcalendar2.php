@@ -12,16 +12,16 @@ class jcalendar2 extends Controller{
 
   function index(){
     $events = $this->JCalendar->select_all_events($this->user['userid']);
-    $template['events'] = $events;
-    $template['user'] = $this->user;
+    $data['events'] = $events;
+    $data['user'] = $this->user;
 	
-	$this->db->from('userdetails');
-	$this->db->where('userid',$template['user']['userid']);
-	$userdetails = $this->db->get()->row_array();
-	$template['rss'] = $userdetails['rssfeed'];
+    $this->db->from('userdetails');
+    $this->db->where('userid', $this->user['userid']);
+    $userdetails = $this->db->get()->row_array();
+    $sidedata['rss'] = $userdetails['rssfeed'];
     $template['title'] = 'jCalendar';
-    $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $template, true);
-    $template['body'] = $this->load->view('/jcalendar/index', $template, true);
+    $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata, true);
+    $template['body'] = $this->load->view('/jcalendar/index', $data, true);
     $this->load->view('template', $template);
   }
 
