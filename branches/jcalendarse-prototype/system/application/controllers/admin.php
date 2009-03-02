@@ -1,11 +1,13 @@
 <?php
 class Admin extends Controller{
+  
   function Admin(){
     parent::Controller();
 
     $this->load->model('Administration');
 
     $this->user = $this->session->userdata('user');
+    $this->per_page = 10;
     
     if(!$this->user || !$this->Administration->member_of($this->user['userid'], 1))
       redirect('/login');
@@ -50,8 +52,9 @@ class Admin extends Controller{
     }
   }
 
-  function manage_users(){
-    $data['users'] = $this->Administration->select_all_users();
+  function manage_users($page = 1){
+    $data['users'] = $this->Administration->select_all_users($this->per_page, $this->per_page*($page-1));
+    $data['pages'] = $this->Administration->count_all_users() / $this->per_page;
 
     $template['title'] = 'Admin - Manage Users';
     $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
