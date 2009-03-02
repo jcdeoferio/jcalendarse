@@ -18,6 +18,7 @@ class jcalendar2 extends Controller{
     $this->db->from('userdetails');
     $this->db->where('userid', $this->user['userid']);
     $userdetails = $this->db->get()->row_array();
+	$this->getcal($userdetails['rssfeed']);
     $sidedata['rss'] = $userdetails['rssfeed'];
     $template['title'] = 'jCalendar';
     $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata, true);
@@ -248,5 +249,28 @@ class jcalendar2 extends Controller{
   function _date_check(){      	       
     return TRUE;
   }
+  
+  function getcal($feed){
+		$this->load->helper('file');
+		
+		$userid = $this->db->query("SELECT userid from userdetails WHERE rssfeed = '".$feed."'")->row_array();
+		$userid = $userid['userid'];
+				
+		$events = $this->JCalendar->select_all_events($userid);
+		write_file('./calendars/calendar_'.$feed.'.ics',"BEGIN:VCALENDAR\nVERSION:2.0\n");
+		foreach($events as $event){
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nBEGIN:VEVENT",'a');
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nUID:{".random_string('unique')."}",'a');
+			$startdate = substr($event['start_date'], 0, strlen('yyyy')).substr($event['start_date'], 5, strlen('mm')).substr($event['start_date'], 8, strlen('dd')).'T'.substr($event['start_date'], 11, strlen('hh')).substr($event['start_date'], 14, strlen('mm')).'00Z';
+			
+			$enddate = substr($event['end_date'], 0, strlen('yyyy')).substr($event['end_date'], 5, strlen('mm')).substr($event['end_date'], 8, strlen('dd')).'T'.substr($event['end_date'], 11, strlen('hh')).substr($event['end_date'], 14, strlen('mm')).'00Z';
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nSUMMARY:".$event['eventname'],'a');
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nDESCRIPTION:".$event['eventdetails'],'a');		
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nDTSTART:".$startdate,'a');
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nDTEND:".$enddate,'a');
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nEND:VEVENT\n",'a');
+		}
+		write_file('./calendars/calendar_'.$feed.'.ics',"\nEND:VCALENDAR",'a');
+	}
 }
 ?>
