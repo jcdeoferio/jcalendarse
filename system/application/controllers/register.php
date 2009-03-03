@@ -35,48 +35,50 @@ class Register extends Controller{
 	$data = array();
 	
 	if ($this->form_validation->run('register')){
-		$studentnumber = $this->input->post('studentnumber');
-		$firstname = $this->input->post('firstname');
-		$middlename = $this->input->post('middlename');
-		$lastname = $this->input->post('lastname');
-		$login = $this->input->post('login');
-		$courseid = $this->input->post('course');
-		$password = md5($this->input->post('password1'));
-		$registered = false;
-		$this->JCalendar->add_user($login,$password,$studentnumber,$firstname,$middlename,$lastname,$courseid,$registered);
-		$data = array('firstname' => $firstname, 'lastname' => $lastname, 'middlename' => $middlename);
-		$template['title'] = 'Registration Successful';
-		$template['body'] = $this->load->view('register/success', $data, true);
-		$template['sidebar'] = '';
-		if(!$this->user)
-		  $template['sidebar'] = $this->load->view('register/sidebar',null, true);
-		else
-		  $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);
+	  $studentnumber = $this->input->post('studentnumber');
+	  $firstname = $this->input->post('firstname');
+	  $middlename = $this->input->post('middlename');
+	  $lastname = $this->input->post('lastname');
+	  $login = $this->input->post('login');
+	  $courseid = $this->input->post('course');
+	  $password = md5($this->input->post('password1'));
+	  $registered = false;
+	  $this->JCalendar->add_user($login,$password,$studentnumber,$firstname,$middlename,$lastname,$courseid,$registered);
+	  $data = array('firstname' => $firstname, 'lastname' => $lastname, 'middlename' => $middlename);
+	  $template['title'] = 'Registration Successful';
+	  $template['body'] = $this->load->view('register/success', $data, true);
+	  $template['sidebar'] = '';
+	  if(!$this->user)
+	    $template['sidebar'] = $this->load->view('register/sidebar',null, true);
+	  else
+	    $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);
 
-		$this->load->view('template', $template);
-	}else{
-		$courses = array('' => '');
-		foreach($this->JCalendar->select_courses(null) as $course)
-		  $courses[$course['courseid']] = $course['coursename'];
-		$colleges = array('' => '');
-		foreach($this->JCalendar->select_colleges(null) as $college)
-		  $colleges[$college['collegeid']] = $college['collegename'];
+	  $this->load->view('template', $template);
+	}
+	else{
+	  $courses = array('' => '');
+	  foreach($this->JCalendar->select_courses(null) as $course)
+	    $courses[$course['courseid']] = $course['coursename'];
+	  $colleges = array('' => '');
+	  foreach($this->JCalendar->select_colleges(null) as $college)
+	    $colleges[$college['collegeid']] = $college['collegename'];
 
-		$data['new_user'] = true;
-		$data['user_data'] = null;
-		$data['courses'] = $courses;
-		$data['colleges'] = $colleges;
-		$data['submit_url'] = 'register/reg';
-		$data['fieldname'] = 'register';
-		$template['title'] = 'Register';
-		$template['body'] = $this->load->view('register/form', $data ,TRUE);
-		$template['sidebar'] = '';
-		if(!$this->user)
-		  $template['sidebar'] = $this->load->view('register/sidebar',null, true);
-		else
-		  $template['sidebar'] = $this->load->view('admin/control_center_sidebar',null, true);
+	  $data['new_user'] = true;
+	  $data['user_data'] = null;
+	  $data['groups'] = $this->Administration->select_all_groups();
+	  $data['courses'] = $courses;
+	  $data['colleges'] = $colleges;
+	  $data['submit_url'] = 'register/reg';
+	  $data['fieldname'] = 'register';
+	  $template['title'] = 'Register';
+	  $template['body'] = $this->load->view('register/form', $data ,TRUE);
+	  $template['sidebar'] = '';
+	  if(!$this->user)
+	    $template['sidebar'] = $this->load->view('register/sidebar',null, true);
+	  else
+	    $template['sidebar'] = $this->load->view('admin/control_center_sidebar',null, true);
 
-		$this->load->view('template', $template);
+	  $this->load->view('template', $template);
 	}
   }
 

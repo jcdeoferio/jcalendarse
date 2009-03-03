@@ -21,7 +21,7 @@ class Administration extends Model{
     return($this->db->count_all_results());
   }
   
-    function count_all_groups(){
+  function count_all_groups(){
     $this->db->from('groups');
     
     return($this->db->count_all_results());
@@ -46,11 +46,27 @@ class Administration extends Model{
     return($query->result_array());
   }
 
-  function select_all_groups($limit = 10, $offset = 0){
+  function select_all_groups($limit = 'ALL', $offset = 0){
     $this->db->select('groupid, groupname');
     $this->db->from('groups');
     $this->db->order_by('groupname', 'asc');
 	$this->db->limit($limit, $offset);
+
+    $query = $this->db->get();
+    return($query->result_array());
+  }
+
+  function user_member_of($userid){
+    $this->db->from('member_of');
+    $this->db->where('userid', $userid);
+
+    $query = $this->db->get();
+    return($query->result_array());
+  }
+
+  function group_member_of($groupid){
+    $this->db->from('member_of');
+    $this->db->where('groupid', $groupid);
 
     $query = $this->db->get();
     return($query->result_array());

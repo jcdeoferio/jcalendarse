@@ -1,5 +1,6 @@
 <?= form_open($submit_url, '', array('new_user' => $new_user)) ?>
 <?= validation_errors() ?>
+
 <fieldset>
      <legend><?= $new_user?'register':'update' ?></legend><table>
 <tr>
@@ -7,7 +8,7 @@
 Student number:
 </td>
 <td>
-     <?= form_input(array('name'=>'studentnumber', 'size'=>'10', 'value'=>set_value('studentnumber')?set_value('studentnumber'):(!$new_user?$user_data['studentnumber']:''))) ?>
+<?= form_input(array('name'=>'studentnumber', 'size'=>'10', 'value'=>set_value('studentnumber')?set_value('studentnumber'):(!$new_user?$user_data['studentnumber']:''))) ?>
 </td>
 </tr>
 <tr>
@@ -74,11 +75,16 @@ Course:
 <?= form_dropdown('course', $courses, set_value('course')?set_value('course'):(!$new_user?$user_data['courseid']:'')) ?>
 </td>
 </tr>
-<tr>
-<td colspan=2>
-<br/><?= form_submit(array('name'=>'submit', 'value'=>'Register')) ?>
-</td>
-</tr>
 </table>
+<br/>
+Groups: <br/>
+<?php $i = 0; ?>
+<?php foreach($groups as $group): ?>
+    <?php if($i==8){echo br(1);$i=0;} ?>
+    <?= form_checkbox('group-'.$group['groupid'], $group['groupname'], set_value($group['groupid'])?set_value($group['groupid']):(isset($member_of[$group['groupid']])?$member_of[$group['groupid']]:'')).' '.form_label($group['groupname'], $group['groupid']) ?>
+    <?php $i++; ?>
+<?php endforeach; ?>
+<?= br(2) ?>
+<?= form_submit(array('name'=>'submit', 'value'=>$new_user?'Register':'Update')) ?>
 </fieldset>
 <?= form_close() ?>
