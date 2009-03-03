@@ -12,11 +12,8 @@
    <td><?= $user['studentnumber'] ?></td>
    <td><?= $user['login'] ?></td>
    <td><?= $user['lastname'].', '.$user['firstname'].' '.$user['middlename'] ?></td>
-   <td><?= anchor('/admin/update_user/'.$user['userid'], 'Update').' | '.anchor('/admin/flip_activation/'.$user['userid'], ($user['registered']=='t'?'Deactivate':'Activate')) ?></td>
-   </tr>
+   <td><?= anchor('/admin/update_user/'.$user['userid'], 'Update').' | '.anchor('/admin/flip_activation/'.$user['userid'], ($user['registered']=='t'?'Deactivate':'Activate')) ?></td>   </tr>
   <?php endforeach; ?>
 </table>
-Pages :
-<?php for($i = 1; $i <= $pages; $i++): ?>
-    <?= anchor('/admin/manage_users/'.$i, $i).' ' ?>
-<?php endfor; ?>
+<?php echo $this->pagination->create_links();?>
+

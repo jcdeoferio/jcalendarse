@@ -1,8 +1,7 @@
 <?= form_open($submit_url, '', array('new_user' => $new_user)) ?>
 <?= validation_errors() ?>
 <fieldset>
-     <legend><?= $new_user?'register':'update' ?></legend>
-<table>
+     <legend><?= $new_user?'register':'update' ?></legend><table>
 <tr>
 <td>
 Student number:

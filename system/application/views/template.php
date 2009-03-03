@@ -13,7 +13,7 @@
 		</div>
 		<div id="content">
 			<div id="sidebar">
-				<?= $sidebar?>
+				<?= isset($sidebar)?$sidebar:br(17)?>
 				<?= br(4)?>
 			</div>
 			<div id="body">

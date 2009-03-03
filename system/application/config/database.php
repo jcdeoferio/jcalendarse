@@ -39,7 +39,7 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = "localhost";
 $db['default']['username'] = "postgres";
-$db['default']['password'] = "abcd";
+$db['default']['password'] = "password";
 $db['default']['database'] = "jcalendar";
 $db['default']['dbdriver'] = "postgre";
 $db['default']['dbprefix'] = "";

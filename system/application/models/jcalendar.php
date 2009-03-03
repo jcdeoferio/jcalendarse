@@ -2,6 +2,7 @@
 class JCalendar extends Model{
   function JCalendar(){
     parent::Model();
+	$this->load->helper('string');
   }
 
   function select_event_by_id($userid, $eventid){
@@ -49,7 +50,7 @@ class JCalendar extends Model{
   function select_courses_byid($college){
 	$query_str = "SELECT courses.* FROM courses";
 	if($college)
-	$query_str .= ",colleges,course_member_of WHERE colleges.collegeid = ".$college." AND colleges.collegeid = course_member_of.collegeid AND courses.courseid = course_member_of.courseid";
+	$query_str .= ",colleges WHERE colleges.collegeid = ".$college." AND colleges.collegeid = courses.collegeid";
 	$res = $this->db->query($query_str);
 	return $res->result_array();
   }
@@ -93,10 +94,11 @@ class JCalendar extends Model{
     $this->db->set('studentnumber',$studentnumber);
     if($registered)
       $this->db->set('registered',$registered);
+	$this->db->set('rssfeed',random_string('unique'));
     $this->db->insert('userdetails');
   }
 
-  function add_event($userid, $event_name, $start_date, $end_date, $event_details = null, $venue = null){
+  function add_event($userid, $event_name, $start_date, $end_date, $event_details = null, $venue = null, $groupid = null){
     $this->db->set('eventname', $event_name);
     $this->db->set('start_date', $start_date);
     $this->db->set('end_date', $end_date);
@@ -107,10 +109,13 @@ class JCalendar extends Model{
     $eventid_query = $this->db->query('select eventid from events where eventid in (select max(eventid) from events)');
     $eventid = $eventid_query->row_array();
     $eventid = $eventid['eventid'];
-    
-    $this->db->set('eventid', $eventid);
-    $this->db->set('userid', $userid);
-    $this->db->insert('permissions');
+	$this->db->set('eventid', $eventid);
+    if($groupid == null){
+		$this->db->set('userid', $userid);
+	}else{
+		$this->db->set('groupid', $groupid);
+	}
+	$this->db->insert('permissions');
   }
 
   function update_event($eventid, $data){
@@ -120,7 +125,19 @@ class JCalendar extends Model{
 
   function delete_event($eventid){
     $this->db->where('eventid', $eventid);
-    $this->db->delete('events');
+    $this->db->delete('permissions');
+	$this->db->where('eventid', $eventid);
+	$this->db->delete('events');
   }
+  
+	function get_group_by_userid($userid, $roleid){
+		$query = 'select groups.groupid, groups.groupname from groups';
+		if($userid)
+			$query .= ',member_of where member_of.userid = '.$userid.' and groups.groupid = member_of.groupid';
+		if($roleid)
+			$query .= ' and member_of.grouproleid = '.$roleid;
+		$res = $this->db->query($query);
+		return $res->result_array();
+	}
 }
 ?>
