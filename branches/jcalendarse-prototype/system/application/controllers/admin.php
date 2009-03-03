@@ -5,7 +5,7 @@ class Admin extends Controller{
     parent::Controller();
 
     $this->load->model('Administration');
-	$this->load->model('JCalendar');
+    $this->load->model('JCalendar');
 
     $this->user = $this->session->userdata('user');
     $this->per_page = 10;
@@ -57,9 +57,10 @@ class Admin extends Controller{
       $password = md5($this->input->post('password1'));
       $registered = $this->input->post('registered');
       $groups = array();
+      $i = 0;
       foreach($db_groups as $group){
 	if($this->input->post('group-'.$group['groupid']))
-	  $groups += $group['groupid'];
+	  $groups[$i++] = $group['groupid'];
       }
       
       $this->Administration->update_user($userid, $login, $password, $studentnumber, $firstname, $middlename, $lastname, $courseid, $registered, $groups);
@@ -78,11 +79,17 @@ class Admin extends Controller{
       foreach($this->JCalendar->select_colleges(null) as $college)
 	$colleges[$college['collegeid']] = $college['collegename'];
 
+      $member_of = array();
+      $member_of_result = $this->Administration->user_member_of($userid);
+      for ($i = 0; $i < count($member_of_result); $i++)
+	$member_of[$member_of_result[$i]['groupid']] = true;
+
       $data['new_user'] = false;
       $data['user_data'] = $this->Administration->select_user($userid);
       $data['groups'] = $db_groups;
       $data['courses'] = $courses;
       $data['colleges'] = $colleges;
+      $data['member_of'] = $member_of;
       $data['submit_url'] = 'admin/update_user/'.$userid;
       $template['title'] = 'Update User';
       $template['body'] = $this->load->view('register/form', $data ,TRUE);
@@ -140,5 +147,19 @@ class Admin extends Controller{
 	$this->Administration->delete_group($groupid);
 	redirect('/admin/manage_groups/success');
   }
+
+  function _studentnumber_check($studentnumber){
+    if(!preg_match('/^\d{4}\D?\d{5}$/', $studentnumber)){
+      $this->form_validation->set_message('_studentnumber_check', 'Invalid student number format.');
+      return(false);
+    }
+
+    return (true);
+  }
+
+  function _validify_studentnumber($studentnumber){
+    return(preg_replace('/\D/', '', $studentnumber));
+  }
+
 }
 ?>
