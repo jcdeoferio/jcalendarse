@@ -3,6 +3,7 @@ class jcalendar2 extends Controller{
   function jcalendar2(){
     parent::Controller();
     $this->load->model('JCalendar');
+	$this->load->model('Administration');
 
     if($this->session->userdata('user'))
       $this->user = $this->session->userdata('user');
@@ -27,7 +28,7 @@ class jcalendar2 extends Controller{
   }
 
   function add(){
-    $this->form_validation->set_error_delimiters('<font color=red><b>','</b></font>');
+    $this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');
     $this->form_validation->set_rules('event_name', 'Event Name', 'required');
     $this->form_validation->set_rules('start_year', 'Start Year', 'required');
     $this->form_validation->set_rules('start_month', 'Start Month', 'required');
@@ -58,8 +59,8 @@ class jcalendar2 extends Controller{
       $event_name = $this->input->post('event_name');
       $event_details = $this->input->post('event_details');
       $venue = $this->input->post('venue');
-
-      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date, $event_details, $venue);
+	  $group = (($this->input->post('group') == '') ? null : $this->input->post('group')); 
+      $this->JCalendar->add_event($this->user['userid'], $event_name, $start_date, $end_date, $event_details, $venue, $group);
       $data['event_name']= $event_name;
       $data['success'] = true;
     }
@@ -74,6 +75,15 @@ class jcalendar2 extends Controller{
 
     $data['venues'] = $venues;
     $data['user'] = $this->user;
+	$groups = $this->JCalendar->get_group_by_userid($this->user['userid'], 1); #groupadmin
+	$groups = array_merge($groups,$this->JCalendar->get_group_by_userid($this->user['userid'], 2)); #groupmoderator
+	$newgroups = array(''=>'');
+	if(count($groups) == 0)
+		$newgroups = null;
+	else
+		foreach ($groups as $dat)
+			$newgroups[$dat['groupid']] = $dat['groupname'];		#should the public events be contained in a group instead as a user?
+	$data['groups'] = $newgroups;
     $template['title'] = 'Add Event';
     $template['sidebar'] = $this->load->view('/jcalendar/add_sidebar', '', true);
     $template['body'] = $this->load->view('/jcalendar/add', $data, true);
@@ -81,7 +91,7 @@ class jcalendar2 extends Controller{
   }
 
   function update($id){
-    $this->form_validation->set_error_delimiters('<font color=red><b>', '</b></font>');
+    $this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');
     $this->form_validation->set_rules('event_name', 'Event Name', 'required');
     $this->form_validation->set_rules('start_year', 'Start Year', 'required');
     $this->form_validation->set_rules('start_month', 'Start Month', 'required');
@@ -173,12 +183,11 @@ class jcalendar2 extends Controller{
 
   function delete($id){
     $this->JCalendar->delete_event($id);
-	       
-
-    $data['user'] = $this->user;
-    $template['title']  = 'Delete Event';
-    $template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
-    $this->load->view('template', $template);
+	redirect('/jcalendar2/index/success');
+    #$data['user'] = $this->user;
+    #$template['title']  = 'Delete Event';
+    #$template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
+    #$this->load->view('template', $template);
   }
 
   function event($eventid){
@@ -195,7 +204,7 @@ class jcalendar2 extends Controller{
   }
 
   function adsearch(){
-    $this->form_validation->set_error_delimiters('<font color=red><b>', '</b></font>');    
+	$this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');  
     $this->form_validation->set_rules('event_name', 'Event Name', '');
     $this->form_validation->set_rules('start_year', 'Start Year', '');
     $this->form_validation->set_rules('start_month', 'Start Month', '');
@@ -246,8 +255,9 @@ class jcalendar2 extends Controller{
 
   //will check if end date is on or after start date and may check other date things
   //like which months have 30 days etc
-  function _date_check(){      	       
-    return TRUE;
+  function _date_check(){ 
+	$this->form_validation->set_message('_date_check', 'End date must come after Start date.');
+    return $this->input->post('end_year') >= $this->input->post('start_year') && ($this->input->post('end_month')+1) >= ($this->input->post('start_month')+1) && $this->input->post('end_day') >= $this->input->post('start_day') && $this->input->post('end_hour') >= $this->input->post('start_hour') && $this->input->post('end_minute') >= $this->input->post('start_minute');
   }
   
   function getcal($feed){
@@ -265,7 +275,7 @@ class jcalendar2 extends Controller{
 			
 			$enddate = substr($event['end_date'], 0, strlen('yyyy')).substr($event['end_date'], 5, strlen('mm')).substr($event['end_date'], 8, strlen('dd')).'T'.substr($event['end_date'], 11, strlen('hh')).substr($event['end_date'], 14, strlen('mm')).'00Z';
 			write_file('./calendars/calendar_'.$feed.'.ics',"\nSUMMARY:".$event['eventname'],'a');
-			write_file('./calendars/calendar_'.$feed.'.ics',"\nDESCRIPTION:".$event['eventdetails'],'a');		
+			write_file('./calendars/calendar_'.$feed.'.ics',"\nDESCRIPTION:".str_replace(array("\r\n", "\n", "\r"),'\\n',$event['eventdetails']),'a');		
 			write_file('./calendars/calendar_'.$feed.'.ics',"\nDTSTART:".$startdate,'a');
 			write_file('./calendars/calendar_'.$feed.'.ics',"\nDTEND:".$enddate,'a');
 			write_file('./calendars/calendar_'.$feed.'.ics',"\nEND:VEVENT\n",'a');

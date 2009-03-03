@@ -2,6 +2,7 @@
 class Administration extends Model{
   function Administration(){
     parent::Model();
+	$this->load->library('pagination');
   }
 
   function select_all_users($limit = 10, $offset = 0){
@@ -16,6 +17,12 @@ class Administration extends Model{
 
   function count_all_users(){
     $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
+    
+    return($this->db->count_all_results());
+  }
+  
+    function count_all_groups(){
+    $this->db->from('groups');
     
     return($this->db->count_all_results());
   }
@@ -39,10 +46,11 @@ class Administration extends Model{
     return($query->result_array());
   }
 
-  function select_all_groups(){
+  function select_all_groups($limit = 10, $offset = 0){
     $this->db->select('groupid, groupname');
     $this->db->from('groups');
     $this->db->order_by('groupname', 'asc');
+	$this->db->limit($limit, $offset);
 
     $query = $this->db->get();
     return($query->result_array());

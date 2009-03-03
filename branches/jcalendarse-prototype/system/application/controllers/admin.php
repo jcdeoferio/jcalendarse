@@ -5,6 +5,7 @@ class Admin extends Controller{
     parent::Controller();
 
     $this->load->model('Administration');
+	$this->load->model('JCalendar');
 
     $this->user = $this->session->userdata('user');
     $this->per_page = 10;
@@ -85,14 +86,21 @@ class Admin extends Controller{
       $data['submit_url'] = 'admin/update_user/'.$userid;
       $template['title'] = 'Update User';
       $template['body'] = $this->load->view('register/form', $data ,TRUE);
-      $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);
-      $this->load->view('template', $template);
+      $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);      $this->load->view('template', $template);
     }
   }
 
-  function manage_users($page = 1){
-    $data['users'] = $this->Administration->select_all_users($this->per_page, $this->per_page*($page-1));
-    $data['pages'] = $this->Administration->count_all_users() / $this->per_page;
+  function manage_users($page = 0){
+#edited this function to use the pagination class in splitting the users  
+    $data['users'] = $this->Administration->select_all_users($this->per_page, $page);
+#    $data['pages'] = $this->Administration->count_all_users() / $this->per_page;
+#pagination
+	$config['base_url'] = site_url('/admin/manage_users/');
+	$config['total_rows'] = $this->Administration->count_all_users();
+	$config['per_page'] = $this->per_page; 
+	$config['num_links'] = 3;
+	$this->pagination->initialize($config);
+#pagination
 
     $template['title'] = 'Admin - Manage Users';
     $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
@@ -107,20 +115,30 @@ class Admin extends Controller{
   }
 
   function add_group(){
-
+	echo 'add group!';
   }
 
-  function update_group(){
-
+  function update_group($groupid){
+	echo 'update group!';
   }
 
-  function manage_groups(){
-    $data['groups'] = $this->Administration->select_all_groups();
-
+  function manage_groups($page = 0){
+    $data['groups'] = $this->Administration->select_all_groups($this->per_page, $page);
+#pagination
+	$config['base_url'] = site_url('/admin/manage_groups/');
+	$config['total_rows'] = $this->Administration->count_all_groups();
+	$config['per_page'] = $this->per_page; 
+	$config['num_links'] = 3;
+	$this->pagination->initialize($config);
+#pagination
     $template['title'] = 'Admin - Manage Groups';
     $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
     $template['body'] = $this->load->view('admin/manage_groups', $data, true);
     $this->load->view('template', $template);    
+  }
+  function delete_group($groupid){
+	$this->Administration->delete_group($groupid);
+	redirect('/admin/manage_groups/success');
   }
 }
 ?>

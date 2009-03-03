@@ -15,12 +15,13 @@
 <fieldset>
 <legend>Add Event</legend>
 Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>set_value('event_name'))) ?><br/>
-Start date: <br/><script>DateInput('start', true, 'DD-MON-YYYY')</script>
+Start date: <br/><script>DateInput('start', true, 'YYYYMMDD')</script>
 Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), set_value('start_hour')) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array(), set_value('start_minute')) ?><br/>
-End date: <br/><script>DateInput('end', true, 'DD-MON-YYYY')</script>
+End date: <br/><script>DateInput('end', true, 'YYYYMMDD')</script>
 End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute')) ?><br/>
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>set_value('event_details'))) ?> <br/>
-Venue: <br/><?= form_dropdown('venue', $venues, set_value('venue')) ?><br/><br/>
+Venue: <br/><?= form_dropdown('venue', $venues, set_value('venue')) ?><br/>
+<?= (isset($groups) ? "Group: <br/> ".form_dropdown('group', $groups, set_value('group'))." <br/><br/>" : "<br/>" )?>
 <?= form_submit('submit', 'Add Event') ?> <br/>
 </fieldset>
 

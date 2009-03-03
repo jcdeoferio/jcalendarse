@@ -67,6 +67,7 @@ class Register extends Controller{
 		$data['courses'] = $courses;
 		$data['colleges'] = $colleges;
 		$data['submit_url'] = 'register/reg';
+		$data['fieldname'] = 'register';
 		$template['title'] = 'Register';
 		$template['body'] = $this->load->view('register/form', $data ,TRUE);
 		$template['sidebar'] = '';

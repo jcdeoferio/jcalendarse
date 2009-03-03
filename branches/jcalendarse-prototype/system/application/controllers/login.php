@@ -8,13 +8,15 @@ class Login extends Controller{
     $this->load->model('JCalendar');
 	$this->load->library('pagination');
 	$this->load->helper('text');
+	
+	$this->per_page = 10;
   }
   
   function index(){
     redirect('/login/logg/0/');
   }
       
-  function logg(){
+  function logg($page = 0){
     if ($this->session->userdata('user')){
       redirect('/jcalendar2/index');
     }
@@ -40,29 +42,20 @@ class Login extends Controller{
     $events = $this->JCalendar->select_all_events(-1);
 	
 #pagination	
-
-	$config['base_url'] = 'http://localhost/jcalendarse-prototype/index.php/login/logg/';
+	$config['base_url'] = site_url('/login/logg/');
 	$config['total_rows'] = count($events);
-	$config['per_page'] = '10'; 
+	$config['per_page'] = $this->per_page; 
 	$config['num_links'] = 3;
 	$this->pagination->initialize($config);
 	
 	$newevents = array();
-	if($this->uri->segment(3)){
-		for($i = 0;$i<$config['per_page'] && $i+$this->uri->segment(3)<count($events);$i++){
-			$newevents[$i] = $events[''.($this->uri->segment(3)+$i).''];
-		}
-	}else{
-		for($i = 0;$i<$config['per_page'] && $i<count($events);$i++){
-			$newevents[$i] = $events[''.$i.''];
-		}
-	}
-	
+	for($i = 0;$i<$this->per_page && $i+$page<count($events);$i++)
+		$newevents[$i] = $events[$page+$i];
 #pagination
 
     $data['events'] = $newevents;
     $template['title'] = 'Login';
-    $template['sidebar'] = $this->load->view('login/login', $data, TRUE);
+    $template['sidebar'] = $this->load->view('login/login', '', TRUE);
     $template['body'] = $this->load->view('jcalendar/public',$data,TRUE);
     $this->load->view('template', $template);
 	$this->load->helper('text');
