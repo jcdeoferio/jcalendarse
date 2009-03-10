@@ -16,12 +16,22 @@
 <legend>Add Event</legend>
 Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>set_value('event_name'))) ?><br/>
 Start date: <br/><script>DateInput('start', true, 'YYYYMMDD')</script>
-Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), set_value('start_hour')) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array(), set_value('start_minute')) ?><br/>
+Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), set_value('start_hour','0')) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array(), set_value('start_minute','0')) ?><br/>
 End date: <br/><script>DateInput('end', true, 'YYYYMMDD')</script>
-End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute')) ?><br/>
+End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour','0')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute','0')) ?><br/>
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>set_value('event_details'))) ?> <br/>
 Venue: <br/><?= form_dropdown('venue', $venues, set_value('venue')) ?><br/>
-<?= (isset($groups) ? "Group: <br/> ".form_dropdown('group', $groups, set_value('group'))." <br/><br/>" : "<br/>" )?>
+Groups: <br/>
+<?php $i = 0; ?>
+<?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event') ?>
+<?php foreach($groups as $group){
+    if($i==8){echo br(1);$i=0;}
+    if($group['grouproleid'] > 1){
+			echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']);
+			$i++;
+		}
+} echo br(2);?>
+<!--<?= (isset($groups) ? "Group: <br/> ".form_dropdown('group', $groups, set_value('group'))." <br/><br/>" : "<br/>" )?>-->
 <?= form_submit('submit', 'Add Event') ?> <br/>
 </fieldset>
 

@@ -15,7 +15,17 @@ Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value
 Start date: <br/><script>DateInput('start', false, 'DD-MON-YYYY')</script>
 Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), set_value('start_hour')) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array(), set_value('start_minute')) ?><br/>
 End date: <br/><script>DateInput('end', false, 'DD-MON-YYYY')</script>
-End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute')) ?><br/><br/>
+End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute')) ?><br/>
+Groups: <br/>
+<?php $i = 0; ?>
+<?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event') ?>
+<?php foreach($groups as $group){
+    if($i==8){echo br(1);$i=0;}
+    if($group['grouproleid'] > 1){
+			echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']);
+			$i++;
+		}
+} echo br(2);?>
 <?= form_submit('submit', 'Search') ?> <br/>
 </fieldset>
 <!--

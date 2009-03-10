@@ -563,8 +563,9 @@ function DateInput(DateName, Required, DateFormat, DefaultDate) {
          writeln('<table cellpadding="0" cellspacing="2"><tr>' + String.fromCharCode(13) + '<td valign="middle">');
          writeln('<select class="calendarDateInput" id="' + DateName + '_Month_ID" onChange="' + DateName + '_Object.changeMonth(this)" name = "' + DateName + '_month">');
          if (!Required) {
+//			confirm(DateName + " " + DefaultDate);
             var NoneSelected = (DefaultDate == '') ? ' selected' : '';
-            writeln('<option value=""' + NoneSelected + '>' + UnselectedMonthText + '</option>');
+            writeln('<option value="" selected="' + NoneSelected + '">' + UnselectedMonthText + '</option>');
          }
          for (var i=0;i<12;i++) {
             MonthSelected = ((DefaultDate != '') && (eval(DateName + '_Object.picked.monthIndex') == i)) ? ' selected' : '';

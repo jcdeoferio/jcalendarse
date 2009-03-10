@@ -1,25 +1,24 @@
-
 <?=($this->uri->rsegment(3))?"<script>confirm('Delete successful')</script>":""?>
 <h2>EVENTS</h2>
 <table border=1 id="events">
-  <tr>
-    <th>Event Name</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-    <th>Venue</th>
+	<tr>
+		<th>Event Name</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th>Venue</th>
+		<th></th>
 	<th></th>
-	<th></th>
-  </tr>
-  <?php foreach ($events as $event): ?>
-  <tr>
-    <td><?= anchor('jcalendar2/event/'.$event['eventid'],$event['eventname']) ?></td>
-    <td><?= $event['start_date'] ?></td>
-    <td><?= $event['end_date'] ?></td>
-    <td><?= $event['venue_name'] ?></td>
-	<td><?= anchor('jcalendar2/update/' . $event['eventid'], 'edit') ?></td>
-	<td><?= anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) ?></td>
-  </tr>
-  <?php endforeach; ?>
+	</tr>
+	<?php foreach ($events as $event): ?>
+	<tr>
+		<td><?= anchor('jcalendar2/event/'.$event['eventid'],$event['eventname']) ?></td>
+		<td><?= $event['start_date'] ?></td>
+		<td><?= $event['end_date'] ?></td>
+		<td><?= $event['venue_name'] ?></td>
+		<td><?= anchor('jcalendar2/update/' . $event['eventid'], 'edit') ?></td>
+		<td><?= anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) ?></td>
+	</tr>
+	<?php endforeach; ?>
 </table>
 <br/>
 <!--<?= form_open('jcalendar2/index') ?>

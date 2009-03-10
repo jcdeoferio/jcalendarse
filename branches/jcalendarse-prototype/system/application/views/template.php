@@ -2,7 +2,8 @@
 <html>
 <head>
 	<title>jCalendar - <?= $title ?></title>
-	<?= link_tag(site_url('/rss/getfeed/'.(isset($rss)?$rss:'62bdbefd1fecf993e951b419e82a6499')), 'alternate', 'application/rss+xml', 'jCalendar Public RSS Feed') ?>
+<!-- GET THIS FROM USERDATA! -->
+	<?= link_tag(site_url('/rss/getfeed/'.(isset($rss)?$rss:'')), 'alternate', 'application/rss+xml', 'jCalendar Public RSS Feed') ?>
 	<?= link_tag('files/favicon.png', 'shortcut icon', 'image/ico'); ?>
 	<?= link_tag('files/style.css') ?>
 </head>
