@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>jCalendar - 404 Page Not Found</title>
-	<?= link_tag('files/favicon.png', 'shortcut icon', 'image/ico'); ?>
-	<?= link_tag('files/style.css') ?>
+	<?= link_tag('favicon.png', 'shortcut icon', 'image/ico'); ?>
+	<?= link_tag('style.css') ?>
 </head>
 <body>
 	<div id="main">

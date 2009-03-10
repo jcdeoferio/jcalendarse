@@ -46,7 +46,10 @@ div#body a{
 color: #669900;/*#27abff;*/ 
 }
 div#sidebar a{
-color: #666; 
+color: #666;
+}
+img{
+border: 0;
 }
 table#groups{
 border-spacing:2px;
