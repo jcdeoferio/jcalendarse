@@ -233,7 +233,7 @@ class jcalendar2 extends Controller{
   }
 
   function adsearch(){
-	$this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');  
+    $this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');  
     $this->form_validation->set_rules('event_name', 'Event Name', 'xss_clean');
     $this->form_validation->set_rules('start_year', 'Start Year', '');
     $this->form_validation->set_rules('start_month', 'Start Month', '');
@@ -270,7 +270,6 @@ class jcalendar2 extends Controller{
 	  (strlen($this->input->post('end_hour'))?($this->input->post('end_hour') . ':' .
 						     (strlen($this->input->post('end_minute'))?$this->input->post('end_minute'):'00')):'');
       }
-      echo 'starT: '. $start_date;
       $events = $this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null);
     }
 
