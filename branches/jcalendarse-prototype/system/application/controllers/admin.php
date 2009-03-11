@@ -88,7 +88,6 @@ class Admin extends Controller{
 				$member_of[$group['groupid']] = 0;
 			for ($i = 0; $i < count($member_of_result); $i++)
 				$member_of[$member_of_result[$i]['groupid']] = $member_of_result[$i]['grouproleid'];
-
 			$data['new_user'] = false;
 			$data['groups'] = $db_groups;
 			$data['courses'] = $courses;

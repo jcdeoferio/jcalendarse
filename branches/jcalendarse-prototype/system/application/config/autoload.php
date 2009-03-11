@@ -51,7 +51,7 @@ $autoload['libraries'] = array('database', 'session', 'form_validation', 'table'
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('jcfunc', 'form', 'html', 'url');
+$autoload['helper'] = array('jcfunc', 'form', 'html', 'security', 'url');
 
 
 /*

@@ -310,6 +310,7 @@ $config['time_reference'] = 'local';
 */
 $config['rewrite_short_tags'] = FALSE;
 
+$config['global_xss_filtering'] = true;
 
 
 /* End of file config.php */
