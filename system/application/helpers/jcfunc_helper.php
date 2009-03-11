@@ -5,15 +5,15 @@ if ( ! function_exists('months_array'))
 {
 	function months_array()
 	{
-		$months=array(	'01'=>'January',
- 				'02'=>'February',
-				'03'=>'March',
-				'04'=>'April',
-				'05'=>'May',
-				'06'=>'June',
-				'07'=>'July',
-				'08'=>'August',
-				'09'=>'September',
+		$months=array(	'1'=>'January',
+ 				'2'=>'February',
+				'3'=>'March',
+				'4'=>'April',
+				'5'=>'May',
+				'6'=>'June',
+				'7'=>'July',
+				'8'=>'August',
+				'9'=>'September',
 				'10'=>'October',
 				'11'=>'November',
 				'12'=>'December');
@@ -57,6 +57,33 @@ if ( ! function_exists('months_array'))
 		 }
 
 		 return ($minutes);
+	}
+
+	function months_array_reverse(){
+		$months=array(	'January'=>'01',
+ 				'February'=>'02',
+				'March'=>'03',
+				'April'=>'04',
+				'May'=>'05',
+				'June'=>'06',
+				'July'=>'07',
+				'August'=>'08',
+				'September'=>'09',
+				'October'=>'10',
+				'November'=>'11',
+				'December'=>'12');
+		return ($months);
+	}
+
+	function days_array_reverse(){
+		$months=array(	'Sun'=>'0',
+ 				'Mon'=>'1',
+				'Tue'=>'2',
+				'Wed'=>'3',
+				'Thu'=>'4',
+				'Fri'=>'5',
+				'Sat'=>'6');
+		return ($months);
 	}
 }
 
