@@ -136,7 +136,7 @@ class Admin extends Controller{
       $members = array();
       $users = $this->select_all_users(null);
       $i = 0;
-      for($users as $user){
+      foreach($users as $user){
 	$members[$i][0] = $this->input->post('user-'.$user['userid']);
 	$members[$i][1] = $this->input->post('grouprole-'.$user['userid']);
 	$i++;
@@ -158,7 +158,7 @@ class Admin extends Controller{
       $members = array();
       $users = $this->select_all_users(null);
       $i = 0;
-      for($users as $user){
+      foreach($users as $user){
 	$members[$i][0] = $this->input->post('user-'.$user['userid']);
 	$members[$i][1] = $this->input->post('grouprole-'.$user['userid']);
 	$i++;
