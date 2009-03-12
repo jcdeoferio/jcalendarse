@@ -13,10 +13,13 @@ class User extends Model{
 		$query_str = "SELECT userdetails.registered FROM userdetails,users WHERE users.login = '".$login."' AND users.userid = userdetails.userid";
 		$register = $this->db->query($query_str);
 		$register = $register->row_array();
-		
-		extract($register);
-		if(isset($registered))
-			$temp['registered'] = $registered;
+		if(count($temp) == 0)
+			$temp = null;
+		else{
+			extract($register);
+			if(isset($registered))
+				$temp['registered'] = $registered;
+		}
 		return ($temp);
 	}
 }
