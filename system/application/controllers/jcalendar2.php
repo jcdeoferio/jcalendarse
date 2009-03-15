@@ -65,6 +65,7 @@ class jcalendar2 extends Controller{
     $this->db->from('userdetails');
     $this->db->where('userid', $this->user['userid']);
     $userdetails = $this->db->get()->row_array();
+    $sidedata = $data;
     $sidedata['rss'] = $userdetails['rssfeed'];
     $sidedata['groups'] = $groups;
     $template['title'] = 'jCalendar';
