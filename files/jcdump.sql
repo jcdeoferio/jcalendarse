@@ -150,7 +150,7 @@ ALTER SEQUENCE events_eventid_seq OWNED BY events.eventid;
 -- Name: events_eventid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('events_eventid_seq', 14, true);
+SELECT pg_catalog.setval('events_eventid_seq', 20, true);
 
 
 --
@@ -418,7 +418,6 @@ COPY courses (courseid, coursename, collegeid) FROM stdin;
 COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FROM stdin;
 3	event2	\N	2009-02-06 11:29:11.845751	2009-02-06 11:29:11.845751	\N
 5	event3	\N	2009-02-08 00:00:00	2009-02-08 12:00:00	\N
-8	event8	\N	2009-02-11 14:22:08.108659	2009-02-11 14:22:08.108659	\N
 9	lkj		2009-02-15 01:05:00	2009-02-15 18:00:00	1
 7	event7	Details of the event are as follows.\r\n\r\nThis description intentionally left blank	2009-02-15 12:00:00	2009-02-15 11:55:00	4
 10	llj		2009-02-15 00:00:00	2009-02-03 17:05:00	1
@@ -429,6 +428,7 @@ COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FR
 14	foo	redfdsq	2009-03-04 00:00:00	2009-03-04 00:05:00	1
 12	val's day	this is 6 days before valentine's day	2009-02-08 00:00:00	2009-02-08 23:55:00	\N
 2	event1	Ooooo event 1	2009-02-06 10:10:00	2009-03-09 10:10:00	4
+20	Event name		2009-03-15 00:00:00	2009-03-15 00:00:00	\N
 \.
 
 
@@ -450,6 +450,7 @@ COPY grouproles (grouproleid, grouprolename) FROM stdin;
 COPY groups (groupid, groupname) FROM stdin;
 1	admin
 2	student
+-1	public
 \.
 
 
@@ -458,10 +459,11 @@ COPY groups (groupid, groupname) FROM stdin;
 --
 
 COPY member_of (groupid, userid, grouproleid) FROM stdin;
-1	1	\N
-2	2	\N
-1	3	\N
-2	3	\N
+1	1	1
+2	2	3
+1	3	2
+2	3	2
+-1	1	1
 \.
 
 
@@ -484,6 +486,7 @@ COPY permissions (eventid, groupid, userid) FROM stdin;
 12	\N	1
 13	\N	1
 14	\N	1
+20	\N	1
 \.
 
 

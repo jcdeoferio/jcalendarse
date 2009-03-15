@@ -10,7 +10,7 @@
    echo 'Event ' . $event_name .' added';
    }
 ?>
-<?= form_open('jcalendar2/add') ?>
+<?= form_open('jcalendar2/add', '', array('userid'=>$user['userid'])) ?>
 <?= validation_errors() ?>
 <fieldset>
 <legend>Add Event</legend>
@@ -23,13 +23,14 @@ Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4'
 Venue: <br/><?= form_dropdown('venue', $venues, set_value('venue')) ?><br/>
 Groups: <br/>
 <?php $i = 0; ?>
-<?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event') ?>
-<?php foreach($groups as $group){
+<?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event').' ' ?>
+<?php 
+   foreach($groups as $group){
     if($i==8){echo br(1);$i=0;}
-    if($group['grouproleid'] > 1){
-			echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']);
-			$i++;
-		}
+    if($group['grouproleid'] >= 1){
+      echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']).' ';
+      $i++;
+    }
 } echo br(2);?>
 <!--<?= (isset($groups) ? "Group: <br/> ".form_dropdown('group', $groups, set_value('group'))." <br/><br/>" : "<br/>" )?>-->
 <?= form_submit('submit', 'Add Event') ?> <br/>
