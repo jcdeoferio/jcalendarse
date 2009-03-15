@@ -30,18 +30,18 @@ class JCalendar extends Model{
       $where_str = '(';
       $i = 0;
       foreach($groups as $group){
-				$where_str .= ($i != 0 ? ' or ':'').'p.groupid = '.$group;
-				$i++;
+	$where_str .= ($i != 0 ? ' or ':'').'p.groupid = '.$group;
+	$i++;
       }
       $where_str .= ' )';
 			
       $this->db->where($where_str, null, false);
     }
 		
-		if($date){
-			$this->db->where('start_date <=',$date);
-			$this->db->where('end_date >=',$date);
-		}
+    if($date){
+      $this->db->where('start_date <=',$date);
+      $this->db->where('end_date >=',$date);
+    }
 
     $this->db->order_by('start_date', 'asc');
 
@@ -101,7 +101,7 @@ class JCalendar extends Model{
   }
 	
   function add_event($userid = null, $event_name, $start_date, $end_date, $event_details = null, $venue = null, $groupids = null){
-		$this->db->set('eventname', $event_name);
+    $this->db->set('eventname', $event_name);
     $this->db->set('start_date', $start_date);
     $this->db->set('end_date', $end_date);
     $this->db->set('eventdetails', $event_details);
@@ -117,9 +117,9 @@ class JCalendar extends Model{
     }
     if($groupids != null){
       foreach($groupids as $groupid){
-				$this->db->set('eventid', $eventid);
-				$this->db->set('groupid', $groupid);
-				$this->db->insert('permissions');
+	$this->db->set('eventid', $eventid);
+	$this->db->set('groupid', $groupid);
+	$this->db->insert('permissions');
       }
     }
   }
@@ -135,13 +135,13 @@ class JCalendar extends Model{
     $this->db->where('eventid', $eventid);
     $this->db->delete('events');
   }
-	function get_group_by_userid($userid){
-		$this->db->where('userid', $userid);
-		$this->db->from('member_of left join groups using (groupid)');
-		$this->db->distinct();
-		$this->db->select('groups.groupid,groupname,grouproleid');
-		$q = $this->db->get();
-		return $q->result_array();
-	}
+  function get_group_by_userid($userid){
+    $this->db->select('groups.groupid,groupname,grouproleid');
+    $this->db->distinct();
+    $this->db->from('member_of left join groups using (groupid)');
+    $this->db->where('userid', $userid);
+    $q = $this->db->get();
+    return $q->result_array();
+  }
   }
 ?>

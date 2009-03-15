@@ -3,7 +3,7 @@ class jcalendar2 extends Controller{
   function jcalendar2(){
     parent::Controller();
     $this->load->model('JCalendar');
-	$this->load->model('Administration');
+    $this->load->model('Administration');
 
     if($this->session->userdata('user'))
       $this->user = $this->session->userdata('user');
@@ -25,28 +25,28 @@ class jcalendar2 extends Controller{
   function calendar($mode = 'M', $year = CURRENT_YEAR, $month = CURRENT_MONTH, $day = null, $group = null){
     $events = array();
 		
-		if(!$day){
-			$day = getdate();
-			$day = $day['mday'];
-		}
-		$date = getdate(mktime(null,null,null,$month,$day,$year));
-		$groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
+    if(!$day){
+      $day = getdate();
+      $day = $day['mday'];
+    }
+    $date = getdate(mktime(null,null,null,$month,$day,$year));
+    $groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
     switch($mode){
     case 'L':
       $events = $this->JCalendar->select_all_events($this->user['userid']);
       break;
     case 'M':
       for($i = 1; $i <= cal_days_in_month(0, $month, $year); $i++){
-				$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
+	$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
       break;
-		case 'W':
+    case 'W':
       for($i = $date['mday']-$date['wday']<1?1:$date['mday']-$date['wday']; $i <= $date['mday']-$date['wday']+6 && $i <= cal_days_in_month(0,$month,$year); $i++){
-				$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
+	$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
       break;
-		case 'D':
-			$events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$day);
+    case 'D':
+      $events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$day);
       break;
     }
 
@@ -56,8 +56,8 @@ class jcalendar2 extends Controller{
     $data['events'] = $events;
     $data['year'] = $year;
     $data['month'] = $month;
-	$data['day'] = $day;
-	$data['date'] = $date;
+    $data['day'] = $day;
+    $data['date'] = $date;
     $data['monthstr'] = $this->months_array[substr($month, 0, 1)=='0'?substr($month, 1, 1):$month];
     $data['user'] = $this->user;
     $data['mode'] = $mode;
@@ -66,7 +66,7 @@ class jcalendar2 extends Controller{
     $this->db->where('userid', $this->user['userid']);
     $userdetails = $this->db->get()->row_array();
     $sidedata['rss'] = $userdetails['rssfeed'];
-		$sidedata['groups'] = $groups;
+    $sidedata['groups'] = $groups;
     $template['title'] = 'jCalendar';
     $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata, true);
     $template['body'] = $this->load->view('/jcalendar/index', $data, true);
@@ -88,8 +88,9 @@ class jcalendar2 extends Controller{
     $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
     $this->form_validation->set_rules('event_details', 'Event Details', '');
     $this->form_validation->set_rules('venue', 'Venue', '');
+    $this->form_validation->set_rules('userid', '', 'callback__group_check');
     $data = array('success' => FALSE);
-		$groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
+    $groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
     if($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
 	($this->input->post('start_month')+1) . '-' .
@@ -104,12 +105,12 @@ class jcalendar2 extends Controller{
       $event_name = $this->input->post('event_name');
       $event_details = $this->input->post('event_details');
       $venue = $this->input->post('venue');
-			$group = array();
-			$i = 0;
-			foreach($groups as $grp){
-				if($this->input->post('group-'.$grp['groupid']))
-					$group[$i++] = $grp['groupid'];
-			}
+      $group = array();
+      $i = 0;
+      foreach($groups as $grp){
+	if($this->input->post('group-'.$grp['groupid']))
+	  $group[$i++] = $grp['groupid'];
+      }
       $this->JCalendar->add_event($this->input->post('personal_event')?$this->user['userid']:null, $event_name, $start_date, $end_date, $event_details, $venue, $group);
       $data['event_name']= $event_name;
       $data['success'] = true;
@@ -124,14 +125,7 @@ class jcalendar2 extends Controller{
 
     $data['venues'] = $venues;
     $data['user'] = $this->user;
-	$newgroups = array(''=>'');
-	if(count($groups) == 0)
-		$newgroups = null;
-	else
-		$newgroups = $groups;
-//		foreach ($groups as $dat)
-//			$newgroups[$dat['groupid']] = $dat['groupname'];		#should the public events be contained in a group instead as a user?
-		$data['groups'] = $newgroups;
+    $data['groups'] = $groups;
     $template['title'] = 'Add Event';
     $template['sidebar'] = $this->load->view('/jcalendar/add_sidebar', '', true);
     $template['body'] = $this->load->view('/jcalendar/add', $data, true);
@@ -231,7 +225,7 @@ class jcalendar2 extends Controller{
 
   function delete($id){
     $this->JCalendar->delete_event($id);
-	redirect('/jcalendar2/index/success');
+    redirect('/jcalendar2/index/success');
     #$data['user'] = $this->user;
     #$template['title']  = 'Delete Event';
     #$template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
@@ -266,9 +260,9 @@ class jcalendar2 extends Controller{
     $this->form_validation->set_rules('end_day', 'End Minute', 'callback__date_check');
 
     $events = null;
-		$groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
+    $groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
     
-		if($this->form_validation->run()){
+    if($this->form_validation->run()){
       $event_name = null;
       if($this->input->post('event_name') != '')
 	$event_name = $this->input->post('event_name');
@@ -288,27 +282,27 @@ class jcalendar2 extends Controller{
 	  ($this->input->post('end_month')+1) . '-' .
 	  $this->input->post('end_day') . ' ' .
 	  (strlen($this->input->post('end_hour'))?($this->input->post('end_hour') . ':' .
-						     (strlen($this->input->post('end_minute'))?$this->input->post('end_minute'):'00')):'');
+						   (strlen($this->input->post('end_minute'))?$this->input->post('end_minute'):'00')):'');
       }
 			
-			$group = array();
-			$i = 0;
-			foreach($groups as $grp){
-				if($this->input->post('group-'.$grp['groupid']))
-					$group[$i++] = $grp['groupid'];
-			}
+      $group = array();
+      $i = 0;
+      foreach($groups as $grp){
+	if($this->input->post('group-'.$grp['groupid']))
+	  $group[$i++] = $grp['groupid'];
+      }
 			
       $events = $this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null, $group);
     }
 		
-			$newgroups = array(''=>'');
-	if(count($groups) == 0)
-		$newgroups = null;
-	else
-		$newgroups = $groups;
-//		foreach ($groups as $dat)
-//			$newgroups[$dat['groupid']] = $dat['groupname'];		#should the public events be contained in a group instead as a user?
-		$data['groups'] = $newgroups;
+    $newgroups = array(''=>'');
+    if(count($groups) == 0)
+      $newgroups = null;
+    else
+      $newgroups = $groups;
+    //		foreach ($groups as $dat)
+    //			$newgroups[$dat['groupid']] = $dat['groupname'];		#should the public events be contained in a group instead as a user?
+    $data['groups'] = $newgroups;
 		
     $data['events'] = $events;
     $data['user'] = $this->user;
@@ -321,37 +315,50 @@ class jcalendar2 extends Controller{
   //will check if end date is on or after start date and may check other date things
   //like which months have 30 days etc
   function _date_check(){ 
-	$this->form_validation->set_message('_date_check', 'End date must come after Start date.');
+    $this->form_validation->set_message('_date_check', 'End date must come after Start date.');
     return $this->input->post('end_year') >= $this->input->post('start_year') && ($this->input->post('end_month')+1) >= ($this->input->post('start_month')+1) && $this->input->post('end_day') >= $this->input->post('start_day') && $this->input->post('end_hour') >= $this->input->post('start_hour') && $this->input->post('end_minute') >= $this->input->post('start_minute');
+  }
+
+  function _group_check($userid){
+    if($this->input->post('personal_event'))
+      return(true);
+    else{
+      foreach($this->JCalendar->get_group_by_userid($userid) as $group)
+	if($this->input->post('group-'.$group['groupid']))
+	  return(true);
+
+      $this->form_validation->set_message('_group_check', 'You must check personal or at least one group otherwise the event will be unviewable.');
+      return (false);
+    }
   }
   
   function getcal($feed){
-		$this->load->helper('file');
-		$this->load->helper('download');
+    $this->load->helper('file');
+    $this->load->helper('download');
 		
-		$userid = $this->db->query("SELECT userid from userdetails WHERE rssfeed = '".$feed."'")->row_array();
-		$userid = $userid['userid'];
+    $userid = $this->db->query("SELECT userid from userdetails WHERE rssfeed = '".$feed."'")->row_array();
+    $userid = $userid['userid'];
 				
-		$events = $this->JCalendar->select_all_events($userid);
-		write_file('./files/temp',"BEGIN:VCALENDAR\nVERSION:2.0\n");
-		foreach($events as $event){
-			write_file('./files/temp',"\nBEGIN:VEVENT",'a');
-			write_file('./files/temp',"\nUID:{".random_string('unique')."}",'a');
-			$startdate = substr($event['start_date'], 0, strlen('yyyy')).substr($event['start_date'], 5, strlen('mm')).substr($event['start_date'], 8, strlen('dd')).'T'.substr($event['start_date'], 11, strlen('hh')).substr($event['start_date'], 14, strlen('mm')).'00Z';
+    $events = $this->JCalendar->select_all_events($userid);
+    write_file('./files/temp',"BEGIN:VCALENDAR\nVERSION:2.0\n");
+    foreach($events as $event){
+      write_file('./files/temp',"\nBEGIN:VEVENT",'a');
+      write_file('./files/temp',"\nUID:{".random_string('unique')."}",'a');
+      $startdate = substr($event['start_date'], 0, strlen('yyyy')).substr($event['start_date'], 5, strlen('mm')).substr($event['start_date'], 8, strlen('dd')).'T'.substr($event['start_date'], 11, strlen('hh')).substr($event['start_date'], 14, strlen('mm')).'00Z';
 			
-			$enddate = substr($event['end_date'], 0, strlen('yyyy')).substr($event['end_date'], 5, strlen('mm')).substr($event['end_date'], 8, strlen('dd')).'T'.substr($event['end_date'], 11, strlen('hh')).substr($event['end_date'], 14, strlen('mm')).'00Z';
-			write_file('./files/temp',"\nSUMMARY:".$event['eventname'],'a');
-			write_file('./files/temp',"\nDESCRIPTION:".str_replace(array("\r\n", "\n", "\r"),'\\n',$event['eventdetails']),'a');		
-			write_file('./files/temp',"\nDTSTART:".$startdate,'a');
-			write_file('./files/temp',"\nDTEND:".$enddate,'a');
-			write_file('./files/temp',"\nEND:VEVENT\n",'a');
-		}
-		write_file('./files/temp',"\nEND:VCALENDAR",'a');
+      $enddate = substr($event['end_date'], 0, strlen('yyyy')).substr($event['end_date'], 5, strlen('mm')).substr($event['end_date'], 8, strlen('dd')).'T'.substr($event['end_date'], 11, strlen('hh')).substr($event['end_date'], 14, strlen('mm')).'00Z';
+      write_file('./files/temp',"\nSUMMARY:".$event['eventname'],'a');
+      write_file('./files/temp',"\nDESCRIPTION:".str_replace(array("\r\n", "\n", "\r"),'\\n',$event['eventdetails']),'a');		
+      write_file('./files/temp',"\nDTSTART:".$startdate,'a');
+      write_file('./files/temp',"\nDTEND:".$enddate,'a');
+      write_file('./files/temp',"\nEND:VEVENT\n",'a');
+    }
+    write_file('./files/temp',"\nEND:VCALENDAR",'a');
 		
-		$data = file_get_contents("./files/temp"); // Read the file's contents
-		$name = 'calendar.ics';
-		force_download($name, $data); 
+    $data = file_get_contents("./files/temp"); // Read the file's contents
+    $name = 'calendar.ics';
+    force_download($name, $data); 
 		
-	}
-}
+  }
+  }
 ?>

@@ -187,9 +187,18 @@ class Admin extends Controller{
     $template['body'] = $this->load->view('admin/manage_groups', $data, true);
     $this->load->view('template', $template);    
   }
+
   function delete_group($groupid){
     $this->Administration->delete_group($groupid);
     redirect('/admin/manage_groups/success');
+  }
+
+  function db_maintenance(){
+    $this->Administration->db_maintenance();
+    $template['title'] = 'Admin - Database Maintenance';
+    $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
+    $template['body'] = 'Removed dangling events.';
+    $this->load->view('template', $template);
   }
 
   function _studentnumber_check($studentnumber){
