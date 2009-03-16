@@ -15,7 +15,7 @@ class JCalendar extends Model{
     $this->db->select('events.*, venues.venue_name');
     $this->db->distinct();
     $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
-    $this->db->where('(((p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid.') or p.userid = -1)', null, false);
+    $this->db->where('((p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid.')', null, false);
 
     if($event_name)
       $this->db->where('eventname ilike', '%'.$event_name.'%');
@@ -39,8 +39,8 @@ class JCalendar extends Model{
     }
 		
     if($date){
-      $this->db->where('start_date <=',$date);
-      $this->db->where('end_date >=',$date);
+      $this->db->where('start_date <=',$date.' 23:59:59');
+      $this->db->where('end_date >=',$date.' 00:00:00');
     }
 
     $this->db->order_by('start_date', 'asc');
