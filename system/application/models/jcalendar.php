@@ -52,6 +52,22 @@ class JCalendar extends Model{
   function select_all_events($userid){
     return($this->select_events_by_criteria($userid, null, null, null, null));
   }
+  
+  function select_public_events($start_date = null, $end_date = null){
+    $this->db->select('events.*, venues.venue_name');
+    $this->db->distinct();
+    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
+    $this->db->where('p.groupid = m.groupid', null, false);
+    $this->db->where('p.groupid', -1);
+    if($start_date)
+      $this->db->where('end_date >=', $start_date.' 00:00:00');
+
+    if($end_date)
+      $this->db->where('start_date <=', $end_date.' 23:59:59');
+
+    $query = $this->db->get();
+    return($query->result_array());
+  }
 
   function select_all_venues(){
     $this->db->from('venues');

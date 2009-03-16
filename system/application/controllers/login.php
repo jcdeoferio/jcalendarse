@@ -38,7 +38,7 @@ class Login extends Controller{
 			}
 		}
 	
-		$events = $this->JCalendar->select_all_events(-1);
+		$events = $this->JCalendar->select_public_events();
 	
 #pagination	
 		$config['base_url'] = site_url('/login/logg/');
