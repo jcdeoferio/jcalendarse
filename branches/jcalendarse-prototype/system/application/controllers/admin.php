@@ -101,6 +101,7 @@ class Admin extends Controller{
       $data['colleges'] = $colleges;
       $data['member_of'] = $member_of;
       $data['submit_url'] = 'admin/update_user/'.$userid;
+			$data['roles'] = $this->Administration->select_all_roles();
       $template['title'] = 'Update User';
       $template['body'] = $this->load->view('register/form', $data ,TRUE);
       $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);      $this->load->view('template', $template);
@@ -131,44 +132,55 @@ class Admin extends Controller{
 
   function add_group(){
     $this->form_validation->set_rules('groupname', 'Group Name', 'required|trim|callback__groupname_check');
-
+		$users = $this->Administration->select_all_users(null);
     if($this->form_validation->run()){
       $members = array();
-      $users = $this->select_all_users(null);
-      $i = 0;
-      foreach($users as $user){
-	$members[$i][0] = $this->input->post('user-'.$user['userid']);
-	$members[$i][1] = $this->input->post('grouprole-'.$user['userid']);
-	$i++;
-      }
+      $i = 0;	
+      foreach($users as $user)
+				if($this->input->post('user-'.$user['userid'])){
+					$members[$i][0] = $user['userid'];
+					$members[$i][1] = $this->input->post('grouprole-'.$user['userid']);
+					$i++;
+				}
 
       $this->Administration->add_group($this->input->post('groupname'), $members);
+			redirect('admin/manage_groups');
     }
     else{
       $template['title'] = 'Add Group';
-      $template['body'] = $this->load->view('admin/add_group', '', true);
+			$data['submit_url'] = 'admin/add_group/';
+			$data['users'] = $users;
+			$data['roles'] = $this->Administration->select_all_roles();
+      $template['body'] = $this->load->view('admin/add_group', $data, true);
       $this->load->view('template', $template);
     }
   }
 
   function update_group($groupid){
-    $this->form_validation->set_rules('groupname', 'Group Name', 'required|trim|callback__groupname_check');
-
+    $this->form_validation->set_rules('groupname', 'Group Name', 'required|trim');
+		$users = $this->Administration->select_all_users(null);
     if($this->form_validation->run()){
       $members = array();
-      $users = $this->select_all_users(null);
       $i = 0;
-      foreach($users as $user){
-	$members[$i][0] = $this->input->post('user-'.$user['userid']);
-	$members[$i][1] = $this->input->post('grouprole-'.$user['userid']);
-	$i++;
-      }
+      foreach($users as $user)
+				if($this->input->post('user-'.$user['userid'])){
+					$members[$i][0] = $user['userid'];
+					$members[$i][1] = $this->input->post('grouprole-'.$user['userid']);
+					$i++;
+				}
 
-      $this->Administration->add_group($groupid, $this->input->post('groupname'), $members);
+      $this->Administration->update_group($groupid, $this->input->post('groupname'), $members);
+			redirect('admin/manage_groups');
     }
     else{
-      $template['title'] = 'Add Group';
-      $template['body'] = $this->load->view('admin/add_group', '', true);
+			$data['submit_url'] = 'admin/update_group/'.$groupid;
+			$data['member_of'] = $this->Administration->group_member_of($groupid);
+			$data['users'] = $users;
+			$data['roles'] = $this->Administration->select_all_roles();
+			$data['groupname'] = $this->db->query('SELECT groupname FROM groups WHERE groupid = '.$groupid)->row_array();
+			$data['groupname'] = $data['groupname']['groupname'];
+      $template['title'] = 'Manage Group - '.$data['groupname'];
+      $template['body'] = $this->load->view('admin/add_group', $data, true);
       $this->load->view('template', $template);
     }
   }

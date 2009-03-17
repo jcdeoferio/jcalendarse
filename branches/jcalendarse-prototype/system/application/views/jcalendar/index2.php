@@ -9,7 +9,6 @@
     <th>Fri</th>
     <th>Sat</th>
   </tr>
-  <?php for($i )>
 <!--  <?php foreach ($events as $event): ?>
   <tr>
     <td><?= $event['name'] ?></td>

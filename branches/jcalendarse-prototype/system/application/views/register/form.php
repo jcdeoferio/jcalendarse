@@ -12,10 +12,15 @@ $this->table->add_row('Course:',form_dropdown('course', $courses, set_value('cou
 if(!$new_user){
 $group_dropdown = '';
 	foreach($groups as $group){
-			$group_dropdown.=form_checkbox('group-'.$group['groupid'], $group['groupname'], set_value($group['groupid'])?set_value($group['groupid']):(isset($member_of[$group['groupid']])?$member_of[$group['groupid']]:'')).' '.form_label($group['groupname'], $group['groupid']).br(1).
+			$group_dropdown.=form_checkbox('group-'.$group['groupid'], $group['groupname'], set_value($group['groupid'])?set_value($group['groupid']):(isset($member_of[$group['groupid']])?$member_of[$group['groupid']]:'')).' '.form_label($group['groupname'], $group['groupid']).br(1);
+			foreach($roles as $role)
+				$group_dropdown.=form_radio('group-'.$group['groupid'].'_role',$role['grouproleid'], $member_of[$group['groupid']] == $role['grouproleid']).form_label($role['grouprolename'],$role['grouprolename']);
+			$group_dropdown.=br(1);
+/*
 			form_radio('group-'.$group['groupid'].'_role',1, $member_of[$group['groupid']] == 1).form_label('read events','read_events').
 			form_radio('group-'.$group['groupid'].'_role',2, $member_of[$group['groupid']] == 2).form_label('edit events','edit_events').
 			form_radio('group-'.$group['groupid'].'_role',3, $member_of[$group['groupid']] == 3).form_label('edit members and events','edit_members/events').br(1);
+*/
 	}
 	$this->table->add_row('Groups:',$group_dropdown);
 }
