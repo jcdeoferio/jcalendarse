@@ -247,5 +247,12 @@ class Administration extends Model{
       $this->db->delete('events');
     }
   }
-  }
+  function select_all_roles(){
+    $this->db->from('grouproles');
+
+    $query = $this->db->get();
+    return($query->result_array());
+	}
+	}
+	
 ?>

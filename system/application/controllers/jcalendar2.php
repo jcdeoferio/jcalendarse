@@ -56,11 +56,12 @@ class jcalendar2 extends Controller{
     $data['events'] = $events;
     $data['year'] = $year;
     $data['month'] = $month;
-    $data['day'] = $day;
-    $data['date'] = $date;
-    $data['monthstr'] = $this->months_array[substr($month, 0, 1)=='0'?substr($month, 1, 1):$month];
+		$data['day'] = $day;		
+		$data['date'] = $date;
+		$data['monthstr'] = $this->months_array[substr($month, 0, 1)=='0'?substr($month, 1, 1):$month];
     $data['user'] = $this->user;
     $data['mode'] = $mode;
+		$data['group_arg'] = $group;
 	
     $this->db->from('userdetails');
     $this->db->where('userid', $this->user['userid']);
@@ -69,7 +70,7 @@ class jcalendar2 extends Controller{
     $sidedata['rss'] = $userdetails['rssfeed'];
     $sidedata['groups'] = $groups;
     $template['title'] = 'jCalendar';
-    $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata, true);
+    $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata+$data, true);
     $template['body'] = $this->load->view('/jcalendar/index', $data, true);
     $this->load->view('template', $template);
   }

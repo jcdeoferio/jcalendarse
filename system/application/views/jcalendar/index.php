@@ -50,7 +50,7 @@
     </tr>
 <?php endfor; ?>
 </table>
-<?= anchor('/jcalendar2/calendar/M/'.($month-1>0?$year:$year-1).'/'.($month-1>0?$month-1:12), 'previous month') ?>&nbsp;
+<?= anchor('/jcalendar2/calendar/M/'.($month-1>0?$year:$year-1).'/'.($month-1>0?$month-1:12), 'previous month').' | ' ?>
 <?= anchor('/jcalendar2/calendar/M/'.($month+1>12?$year+1:$year).'/'.($month+1>12?1:$month+1), 'next month') ?>
 
 <?php elseif($mode == 'W'): ?>
