@@ -125,9 +125,9 @@ class Admin extends Controller{
     $this->load->view('template', $template);
   }
 
-  function flip_activation($userid){
+  function flip_activation($userid, $page=0){
     $this->Administration->flip_activation($userid);
-    redirect('/admin/manage_users');
+    redirect('/admin/manage_users/'.$page);
   }
 
   function add_group(){

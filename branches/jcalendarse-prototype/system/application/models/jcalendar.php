@@ -10,6 +10,31 @@ class JCalendar extends Model{
 
     return($query->row_array());
   }
+	
+	function select_personal_events_by_criteria($userid,$event_name,$start_date,$end_date,$venue,$date){
+	  $this->db->select('events.*, venues.venue_name');
+		$this->db->distinct();
+		$this->db->from('events inner join permissions using (eventid) left join venues using (venueid)');
+		$this->db->where('userid',$userid);
+		if($event_name)
+      $this->db->where('eventname ilike', '%'.$event_name.'%');
+    if($start_date)
+      $this->db->where('start_date >=', $start_date);
+    if($end_date)
+      $this->db->where('end_date <=', $end_date);
+		if($venue)
+      $this->db->where('venueid', $venue);
+		
+		if($date){
+      $this->db->where('start_date <=',$date.' 23:59:59');
+      $this->db->where('end_date >=',$date.' 00:00:00');
+    }
+    $this->db->order_by('start_date', 'asc');
+	  $query = $this->db->get();
+//		print_r($query->result_array());
+//		echo br(1);
+		return($query->result_array());
+	}
 
   function select_events_by_criteria($userid, $event_name, $start_date, $end_date, $venue, $groups = null, $date = null){
     $this->db->select('events.*, venues.venue_name');
@@ -30,8 +55,8 @@ class JCalendar extends Model{
       $where_str = '(';
       $i = 0;
       foreach($groups as $group){
-	$where_str .= ($i != 0 ? ' or ':'').'p.groupid = '.$group;
-	$i++;
+				$where_str .= ($i != 0 ? ' or ':'').'p.groupid = '.$group;
+				$i++;
       }
       $where_str .= ' )';
 			
@@ -46,6 +71,8 @@ class JCalendar extends Model{
     $this->db->order_by('start_date', 'asc');
 
     $query = $this->db->get();
+//		print_r($query->result_array());
+//		echo br(1);
     return($query->result_array());
   }
 

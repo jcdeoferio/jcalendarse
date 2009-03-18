@@ -37,16 +37,25 @@ class jcalendar2 extends Controller{
       break;
     case 'M':
       for($i = 1; $i <= cal_days_in_month(0, $month, $year); $i++){
-	$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
+				if($group == 'P')
+					$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i);
+				else
+					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
       break;
     case 'W':
       for($i = $date['mday']-$date['wday']<1?1:$date['mday']-$date['wday']; $i <= $date['mday']-$date['wday']+6 && $i <= cal_days_in_month(0,$month,$year); $i++){
-	$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
+				if($group == 'P')
+					$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i);
+				else
+					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
       break;
     case 'D':
-      $events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$day);
+			if($group == 'P')
+				$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$day);
+			else
+				$events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$day);
       break;
     }
 
