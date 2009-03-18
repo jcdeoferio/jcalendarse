@@ -1,5 +1,7 @@
 <?php
 class jcalendar2 extends Controller{
+  private $template;
+
   function jcalendar2(){
     parent::Controller();
     $this->load->model('JCalendar');
@@ -10,6 +12,7 @@ class jcalendar2 extends Controller{
     else
       redirect('/login/logg');
 
+    $this->template['user'] = $this->user;
     $this->months_array_reverse = months_array_reverse();
     $this->days_array_reverse = days_array_reverse();
     $this->months_array = months_array();
@@ -78,10 +81,10 @@ class jcalendar2 extends Controller{
     $sidedata = $data;
     $sidedata['rss'] = $userdetails['rssfeed'];
     $sidedata['groups'] = $groups;
-    $template['title'] = 'jCalendar';
-    $template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata+$data, true);
-    $template['body'] = $this->load->view('/jcalendar/index', $data, true);
-    $this->load->view('template', $template);
+    $this->template['title'] = 'jCalendar';
+    $this->template['sidebar'] = $this->load->view('/jcalendar/index_sidebar', $sidedata+$data, true);
+    $this->template['body'] = $this->load->view('/jcalendar/index', $data, true);
+    $this->load->view('template', $this->template);
   }
 
   function add(){
@@ -137,10 +140,10 @@ class jcalendar2 extends Controller{
     $data['venues'] = $venues;
     $data['user'] = $this->user;
     $data['groups'] = $groups;
-    $template['title'] = 'Add Event';
-    $template['sidebar'] = $this->load->view('/jcalendar/add_sidebar', '', true);
-    $template['body'] = $this->load->view('/jcalendar/add', $data, true);
-    $this->load->view('template', $template);
+    $this->template['title'] = 'Add Event';
+    $this->template['sidebar'] = $this->load->view('/jcalendar/add_sidebar', '', true);
+    $this->template['body'] = $this->load->view('/jcalendar/add', $data, true);
+    $this->load->view('template', $this->template);
   }
 
   function update($id){
@@ -228,32 +231,32 @@ class jcalendar2 extends Controller{
 
     $data['venues'] = $venues;
     $data['user'] = $this->user;
-    $template['title'] = 'Update Entry';
-    $template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
-    $template['body'] = $this->load->view('jcalendar/update', $data, true);
-    $this->load->view('template', $template);
+    $this->template['title'] = 'Update Entry';
+    $this->template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
+    $this->template['body'] = $this->load->view('jcalendar/update', $data, true);
+    $this->load->view('template', $this->template);
   }
 
   function delete($id){
     $this->JCalendar->delete_event($id);
     redirect('/jcalendar2/index/success');
     #$data['user'] = $this->user;
-    #$template['title']  = 'Delete Event';
-    #$template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
-    #$this->load->view('template', $template);
+    #$this->template['title']  = 'Delete Event';
+    #$this->template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
+    #$this->load->view('template', $this->template);
   }
 
   function event($eventid){
     $event = $this->JCalendar->select_event_by_id($this->user['userid'], $eventid);
     $data['event'] = $event;
     $data['user'] = $this->user;
-    $template['title'] = $event['eventname'];
-    $template['sidebar'] = 
+    $this->template['title'] = $event['eventname'];
+    $this->template['sidebar'] = 
       anchor('jcalendar2/update/'. $event['eventid'], 'update event').br(1).
       anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1).
       anchor('jcalendar2/index', 'back to calendar');
-    $template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
-    $this->load->view('template', $template);
+    $this->template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
+    $this->load->view('template', $this->template);
   }
 
   function adsearch(){
@@ -317,10 +320,10 @@ class jcalendar2 extends Controller{
 		
     $data['events'] = $events;
     $data['user'] = $this->user;
-    $template['title'] = 'Advanced Search';
-    $template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
-    $template['body'] = $this->load->view('jcalendar/adsearch', $data, true);
-    $this->load->view('template', $template);
+    $this->template['title'] = 'Advanced Search';
+    $this->template['sidebar'] = anchor('jcalendar2/index', 'back to calendar');
+    $this->template['body'] = $this->load->view('jcalendar/adsearch', $data, true);
+    $this->load->view('template', $this->template);
   }
 
   //will check if end date is on or after start date and may check other date things

@@ -11,6 +11,7 @@ class Admin extends Controller{
     if(!$this->user || !$this->Administration->member_of($this->user['userid'], 1))
       redirect('/login');
 
+    $this->template['user'] = $this->user;
     $this->load->model('JCalendar');
   }
 
@@ -19,17 +20,17 @@ class Admin extends Controller{
   }
 
   function control_center(){
-    $template['title'] = 'Admin - Control Center';
-    $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);    
-    $template['body'] = $this->load->view('admin/control_center', '', true);
-    $this->load->view('template', $template);
+    $this->template['title'] = 'Admin - Control Center';
+    $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);    
+    $this->template['body'] = '';
+    $this->load->view('template', $this->template);
   }
 
   function test(){
     echo $this->input->post('box').' '.$this->input->post('box2');
 
-    $template['body'] = $this->load->view('test', '', true);
-    $this->load->view('template', $template);
+    $this->template['body'] = $this->load->view('test', '', true);
+    $this->load->view('template', $this->template);
   }
 
   function add_user(){
@@ -75,11 +76,11 @@ class Admin extends Controller{
       }
       $this->Administration->update_user($userid, $login, $password, $studentnumber, $firstname, $middlename, $lastname, $courseid, $registered, $groups);
       $data = array('firstname' => $firstname, 'lastname' => $lastname, 'middlename' => $middlename);
-      $template['title'] = 'Updated User';
-      $template['body'] = 'User updated.';
-      $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);
+      $this->template['title'] = 'Updated User';
+      $this->template['body'] = 'User updated.';
+      $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);
 
-      $this->load->view('template', $template);      
+      $this->load->view('template', $this->template);      
     }
     else{
       $courses = array('' => '');
@@ -102,9 +103,9 @@ class Admin extends Controller{
       $data['member_of'] = $member_of;
       $data['submit_url'] = 'admin/update_user/'.$userid;
 			$data['roles'] = $this->Administration->select_all_roles();
-      $template['title'] = 'Update User';
-      $template['body'] = $this->load->view('register/form', $data ,TRUE);
-      $template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);      $this->load->view('template', $template);
+      $this->template['title'] = 'Update User';
+      $this->template['body'] = $this->load->view('register/form', $data ,TRUE);
+      $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', null, true);      $this->load->view('template', $this->template);
     }
   }
 
@@ -119,10 +120,10 @@ class Admin extends Controller{
     $config['num_links'] = 3;
     $this->pagination->initialize($config);
 #pagination
-    $template['title'] = 'Admin - Manage Users';
-    $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
-    $template['body'] = $this->load->view('admin/manage_users', $data, true);
-    $this->load->view('template', $template);
+    $this->template['title'] = 'Admin - Manage Users';
+    $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
+    $this->template['body'] = $this->load->view('admin/manage_users', $data, true);
+    $this->load->view('template', $this->template);
   }
 
   function flip_activation($userid, $page=0){
@@ -147,12 +148,12 @@ class Admin extends Controller{
 			redirect('admin/manage_groups');
     }
     else{
-      $template['title'] = 'Add Group';
+      $this->template['title'] = 'Add Group';
 			$data['submit_url'] = 'admin/add_group/';
 			$data['users'] = $users;
 			$data['roles'] = $this->Administration->select_all_roles();
-      $template['body'] = $this->load->view('admin/add_group', $data, true);
-      $this->load->view('template', $template);
+      $this->template['body'] = $this->load->view('admin/add_group', $data, true);
+      $this->load->view('template', $this->template);
     }
   }
 
@@ -179,9 +180,9 @@ class Admin extends Controller{
 			$data['roles'] = $this->Administration->select_all_roles();
 			$data['groupname'] = $this->db->query('SELECT groupname FROM groups WHERE groupid = '.$groupid)->row_array();
 			$data['groupname'] = $data['groupname']['groupname'];
-      $template['title'] = 'Manage Group - '.$data['groupname'];
-      $template['body'] = $this->load->view('admin/add_group', $data, true);
-      $this->load->view('template', $template);
+      $this->template['title'] = 'Manage Group - '.$data['groupname'];
+      $this->template['body'] = $this->load->view('admin/add_group', $data, true);
+      $this->load->view('template', $this->template);
     }
   }
 
@@ -194,10 +195,10 @@ class Admin extends Controller{
     $config['num_links'] = 3;
     $this->pagination->initialize($config);
 #pagination
-    $template['title'] = 'Admin - Manage Groups';
-    $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
-    $template['body'] = $this->load->view('admin/manage_groups', $data, true);
-    $this->load->view('template', $template);    
+    $this->template['title'] = 'Admin - Manage Groups';
+    $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
+    $this->template['body'] = $this->load->view('admin/manage_groups', $data, true);
+    $this->load->view('template', $this->template);    
   }
 
   function delete_group($groupid){
@@ -207,10 +208,10 @@ class Admin extends Controller{
 
   function db_maintenance(){
     $this->Administration->db_maintenance();
-    $template['title'] = 'Admin - Database Maintenance';
-    $template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
-    $template['body'] = 'Removed dangling events.';
-    $this->load->view('template', $template);
+    $this->template['title'] = 'Admin - Database Maintenance';
+    $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
+    $this->template['body'] = 'Removed dangling events.';
+    $this->load->view('template', $this->template);
   }
 
   function _studentnumber_check($studentnumber){
