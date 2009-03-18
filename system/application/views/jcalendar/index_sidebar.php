@@ -1,7 +1,11 @@
 <?php
 	echo '<span id="eventName">Groups</span>'.br(1);
 	if($group_arg)
-		echo anchor('jcalendar2/calendar/'.$mode.'/'.$year.'/'.$month.'/'.$day,'personal').br(1);
+		echo anchor('jcalendar2/calendar/'.$mode.'/'.$year.'/'.$month.'/'.$day,'all').br(1);
+	else
+		echo 'all'.br(1);
+	if($group_arg != 'P')
+		echo anchor('jcalendar2/calendar/'.$mode.'/'.$year.'/'.$month.'/'.$day.'/P','personal').br(1);
 	else
 		echo 'personal'.br(1);
 	foreach($groups as $group)
