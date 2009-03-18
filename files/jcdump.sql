@@ -421,7 +421,6 @@ COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FR
 9	lkj		2009-02-15 01:05:00	2009-02-15 18:00:00	1
 7	event7	Details of the event are as follows.\r\n\r\nThis description intentionally left blank	2009-02-15 12:00:00	2009-02-15 11:55:00	4
 10	llj		2009-02-15 00:00:00	2009-02-03 17:05:00	1
-6	event4	This is a publicly viewable event	2009-02-08 16:15:00	2009-02-08 16:15:00	1
 11	1	test	2009-02-26 00:00:00	2009-02-26 17:05:00	1
 1	CS 165 MP2 due	OMG XIOU LI	2009-01-30 00:00:00	2009-01-30 12:00:00	1
 13	val's day		2009-03-04 00:00:00	2009-03-04 00:05:00	\N
@@ -429,6 +428,7 @@ COPY events (eventid, eventname, eventdetails, start_date, end_date, venueid) FR
 12	val's day	this is 6 days before valentine's day	2009-02-08 00:00:00	2009-02-08 23:55:00	\N
 2	event1	Ooooo event 1	2009-02-06 10:10:00	2009-03-09 10:10:00	4
 20	Event name		2009-03-15 00:00:00	2009-03-15 00:00:00	\N
+6	event4	This is a publicly viewable event	2009-02-08 16:15:00	2009-02-10 00:00:00	1
 \.
 
 
@@ -477,9 +477,7 @@ COPY permissions (eventid, groupid, userid) FROM stdin;
 2	2	\N
 3	\N	2
 5	\N	1
-6	\N	-1
 7	\N	1
-7	\N	-1
 9	\N	1
 10	\N	1
 11	\N	1
@@ -487,6 +485,8 @@ COPY permissions (eventid, groupid, userid) FROM stdin;
 13	\N	1
 14	\N	1
 20	\N	1
+6	-1	\N
+7	-1	\N
 \.
 
 
