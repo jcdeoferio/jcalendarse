@@ -1,22 +1,26 @@
 <?php if ($mode == 'L'): ?>
+<h2>All Events</h2>
 <?= ($mode == 'M' ? 'Monthly':anchor('jcalendar2/calendar/M','Monthly')).' | '.($mode == 'W' ? 'Weekly':anchor('jcalendar2/calendar/W','Weekly')).' | '.($mode == 'D' ? 'Daily':anchor('jcalendar2/calendar/D','Daily')).' | '.($mode == 'L' ? 'List':anchor('jcalendar2/calendar/L','List')) ?>
 <table border=1 id="events">
 <tr>
-<th>Event Name</th>
-<th>Start Date</th>
-<th>End Date</th>
-<th>Venue</th>
+<th><?= anchor('jcalendar2/calendar/L/'.$year.'/'.$month.'/'.$day.'/'.$group_arg.'/eventid','Event Id')?></th>
+<th><?= anchor('jcalendar2/calendar/L/'.$year.'/'.$month.'/'.$day.'/'.$group_arg.'/eventname','Event Name')?></th>
+<th><?= anchor('jcalendar2/calendar/L/'.$year.'/'.$month.'/'.$day.'/'.$group_arg.'/start_date','Start Date')?></th>
+<th><?= anchor('jcalendar2/calendar/L/'.$year.'/'.$month.'/'.$day.'/'.$group_arg.'/end_date','End Date')?></th>
+<th><?= anchor('jcalendar2/calendar/L/'.$year.'/'.$month.'/'.$day.'/'.$group_arg.'/venue_name','Venue')?></th>
 <th></th>
 <th></th>
 </tr>
+
 <?php foreach ($events as $event): ?>
 <tr>
+<td><?= $event['eventid']?></td>
 <td><?= anchor('jcalendar2/event/'.$event['eventid'],$event['eventname']) ?></td>
 <td><?= $event['start_date'] ?></td>
 <td><?= $event['end_date'] ?></td>
 <td><?= $event['venue_name'] ?></td>
 <td><?= anchor('jcalendar2/update/' . $event['eventid'], 'edit') ?></td>
-<td><?= anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) ?></td>
+<td><?= $permissions[$event['eventid']] ? anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) : ''?></td>
 </tr>
 <?php endforeach; ?>
 </table>
@@ -25,7 +29,8 @@
 <h2><?= $monthstr.' '.$year ?></h2>
 <?= ($mode == 'M' ? 'Monthly':anchor('jcalendar2/calendar/M','Monthly')).' | '.($mode == 'W' ? 'Weekly':anchor('jcalendar2/calendar/W','Weekly')).' | '.($mode == 'D' ? 'Daily':anchor('jcalendar2/calendar/D','Daily')).' | '.($mode == 'L' ? 'List':anchor('jcalendar2/calendar/L','List')) ?>
 <?= br(2).anchor('/jcalendar2/calendar/M/'.($month-1>0?$year:$year-1).'/'.($month-1>0?$month-1:12), 'previous month').' | ' ?>
-<?= anchor('/jcalendar2/calendar/M/'.($month+1>12?$year+1:$year).'/'.($month+1>12?1:$month+1), 'next month') ?>
+<?= anchor('/jcalendar2/calendar/M/'.($month+1>12?$year+1:$year).'/'.($month+1>12?1:$month+1), 'next month').' | ' ?>
+<?= anchor('jcalendar2/calendar/'.$mode.'/'.$today['year'].'/'.$today['mon'].'/'.$today['mday'],'today') ?>
 <table border=1 id="events">
 <tr>
 <th>Sun</th>
@@ -72,12 +77,13 @@
 		if($month+1 > 12){
 			echo anchor('/jcalendar2/calendar/W/'.($year+1).'/1/1','next week');
 		}else{
-			echo anchor('/jcalendar2/calendar/W/'.($year).'/'.($month+1).'/1','previous week');
+			echo anchor('/jcalendar2/calendar/W/'.($year).'/'.($month+1).'/1','next week');
 		}
 	}else{
 		echo anchor('/jcalendar2/calendar/W/'.($year).'/'.($month).'/'.($day+7),'next week');
 	}
 ?>
+<?= ' | '.anchor('jcalendar2/calendar/'.$mode.'/'.$today['year'].'/'.$today['mon'].'/'.$today['mday'],'today') ?>
 <table border=1 id="events">
 <tr>
 <th>Sun</th>
@@ -102,7 +108,7 @@
 </table>
 
 <?php elseif($mode == 'D'): ?>
-<h2><?= $monthstr.' '.$year ?></h2>
+<h2><?= $date['weekday'].', '.$monthstr.' '.$day.', '.$year ?></h2>
 <?= ($mode == 'M' ? 'Monthly':anchor('jcalendar2/calendar/M','Monthly')).' | '.($mode == 'W' ? 'Weekly':anchor('jcalendar2/calendar/W','Weekly')).' | '.($mode == 'D' ? 'Daily':anchor('jcalendar2/calendar/D','Daily')).' | '.($mode == 'L' ? 'List':anchor('jcalendar2/calendar/L','List')).br(2) ?>
 <?php
 	if($date['mday'] - 1 < 1){
@@ -119,15 +125,16 @@
 		if($month+1 > 12){
 			echo anchor('/jcalendar2/calendar/D/'.($year+1).'/1/1','next day');
 		}else{
-			echo anchor('/jcalendar2/calendar/D/'.($year).'/'.($month+1).'/1','previous day');
+			echo anchor('/jcalendar2/calendar/D/'.($year).'/'.($month+1).'/1','next day');
 		}
 	}else{
 		echo anchor('/jcalendar2/calendar/D/'.($year).'/'.($month).'/'.($day+1),'next day');
 	}
 ?>
+<?= ' | '.anchor('jcalendar2/calendar/'.$mode.'/'.$today['year'].'/'.$today['mon'].'/'.$today['mday'],'today') ?>
 <table border=1 id="events" width=100%>
 <tr>
-<th>Sun</th>
+<th><?=$date['weekday']?></th>
 </tr>
 <tr>
 <?php

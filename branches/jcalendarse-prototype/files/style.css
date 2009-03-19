@@ -9,38 +9,48 @@ background-repeat: no-repeat;
 border-bottom: 0px #000 solid;
 }
 div#content{
+padding-left:9px;
+padding-right:9px;
+/*
 padding:16px;
+*/
 }
 div#main{
 background: url(bodybg.png) repeat-y top;
 margin: auto;
-width: 922px;
+width: 978px;
 text-align:left;
 }
 div#sidebar{
 overflow:auto;
+/*
 padding-top:7px;
 padding-left:5px;
+*/
+padding-left:5px;
 border-right: 0px #000 solid;
-width:172px;
+width:187px;
 float:left;
 }
 div#body{
+background: url(med-face-trans.png) repeat-y 400px -150px;
 overflow:auto;
+/*
 padding-top:7px;
 padding-left:5px;
-width:700px;
+*/
+width:768px;
 float:left;
 }
 div#footer{
-padding:10px;
+padding:0px;
 background: url(footerbg.png) no-repeat;
 clear:both;
-font-size: 9pt;
+font-size: 10pt;
 text-align:center;
-line-height:32px;
+line-height:70px;
 color:#ccc;
-height:40px;
+
 }
 div#body a{
 color: #669900;/*#27abff;*/ 

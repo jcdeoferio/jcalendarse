@@ -22,10 +22,8 @@ Groups: <br/>
 <?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event') ?>
 <?php foreach($groups as $group){
     if($i==8){echo br(1);$i=0;}
-    if($group['grouproleid'] > 1){
-			echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']);
-			$i++;
-		}
+		echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']);
+		$i++;
 } echo br(2);?>
 
 
@@ -46,7 +44,7 @@ Groups: <br/>
     <td><?= anchor('jcalendar2/event/'.$event['eventid'],$event['eventname']) ?></td>
     <td><?= $event['start_date'] ?></td>
     <td><?= $event['end_date'] ?></td>
-    <td><?= anchor('jcalendar2/update/'. $event['eventid'], 'update') . '|' . anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) ?></td>
+    <td><?= anchor('jcalendar2/update/'. $event['eventid'], 'update') . '|' . ($permissions[$event['eventid']] ? anchor('jcalendar2/delete/' . $event['eventid'], 'delete', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")) : '') ?></td>
   </tr>
   <?php endforeach; ?>
 </table>

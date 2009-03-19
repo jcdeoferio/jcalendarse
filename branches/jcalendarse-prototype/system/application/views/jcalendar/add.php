@@ -27,7 +27,7 @@ Groups: <br/>
 <?php 
    foreach($groups as $group){
     if($i==8){echo br(1);$i=0;}
-    if($group['grouproleid'] >= 1){
+    if($group['grouproleid'] < 3){
       echo form_checkbox('group-'.$group['groupid'], $group['groupname'], FALSE).' '.form_label($group['groupname'], $group['groupid']).' ';
       $i++;
     }
