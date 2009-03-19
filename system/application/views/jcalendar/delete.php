@@ -1,2 +1,2 @@
 Event deleted
-<?= anchor('jcalendar2/index', 'back to calendar') ?>
+<?= br(1).anchor('jcalendar2/index', 'back to calendar') ?>

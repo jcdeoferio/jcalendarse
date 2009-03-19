@@ -20,7 +20,7 @@
 			</div>
 			<div id="body">
 				<?= $body?>
-				<?= br(4)?>
+				<?= count(explode('<br/>',$body,-1)) + count(explode('</tr>',$body,-1))  + count(explode('</h',$body)) < 10? br(15) : br(3)?>
 			</div>
 		</div>
 		<div id="footer">

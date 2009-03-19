@@ -25,9 +25,8 @@ class jcalendar2 extends Controller{
     redirect('/jcalendar2/calendar');
   }
 
-  function calendar($mode = 'M', $year = CURRENT_YEAR, $month = CURRENT_MONTH, $day = null, $group = null){
+  function calendar($mode = 'M', $year = CURRENT_YEAR, $month = CURRENT_MONTH, $day = null, $group = 'A', $sortby = 'eventid'){
     $events = array();
-		
     if(!$day){
       $day = getdate();
       $day = $day['mday'];
@@ -36,12 +35,24 @@ class jcalendar2 extends Controller{
     $groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
     switch($mode){
     case 'L':
-      $events = $this->JCalendar->select_all_events($this->user['userid']);
+			if($group == 'P')
+				$events = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,null);
+			else if($group == 'A')
+				$events = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, null);
+			else
+				$events = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, null);
+			$permissions = array();
+			foreach($events as $event)
+				$permissions[$event['eventid']] = count($this->JCalendar->get_permissions($this->user['userid'],$event['eventid']));
+			$data['permissions'] = $permissions;
+//      $events = $this->JCalendar->select_all_events($this->user['userid']);
       break;
     case 'M':
       for($i = 1; $i <= cal_days_in_month(0, $month, $year); $i++){
 				if($group == 'P')
 					$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i);
+				else if($group == 'A')
+					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$i);
 				else
 					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
@@ -50,30 +61,33 @@ class jcalendar2 extends Controller{
       for($i = $date['mday']-$date['wday']<1?1:$date['mday']-$date['wday']; $i <= $date['mday']-$date['wday']+6 && $i <= cal_days_in_month(0,$month,$year); $i++){
 				if($group == 'P')
 					$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i);
+				else if($group == 'A')
+					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$i);
 				else
 					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
       break;
     case 'D':
 			if($group == 'P')
-				$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$day);
+				$events[$day] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$day);
+			else if($group == 'A')
+				$events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$day);
 			else
 				$events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$day);
       break;
     }
-
     $data['firstday'] = date_create($year.'-'.$month.'-'.'01');
     $data['firstday'] = $this->days_array_reverse[$data['firstday']->format('D')];
-
-    $data['events'] = $events;
+    $data['events'] = $mode == 'L' ? sorty($events,$sortby):$events;
     $data['year'] = $year;
     $data['month'] = $month;
-		$data['day'] = $day;		
+		$data['day'] = $day;
 		$data['date'] = $date;
 		$data['monthstr'] = $this->months_array[substr($month, 0, 1)=='0'?substr($month, 1, 1):$month];
     $data['user'] = $this->user;
     $data['mode'] = $mode;
 		$data['group_arg'] = $group;
+		$data['today'] = getdate();
 	
     $this->db->from('userdetails');
     $this->db->where('userid', $this->user['userid']);
@@ -239,12 +253,11 @@ class jcalendar2 extends Controller{
 
   function delete($id){
     $this->JCalendar->delete_event($id);
-    redirect('/jcalendar2/index/success');
-    #$data['user'] = $this->user;
-    #$this->template['title']  = 'Delete Event';
-    #$this->template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
-    #$this->load->view('template', $this->template);
-  }
+//  redirect('/jcalendar2/index/success');
+		$data['user'] = $this->user;
+		$template['title']  = 'Delete Event';
+			$template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
+		$this->load->view('template', $template);  }
 
   function event($eventid){
     $event = $this->JCalendar->select_event_by_id($this->user['userid'], $eventid);
@@ -253,7 +266,9 @@ class jcalendar2 extends Controller{
     $this->template['title'] = $event['eventname'];
     $this->template['sidebar'] = 
       anchor('jcalendar2/update/'. $event['eventid'], 'update event').br(1).
-      anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1).
+			(count($this->JCalendar->get_permissions($this->user['userid'],$eventid)) ?
+				anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1) : ''
+			).
       anchor('jcalendar2/index', 'back to calendar');
     $this->template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
     $this->load->view('template', $this->template);
@@ -279,45 +294,60 @@ class jcalendar2 extends Controller{
     if($this->form_validation->run()){
       $event_name = null;
       if($this->input->post('event_name') != '')
-	$event_name = $this->input->post('event_name');
+				$event_name = $this->input->post('event_name');
       
       $start_date = null;
-      if($this->input->post('start_month') != ''){
-	$start_date = $this->input->post('start_year') . '-' .
-	  ($this->input->post('start_month')+1) . '-' .
-	  $this->input->post('start_day') . ' ' .
-	  (strlen($this->input->post('start_hour'))?($this->input->post('start_hour') . ':' .
-						     (strlen($this->input->post('start_minute'))?$this->input->post('start_minute'):'00')):'');
-      }
-
+      if($this->input->post('start_month') != '')
+				$start_date = $this->input->post('start_year') . '-' .
+					($this->input->post('start_month')+1) . '-' .
+					$this->input->post('start_day') . ' ' .
+					(strlen($this->input->post('start_hour'))?($this->input->post('start_hour') . ':' .
+					(strlen($this->input->post('start_minute'))?$this->input->post('start_minute'):'00')):'');
       $end_date = null;
-      if($this->input->post('end_month') != ''){
-	$end_date = $this->input->post('end_year') . '-' .
-	  ($this->input->post('end_month')+1) . '-' .
-	  $this->input->post('end_day') . ' ' .
-	  (strlen($this->input->post('end_hour'))?($this->input->post('end_hour') . ':' .
-						   (strlen($this->input->post('end_minute'))?$this->input->post('end_minute'):'00')):'');
-      }
+      if($this->input->post('end_month') != '')
+				$end_date = $this->input->post('end_year') . '-' .
+					($this->input->post('end_month')+1) . '-' .
+					$this->input->post('end_day') . ' ' .
+					(strlen($this->input->post('end_hour'))?($this->input->post('end_hour') . ':' .
+					(strlen($this->input->post('end_minute'))?$this->input->post('end_minute'):'00')):'');
+			$group = array();
+			$i = 0;
+			foreach($groups as $grp)
+				if($this->input->post('group-'.$grp['groupid']))
+					$group[$i++] = $grp['groupid'];
+			if(count($group) == 0 && !$this->input->post('personal_event'))
+				$events = $this->JCalendar->select_events_by_criteria($this->user['userid'],$event_name,$start_date,$end_date);
+			else{
+				if($this->input->post('personal_event'))
+					$events = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], $event_name,$start_date,$end_date,null,null);
+				if(count($group) != 0){
+					$add_events = $this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null, $group);
+					$i = count($events);
+					foreach($add_events as $x){
+						$t = false;
+						if(isset($events))
+							foreach($events as $e)
+								if($e['eventid'] == $x['eventid'])
+									$t = true;
+						if(!$t)
+							$events[$i++] = $x;
+					}
+				}
+			}
 			
-      $group = array();
-      $i = 0;
-      foreach($groups as $grp){
-	if($this->input->post('group-'.$grp['groupid']))
-	  $group[$i++] = $grp['groupid'];
-      }
-			
-      $events = $this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null, $group);
+			foreach($events as $event)
+				$permissions[$event['eventid']] = count($this->JCalendar->get_permissions($this->user['userid'],$event['eventid']));
+			$data['permissions'] = $permissions;
     }
-		
-    $newgroups = array(''=>'');
-    if(count($groups) == 0)
-      $newgroups = null;
-    else
-      $newgroups = $groups;
+		$groups = count($groups) == 0 ? null:$groups;
+//    $newgroups = array(''=>'');
+//    if(count($groups) == 0)
+//      $newgroups = null;
+//    else
+//      $newgroups = $groups;
     //		foreach ($groups as $dat)
     //			$newgroups[$dat['groupid']] = $dat['groupname'];		#should the public events be contained in a group instead as a user?
-    $data['groups'] = $newgroups;
-		
+    $data['groups'] = $groups;
     $data['events'] = $events;
     $data['user'] = $this->user;
     $this->template['title'] = 'Advanced Search';
@@ -338,9 +368,8 @@ class jcalendar2 extends Controller{
       return(true);
     else{
       foreach($this->JCalendar->get_group_by_userid($userid) as $group)
-	if($this->input->post('group-'.$group['groupid']))
-	  return(true);
-
+				if($this->input->post('group-'.$group['groupid']))
+					return(true);
       $this->form_validation->set_message('_group_check', 'You must check personal or at least one group otherwise the event will be unviewable.');
       return (false);
     }

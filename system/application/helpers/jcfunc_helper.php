@@ -1,5 +1,16 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+function sorty($array,$index){
+		for($j=0;$j<count($array);$j++){
+			$key = $array[$j];
+			$i = $j-1;
+			while ($i>=0 && $array[$i][$index]>$key[$index]){
+				$array[$i+1] = $array[$i];
+				$i--;
+			}
+			$array[$i+1] = $key;
+		}
+		return $array;
+	}
 
 if ( ! function_exists('months_array'))
 {
