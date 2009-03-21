@@ -15,10 +15,19 @@
 <fieldset>
 <legend>Update Event</legend>
 Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>$event_name)) ?><br/>
-Start date: <br/><script>DateInput('start', true, 'YYYYMMDD',<?= $start_year.$start_month.$start_day?>)</script>
+Start date: <br/>
+<?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month',$start_month)) ?>
+<?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day',$start_day)) ?>
+<?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year',$start_year)) ?>
+<br/>
+<!--<script>DateInput('start', true, 'YYYYMMDD',<?= $start_year.$start_month.$start_day?>)</script>-->
 Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), $start_hour) ?>:
       <?= form_dropdown('start_minute', array(''=>'') + minutes_array(), $start_minute) ?><br/>
-End date: <br/><script>DateInput('end', true, 'YYYYMMDD',<?= $end_year.$end_month.$end_day ?>)<!--,<?= $end_year.$end_month.$end_day?>--></script>
+End date: <br/>
+<?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month',$end_month)) ?>
+<?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day',$end_day)) ?>
+<?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_year',$end_year)) ?>
+<br/>
 End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), $end_hour) ?>:
       <?= form_dropdown('end_minute', array(''=>'') + minutes_array(), $end_minute) ?><br/>
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>$event_details)) ?> <br/>
