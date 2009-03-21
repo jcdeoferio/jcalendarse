@@ -10,8 +10,16 @@
    echo 'Event ' . $event_name . ' updated';
    }
 ?>
-<?= form_open('jcalendar2/update/' . $id) ?>
+<?= form_open('jcalendar2/update/' . $id, '', array('userid'=>$user['userid'])) ?>
 <?= validation_errors() ?>
+
+<?php 
+   foreach($permissions as $permission){
+   if($permission['grouproleid'] == 3 || $permission['groupid'] == -1)
+     echo form_hidden('group-'.$permission['groupid'], true);
+ }
+?>
+
 <fieldset>
 <legend>Update Event</legend>
 Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>$event_name)) ?><br/>
@@ -32,6 +40,18 @@ End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), $end
       <?= form_dropdown('end_minute', array(''=>'') + minutes_array(), $end_minute) ?><br/>
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>$event_details)) ?> <br/>
 Venue: <br/><?= form_dropdown('venue', $venues, $venue) ?><br/><br/>
+   <?php if(count($permissions) > 1): ?>
+<?= form_checkbox('personal_event', 'personal_event', $permissions[0]).' '.form_label('Personal', 'personal_event').' ' ?>
+      <?php endif; ?>
+<?php $i = 1; ?>
+<?php 
+   foreach($groups as $group){
+    if($i==8){echo br(1);$i=0;}
+    if($group['grouproleid'] < 3){
+      echo form_checkbox('group-'.$group['groupid'], $group['groupname'], $permissions['groupid'] == 't').' '.form_label($group['groupname'], $group['groupid']).' ';
+      $i++;
+    }
+} echo br(2);?>
 <?= form_submit('submit', 'Update Event') ?> <br/>
 </fieldset>
 <!--
@@ -74,6 +94,22 @@ Venue: <br/><?= form_dropdown('venue', $venues, $venue) ?><br/><br/>
     <th>Venue:</th>
     <td><?= form_dropdown('venue', $venues, $venue) ?></td>
   </tr>
+<tr>
+   <th>Groups:</th>
+</tr>
+<tr>
+    <td><?= form_checkbox('personal_event', 'personal_event', set_value('personal_event')||$permissions[0]).' '.form_label('Personal', 'personal_event').' ' ?></td>
+<?php
+   $i = 8;
+   foreach($groups as $group){
+     if($i == 8){echo '</tr><tr>'; $i=0;}
+     if($group['grouproleid'] < 3){
+       echo '<td>'.form_checkbox('group-'.$group['groupid'], $group['groupname'], set_value('group-'.$group['groupid'])||$permissions['groupid'] == 't').' '.form_label($group['groupname'], $group['groupid']).' </td>';
+       $i++;
+     }
+ }
+echo '</tr>';
+?>
   <tr>
     <td></td>
     <td><?= form_submit('submit', 'Update Event') ?></td>
