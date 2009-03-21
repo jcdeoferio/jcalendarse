@@ -12,9 +12,17 @@
 <fieldset>
 <legend>Search Event</legend>
 Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>set_value('event_name'))) ?><br/>
-Start date: <br/><script>DateInput('start', false, 'DD-MON-YYYY')</script>
+Start date: <br/>
+<?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month','')) ?>
+<?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_day','')) ?>
+<?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_year','')) ?>
+<br/>
 Start time: <br/><?= form_dropdown('start_hour', hours_array(), set_value('start_hour')) ?>:<?= form_dropdown('start_minute', minutes_array(), set_value('start_minute')) ?><br/>
-   End date: <br/><script>DateInput('end', false, 'DD-MON-YYYY')</script>
+   End date: <br/>
+<?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month','')) ?>
+<?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_day','')) ?>
+<?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_year','')) ?>
+<br/>
 End time: <br/><?= form_dropdown('end_hour', hours_array(), set_value('end_hour')) ?>:<?= form_dropdown('end_minute', minutes_array(), set_value('end_minute')) ?><br/><br/>
 
 Groups: <br/>

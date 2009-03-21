@@ -15,9 +15,17 @@
 <fieldset>
 <legend>Add Event</legend>
 Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30')) ?><br/>
-Start date: <br/><script>DateInput('start', true, 'YYYYMMDD')</script>
+Start date: <br/>
+<?= form_dropdown('start_month', array(''=>'') + months_array(), set_value('start_month','')) ?>
+<?= form_dropdown('start_day', array(''=>'') + days_array(), set_value('start_month','')) ?>
+<?= form_dropdown('start_year', array(''=>'') + years_array(), set_value('start_month','')) ?>
+<br/>
 Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array()) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array()) ?><br/>
-End date: <br/><script>DateInput('end', true, 'YYYYMMDD')</script>
+End date: <br/>
+<?= form_dropdown('end_month', array(''=>'') + months_array(), set_value('end_month','')) ?>
+<?= form_dropdown('end_day', array(''=>'') + days_array(), set_value('end_month','')) ?>
+<?= form_dropdown('end_year', array(''=>'') + years_array(), set_value('end_month','')) ?>
+<br/>
 End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array()) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array()) ?><br/>
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30')) ?> <br/>
 Venue: <br/><?= form_dropdown('venue', $venues) ?><br/>

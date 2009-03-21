@@ -121,12 +121,12 @@ class jcalendar2 extends Controller{
     $groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
     if($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
-	($this->input->post('start_month')+1) . '-' .
+	$this->input->post('start_month') . '-' .
 	$this->input->post('start_day') . ' ' .
 	$this->input->post('start_hour') . ':' .
 	$this->input->post('start_minute');
       $end_date = $this->input->post('end_year') . '-' .
-	($this->input->post('end_month')+1) . '-' .
+	$this->input->post('end_month') . '-' .
 	$this->input->post('end_day') . ' ' .
 	$this->input->post('end_hour') . ':' .
 	$this->input->post('end_minute');
@@ -179,12 +179,12 @@ class jcalendar2 extends Controller{
     $data['id'] = $id;
     if ($this->form_validation->run()){
       $start_date = $this->input->post('start_year') . '-' .
-	($this->input->post('start_month')+1) . '-' .
+	$this->input->post('start_month') . '-' .
 	$this->input->post('start_day') . ' ' .
 	$this->input->post('start_hour') . ':' .
 	$this->input->post('start_minute');
       $end_date = $this->input->post('end_year') . '-' .
-	($this->input->post('end_month')+1) . '-' .
+	$this->input->post('end_month') . '-' .
 	$this->input->post('end_day') . ' ' .
 	$this->input->post('end_hour') . ':' .
 	$this->input->post('end_minute');
@@ -299,14 +299,14 @@ class jcalendar2 extends Controller{
       $start_date = null;
       if($this->input->post('start_month') != '')
 				$start_date = $this->input->post('start_year') . '-' .
-					($this->input->post('start_month')+1) . '-' .
+					$this->input->post('start_month') . '-' .
 					$this->input->post('start_day') . ' ' .
 					(strlen($this->input->post('start_hour'))?($this->input->post('start_hour') . ':' .
 					(strlen($this->input->post('start_minute'))?$this->input->post('start_minute'):'00')):'');
       $end_date = null;
       if($this->input->post('end_month') != '')
 				$end_date = $this->input->post('end_year') . '-' .
-					($this->input->post('end_month')+1) . '-' .
+					$this->input->post('end_month') . '-' .
 					$this->input->post('end_day') . ' ' .
 					(strlen($this->input->post('end_hour'))?($this->input->post('end_hour') . ':' .
 					(strlen($this->input->post('end_minute'))?$this->input->post('end_minute'):'00')):'');
@@ -360,7 +360,7 @@ class jcalendar2 extends Controller{
   //like which months have 30 days etc
   function _date_check(){ 
     $this->form_validation->set_message('_date_check', 'End date must come after Start date.');
-    return $this->input->post('end_year') >= $this->input->post('start_year') && ($this->input->post('end_month')+1) >= ($this->input->post('start_month')+1) && $this->input->post('end_day') >= $this->input->post('start_day') && $this->input->post('end_hour') >= $this->input->post('start_hour') && $this->input->post('end_minute') >= $this->input->post('start_minute');
+    return $this->input->post('end_year') >= $this->input->post('start_year') && $this->input->post('end_month') >= $this->input->post('start_month') && $this->input->post('end_day') >= $this->input->post('start_day') && $this->input->post('end_hour') >= $this->input->post('start_hour') && $this->input->post('end_minute') >= $this->input->post('start_minute');
   }
 
   function _group_check($userid){
