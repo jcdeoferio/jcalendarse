@@ -167,7 +167,7 @@ class JCalendar extends Model{
     }
   }
 
-  function update_event($eventid, $data){
+  function update_event($eventid, $data, $userid, $groups){
     $this->db->where('eventid', $eventid);
     $this->db->update('events', $data);
   }
@@ -186,22 +186,45 @@ class JCalendar extends Model{
     $q = $this->db->get();
     return $q->result_array();
   }
-  function get_permissions($userid,$eventid){
+
+  function get_all_permissions($userid, $eventid){
+    $this->db->distinct();
+    $this->db->from('permissions , member_of');
+    $this->db->where('eventid', $eventid);
+    $this->db->where('member_of.userid',$userid);
+    $this->db->where('(member_of.groupid = permissions.groupid )',null,false);
+    $q = $this->db->get();
+    $q = $q->result_array();
+
+    $this->db->distinct();
+    $this->db->from('permissions');
+    $this->db->where('userid',$userid);
+    $this->db->where('eventid',$eventid);
+    $q2 = $this->db->get();
+    $q2 = $q2->result_array();
+    while(count($q2) > 0){
+      array_unshift($q, array_pop($q2));
+      }
+
+    return $q;
+  }
+
+  function get_permissions($userid, $eventid){
     //		$this->db->select('');
     $this->db->distinct();
     $this->db->from('permissions , member_of');
-    $this->db->where('eventid',$eventid);
+    $this->db->where('eventid', $eventid);
     $this->db->where('member_of.userid',$userid);
     $this->db->where('(grouproleid = 1 or grouproleid = 2)');
     $this->db->where('(member_of.groupid = permissions.groupid )',null,false);
     $q = $this->db->get();
+    $q = $q->result_array();
     //		echo $this->db->last_query().br(1);
     $this->db->distinct();
     $this->db->from('permissions');
     $this->db->where('userid',$userid);
     $this->db->where('eventid',$eventid);
     $q2 = $this->db->get();
-    $q = $q->result_array();
     $q2 = $q2->result_array();
     $i = count($q2);
     foreach($q as $x){

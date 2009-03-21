@@ -161,103 +161,130 @@ class jcalendar2 extends Controller{
   }
 
   function update($id){
-    $this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');
-    $this->form_validation->set_rules('event_name', 'Event Name', 'required');
-    $this->form_validation->set_rules('start_year', 'Start Year', 'required');
-    $this->form_validation->set_rules('start_month', 'Start Month', 'required');
-    $this->form_validation->set_rules('start_day', 'Start Day', 'required');
-    $this->form_validation->set_rules('start_hour', 'Start Hour', 'required');
-    $this->form_validation->set_rules('start_minute', 'Start Minute', 'required');
-    $this->form_validation->set_rules('end_year', 'End Year', 'required');
-    $this->form_validation->set_rules('end_month', 'End Month', 'required');    
-    $this->form_validation->set_rules('end_day', 'End Day', 'required');
-    $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
-    $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
-    $this->form_validation->set_rules('event_details', 'Event Details', '');
-    $this->form_validation->set_rules('venue', 'Venue', '');
+    $permissions = $this->JCalendar->get_permissions($this->user['userid'], $id);
 
-    $data['id'] = $id;
-    if ($this->form_validation->run()){
-      $start_date = $this->input->post('start_year') . '-' .
-	$this->input->post('start_month') . '-' .
-	$this->input->post('start_day') . ' ' .
-	$this->input->post('start_hour') . ':' .
-	$this->input->post('start_minute');
-      $end_date = $this->input->post('end_year') . '-' .
-	$this->input->post('end_month') . '-' .
-	$this->input->post('end_day') . ' ' .
-	$this->input->post('end_hour') . ':' .
-	$this->input->post('end_minute');
-      $event_name = $this->input->post('event_name');
-      $event_details = $this->input->post('event_details');
-      $venue = $this->input->post('venue');
+    if(!$permissions){
+      $data['user'] = $this->user;
+      $this->template['title'] = 'Update Entry';
+      $this->template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
+      $this->template['body'] = '<div style="color:red">You do not have permission to edit this event</div>';
+      $this->load->view('template', $this->template);      
+    }
+    else{
+      $this->form_validation->set_error_delimiters('<span id="formError"><b>','<br/></b></span>');
+      $this->form_validation->set_rules('event_name', 'Event Name', 'required');
+      $this->form_validation->set_rules('start_year', 'Start Year', 'required');
+      $this->form_validation->set_rules('start_month', 'Start Month', 'required');
+      $this->form_validation->set_rules('start_day', 'Start Day', 'required');
+      $this->form_validation->set_rules('start_hour', 'Start Hour', 'required');
+      $this->form_validation->set_rules('start_minute', 'Start Minute', 'required');
+      $this->form_validation->set_rules('end_year', 'End Year', 'required');
+      $this->form_validation->set_rules('end_month', 'End Month', 'required');    
+      $this->form_validation->set_rules('end_day', 'End Day', 'required');
+      $this->form_validation->set_rules('end_hour', 'End Hour', 'required');
+      $this->form_validation->set_rules('end_day', 'End Minute', 'required|callback__date_check');
+      $this->form_validation->set_rules('event_details', 'Event Details', '');
+      $this->form_validation->set_rules('venue', 'Venue', '');
+      $this->form_validation->set_rules('userid', '', 'callback__group_check');
 
-      $update_data = array(	'eventname'=>$event_name,
+      $data['id'] = $id;
+      $groups = $this->JCalendar->get_group_by_userid($this->user['userid']);
+      if ($this->form_validation->run()){
+	$start_date = $this->input->post('start_year') . '-' .
+	  $this->input->post('start_month') . '-' .
+	  $this->input->post('start_day') . ' ' .
+	  $this->input->post('start_hour') . ':' .
+	  $this->input->post('start_minute');
+	$end_date = $this->input->post('end_year') . '-' .
+	  $this->input->post('end_month') . '-' .
+	  $this->input->post('end_day') . ' ' .
+	  $this->input->post('end_hour') . ':' .
+	  $this->input->post('end_minute');
+	$event_name = $this->input->post('event_name');
+	$event_details = $this->input->post('event_details');
+	$venue = $this->input->post('venue');
+	$group = array();
+	$i = 0;
+	foreach ($groups as $grp)
+	  if($this->input->post('group-'.$grp['groupid']))
+	    $group[$i++] = $grp['groupid'];
+
+	$update_data = array(	'eventname'=>$event_name,
 				'start_date'=>$start_date,
 				'end_date'=>$end_date,
 				'eventdetails'=>$event_details,
 				'venueid'=>$venue==''?null:$venue);
 			
-      $this->JCalendar->update_event($id, $update_data);
+	$this->JCalendar->update_event($id, $update_data, $this->input->post('personal_event')?$this->user['userid']:null, $group);
 
-      $data['success'] = TRUE;
-      $data['event_name'] = $event_name;
-      $data['start_year'] = $this->input->post('start_year');
-      $data['start_month'] = $this->input->post('start_month');
-      $data['start_day'] = $this->input->post('start_day');
-      $data['start_hour'] = $this->input->post('start_hour');
-      $data['start_minute'] = $this->input->post('start_minute');
-      $data['end_year'] = $this->input->post('end_year');
-      $data['end_month'] = $this->input->post('end_month');
-      $data['end_day'] = $this->input->post('end_day');
-      $data['end_hour'] = $this->input->post('end_hour');
-      $data['end_minute'] = $this->input->post('end_minute');
-      $data['event_details'] = $this->input->post('event_details');
-      $data['venue'] = $this->input->post('venue');
+	$data['success'] = TRUE;
+	$data['event_name'] = $event_name;
+	$data['start_year'] = $this->input->post('start_year');
+	$data['start_month'] = $this->input->post('start_month');
+	$data['start_day'] = $this->input->post('start_day');
+	$data['start_hour'] = $this->input->post('start_hour');
+	$data['start_minute'] = $this->input->post('start_minute');
+	$data['end_year'] = $this->input->post('end_year');
+	$data['end_month'] = $this->input->post('end_month');
+	$data['end_day'] = $this->input->post('end_day');
+	$data['end_hour'] = $this->input->post('end_hour');
+	$data['end_minute'] = $this->input->post('end_minute');
+	$data['event_details'] = $this->input->post('event_details');
+	$data['venue'] = $this->input->post('venue');
+      }
+      else{
+	$event = $this->JCalendar->select_event_by_id($this->user['userid'], $id);
+	$data['event_name'] = $event['eventname'];
+	$start_timestamp = explode(' ', $event['start_date']);
+	$start_date = explode('-', $start_timestamp[0]);
+	$data['start_year'] = $start_date[0];
+	$data['start_month'] = $start_date[1];
+	$data['start_day'] = $start_date[2];
+	$start_time = explode(':', $start_timestamp[1]);
+	$data['start_hour'] = $start_time[0];
+	$data['start_minute'] = $start_time[1];
+	$end_timestamp = explode(' ', $event['end_date']);
+	$end_date = explode('-', $end_timestamp[0]);
+	$data['end_year'] = $end_date[0];
+	$data['end_month'] = $end_date[1];
+	$data['end_day'] = $end_date[2];
+	$end_time = explode(':', $end_timestamp[1]);
+	$data['end_hour'] = $end_time[0];
+	$data['end_minute'] = $end_time[1];      
+	$data['event_details'] = $event['eventdetails'];
+	$data['venue'] = $event['venueid'];
+	$data['success'] = FALSE;
+      }
+
+      $venues = array('' => '');
+      foreach($this->JCalendar->select_all_venues() as $venue)
+	$venues[$venue['venueid']] = $venue['venue_name'];
+
+      $data['venues'] = $venues;
+      $data['groups'] = $groups;
+      $data['permissions'] = $permissions;
+      $data['user'] = $this->user;
+      $this->template['title'] = 'Update Entry';
+      $this->template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
+      $this->template['body'] = $this->load->view('jcalendar/update', $data, true);
+      $this->load->view('template', $this->template);
     }
-    else{
-      $event = $this->JCalendar->select_event_by_id($this->user['userid'], $id);
-      $data['event_name'] = $event['eventname'];
-      $start_timestamp = explode(' ', $event['start_date']);
-      $start_date = explode('-', $start_timestamp[0]);
-      $data['start_year'] = $start_date[0];
-      $data['start_month'] = $start_date[1];
-      $data['start_day'] = $start_date[2];
-      $start_time = explode(':', $start_timestamp[1]);
-      $data['start_hour'] = $start_time[0];
-      $data['start_minute'] = $start_time[1];
-      $end_timestamp = explode(' ', $event['end_date']);
-      $end_date = explode('-', $end_timestamp[0]);
-      $data['end_year'] = $end_date[0];
-      $data['end_month'] = $end_date[1];
-      $data['end_day'] = $end_date[2];
-      $end_time = explode(':', $end_timestamp[1]);
-      $data['end_hour'] = $end_time[0];
-      $data['end_minute'] = $end_time[1];      
-      $data['event_details'] = $event['eventdetails'];
-      $data['venue'] = $event['venueid'];
-      $data['success'] = FALSE;
-    }
-
-    $venues = array('' => '');
-    foreach($this->JCalendar->select_all_venues() as $venue)
-      $venues[$venue['venueid']] = $venue['venue_name'];
-
-    $data['venues'] = $venues;
-    $data['user'] = $this->user;
-    $this->template['title'] = 'Update Entry';
-    $this->template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
-    $this->template['body'] = $this->load->view('jcalendar/update', $data, true);
-    $this->load->view('template', $this->template);
   }
 
   function delete($id){
-    $this->JCalendar->delete_event($id);
-//  redirect('/jcalendar2/index/success');
-		$data['user'] = $this->user;
-		$template['title']  = 'Delete Event';
-			$template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
-		$this->load->view('template', $template);  }
+    $permissions = $this->JCalendar->get_permissions($this->user['userid'], $id);
+
+    if(!$permissions){
+      $this->template['body'] = '<div style="color:red">You do not have permission to delete this event</div>';
+    }
+    else{
+      $this->JCalendar->delete_event($id);
+      $template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
+    }
+    $data['user'] = $this->user;
+    $template['title']  = 'Delete Event';
+    $this->load->view('template', $template);
+  }
 
   function event($eventid){
     $event = $this->JCalendar->select_event_by_id($this->user['userid'], $eventid);
@@ -265,8 +292,8 @@ class jcalendar2 extends Controller{
     $data['user'] = $this->user;
     $this->template['title'] = $event['eventname'];
     $this->template['sidebar'] = 
-      anchor('jcalendar2/update/'. $event['eventid'], 'update event').br(1).
 			(count($this->JCalendar->get_permissions($this->user['userid'],$eventid)) ?
+			        anchor('jcalendar2/update/'. $event['eventid'], 'update event').br(1).
 				anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1) : ''
 			).
       anchor('jcalendar2/index', 'back to calendar');

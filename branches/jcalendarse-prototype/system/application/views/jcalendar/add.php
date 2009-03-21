@@ -30,8 +30,8 @@ End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array()) ?>:<
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30')) ?> <br/>
 Venue: <br/><?= form_dropdown('venue', $venues) ?><br/>
 Groups: <br/>
-<?php $i = 0; ?>
 <?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event').' ' ?>
+<?php $i = 1; ?>
 <?php 
    foreach($groups as $group){
     if($i==8){echo br(1);$i=0;}
