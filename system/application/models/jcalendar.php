@@ -11,31 +11,31 @@ class JCalendar extends Model{
     return($query->row_array());
   }
 	
-	function select_personal_events_by_criteria($userid,$event_name,$start_date,$end_date,$venue,$date){
-	  $this->db->select('events.*, venues.venue_name');
-		$this->db->distinct();
-		$this->db->from('events inner join permissions using (eventid) left join venues using (venueid)');
-		$this->db->where('userid',$userid);
-		if($event_name)
+  function select_personal_events_by_criteria($userid,$event_name,$start_date,$end_date,$venue,$date){
+    $this->db->select('events.*, venues.venue_name');
+    $this->db->distinct();
+    $this->db->from('events inner join permissions using (eventid) left join venues using (venueid)');
+    $this->db->where('userid',$userid);
+    if($event_name)
       $this->db->where('eventname ilike', '%'.$event_name.'%');
     if($start_date)
       $this->db->where('start_date >=', $start_date);
     if($end_date)
       $this->db->where('end_date <=', $end_date);
-		if($venue)
+    if($venue)
       $this->db->where('venueid', $venue);
 		
-		if($date){
+    if($date){
       $this->db->where('start_date <=',$date.' 23:59:59');
       $this->db->where('end_date >=',$date.' 00:00:00');
     }
     $this->db->order_by('start_date', 'asc');
-	  $query = $this->db->get();
-//		echo $this->db->last_query();
-//		print_r($query->result_array());
-//		echo br(1);
-		return($query->result_array());
-	}
+    $query = $this->db->get();
+    //		echo $this->db->last_query();
+    //		print_r($query->result_array());
+    //		echo br(1);
+    return($query->result_array());
+  }
   function select_events_by_criteria($userid=null, $event_name=null, $start_date=null, $end_date=null, $venue=null, $groups = null, $date = null){
     $this->db->select('events.*, venues.venue_name');
     $this->db->distinct();
@@ -55,8 +55,8 @@ class JCalendar extends Model{
       $where_str = '(';
       $i = 0;
       foreach($groups as $group){
-				$where_str .= ($i != 0 ? ' or ':'').'p.groupid = '.$group;
-				$i++;
+	$where_str .= ($i != 0 ? ' or ':'').'p.groupid = '.$group;
+	$i++;
       }
       $where_str .= ' )';
 			
@@ -71,8 +71,8 @@ class JCalendar extends Model{
     $this->db->order_by('start_date', 'asc');
 
     $query = $this->db->get();
-//		print_r($query->result_array());
-//		echo br(1);
+    //		print_r($query->result_array());
+    //		echo br(1);
     return($query->result_array());
   }
 
@@ -186,28 +186,28 @@ class JCalendar extends Model{
     $q = $this->db->get();
     return $q->result_array();
   }
-	function get_permissions($userid,$eventid){
-//		$this->db->select('');
-		$this->db->distinct();
-		$this->db->from('permissions , member_of');
-		$this->db->where('eventid',$eventid);
-		$this->db->where('member_of.userid',$userid);
-		$this->db->where('(grouproleid = 1 or grouproleid = 2)');
-		$this->db->where('(member_of.groupid = permissions.groupid )',null,false);
-		$q = $this->db->get();
-//		echo $this->db->last_query().br(1);
-		$this->db->distinct();
-		$this->db->from('permissions');
-		$this->db->where('userid',$userid);
-		$this->db->where('eventid',$eventid);
-		$q2 = $this->db->get();
-		$q = $q->result_array();
-		$q2 = $q2->result_array();
-		$i = count($q2);
-		foreach($q as $x){
-			$q2[$i++] = $x;
-		}
-		return $q2;
-	}	
-}
+  function get_permissions($userid,$eventid){
+    //		$this->db->select('');
+    $this->db->distinct();
+    $this->db->from('permissions , member_of');
+    $this->db->where('eventid',$eventid);
+    $this->db->where('member_of.userid',$userid);
+    $this->db->where('(grouproleid = 1 or grouproleid = 2)');
+    $this->db->where('(member_of.groupid = permissions.groupid )',null,false);
+    $q = $this->db->get();
+    //		echo $this->db->last_query().br(1);
+    $this->db->distinct();
+    $this->db->from('permissions');
+    $this->db->where('userid',$userid);
+    $this->db->where('eventid',$eventid);
+    $q2 = $this->db->get();
+    $q = $q->result_array();
+    $q2 = $q2->result_array();
+    $i = count($q2);
+    foreach($q as $x){
+      $q2[$i++] = $x;
+    }
+    return $q2;
+  }	
+  }
 ?>

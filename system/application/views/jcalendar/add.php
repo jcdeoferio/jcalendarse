@@ -14,13 +14,13 @@
 <?= validation_errors() ?>
 <fieldset>
 <legend>Add Event</legend>
-Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30', 'value'=>set_value('event_name'))) ?><br/>
+Event name: <br/><?= form_input(array('name'=>'event_name', 'size'=>'30')) ?><br/>
 Start date: <br/><script>DateInput('start', true, 'YYYYMMDD')</script>
-Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array(), set_value('start_hour','0')) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array(), set_value('start_minute','0')) ?><br/>
+Start time: <br/><?= form_dropdown('start_hour', array(''=>'') + hours_array()) ?>:<?= form_dropdown('start_minute', array(''=>'') + minutes_array()) ?><br/>
 End date: <br/><script>DateInput('end', true, 'YYYYMMDD')</script>
-End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), set_value('end_hour','0')) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array(), set_value('end_minute','0')) ?><br/>
-Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>set_value('event_details'))) ?> <br/>
-Venue: <br/><?= form_dropdown('venue', $venues, set_value('venue')) ?><br/>
+End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array()) ?>:<?= form_dropdown('end_minute', array(''=>'') + minutes_array()) ?><br/>
+Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30')) ?> <br/>
+Venue: <br/><?= form_dropdown('venue', $venues) ?><br/>
 Groups: <br/>
 <?php $i = 0; ?>
 <?= form_checkbox('personal_event', 'personal_event', FALSE).' '.form_label('Personal', 'personal_event').' ' ?>
