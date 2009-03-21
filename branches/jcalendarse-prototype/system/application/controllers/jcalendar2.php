@@ -383,22 +383,22 @@ class jcalendar2 extends Controller{
     $userid = $userid['userid'];
 				
     $events = $this->JCalendar->select_all_events($userid);
-    write_file('./files/temp',"BEGIN:VCALENDAR\nVERSION:2.0\n");
+    write_file('files/temp',"BEGIN:VCALENDAR\nVERSION:2.0\n");
     foreach($events as $event){
-      write_file('./files/temp',"\nBEGIN:VEVENT",'a');
-      write_file('./files/temp',"\nUID:{".random_string('unique')."}",'a');
+      write_file('files/temp',"\nBEGIN:VEVENT",'a');
+      write_file('files/temp',"\nUID:{".random_string('unique')."}",'a');
       $startdate = substr($event['start_date'], 0, strlen('yyyy')).substr($event['start_date'], 5, strlen('mm')).substr($event['start_date'], 8, strlen('dd')).'T'.substr($event['start_date'], 11, strlen('hh')).substr($event['start_date'], 14, strlen('mm')).'00Z';
 			
       $enddate = substr($event['end_date'], 0, strlen('yyyy')).substr($event['end_date'], 5, strlen('mm')).substr($event['end_date'], 8, strlen('dd')).'T'.substr($event['end_date'], 11, strlen('hh')).substr($event['end_date'], 14, strlen('mm')).'00Z';
-      write_file('./files/temp',"\nSUMMARY:".$event['eventname'],'a');
-      write_file('./files/temp',"\nDESCRIPTION:".str_replace(array("\r\n", "\n", "\r"),'\\n',$event['eventdetails']),'a');		
-      write_file('./files/temp',"\nDTSTART:".$startdate,'a');
-      write_file('./files/temp',"\nDTEND:".$enddate,'a');
-      write_file('./files/temp',"\nEND:VEVENT\n",'a');
+      write_file('files/temp',"\nSUMMARY:".$event['eventname'],'a');
+      write_file('files/temp',"\nDESCRIPTION:".str_replace(array("\r\n", "\n", "\r"),'\\n',$event['eventdetails']),'a');		
+      write_file('files/temp',"\nDTSTART:".$startdate,'a');
+      write_file('files/temp',"\nDTEND:".$enddate,'a');
+      write_file('files/temp',"\nEND:VEVENT\n",'a');
     }
-    write_file('./files/temp',"\nEND:VCALENDAR",'a');
+    write_file('files/temp',"\nEND:VCALENDAR",'a');
 		
-    $data = file_get_contents("./files/temp"); // Read the file's contents
+    $data = file_get_contents("files/temp"); // Read the file's contents
     $name = 'calendar.ics';
     force_download($name, $data); 
 		
