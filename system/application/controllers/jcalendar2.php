@@ -231,6 +231,7 @@ class jcalendar2 extends Controller{
 	$data['end_minute'] = $this->input->post('end_minute');
 	$data['event_details'] = $this->input->post('event_details');
 	$data['venue'] = $this->input->post('venue');
+	$permissions = $this->JCalendar->get_permissions($this->user['userid'], $id);
       }
       else{
 	$event = $this->JCalendar->select_event_by_id($this->user['userid'], $id);
@@ -279,11 +280,11 @@ class jcalendar2 extends Controller{
     }
     else{
       $this->JCalendar->delete_event($id);
-      $template['body'] = $this->load->view('/jcalendar/delete', $data, TRUE);
+      $this->template['body'] = $this->load->view('/jcalendar/delete', '', true);
     }
-    $data['user'] = $this->user;
-    $template['title']  = 'Delete Event';
-    $this->load->view('template', $template);
+    $this->template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
+    $this->template['title']  = 'Delete Event';
+    $this->load->view('template', $this->template);
   }
 
   function event($eventid){
