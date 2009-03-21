@@ -14,9 +14,12 @@
 <?= validation_errors() ?>
 
 <?php 
+   $fixedpermissions = array();
    foreach($permissions as $permission){
-   if($permission['grouproleid'] == 3 || $permission['groupid'] == -1)
+   $fixedpermissions[$permission['groupid']] = $permission;
+   if($permission['groupid'] && $permission['grouproleid'] == 3){
      echo form_hidden('group-'.$permission['groupid'], true);
+   }
  }
 ?>
 
@@ -40,21 +43,19 @@ End time: <br/><?= form_dropdown('end_hour', array(''=>'') + hours_array(), $end
       <?= form_dropdown('end_minute', array(''=>'') + minutes_array(), $end_minute) ?><br/>
 Event details: <br/><?= form_textarea(array('name'=>'event_details', 'rows'=>'4', 'cols'=>'30', 'value'=>$event_details)) ?> <br/>
 Venue: <br/><?= form_dropdown('venue', $venues, $venue) ?><br/><br/>
-   <?php if(count($permissions) > 1): ?>
 <?= form_checkbox('personal_event', 'personal_event', $permissions[0]).' '.form_label('Personal', 'personal_event').' ' ?>
-      <?php endif; ?>
 <?php $i = 1; ?>
 <?php 
    foreach($groups as $group){
     if($i==8){echo br(1);$i=0;}
     if($group['grouproleid'] < 3){
-      echo form_checkbox('group-'.$group['groupid'], $group['groupname'], $permissions['groupid'] == 't').' '.form_label($group['groupname'], $group['groupid']).' ';
+      echo form_checkbox('group-'.$group['groupid'], $group['groupname'], isset($fixedpermissions[$group['groupid']])).' '.form_label($group['groupname'], $group['groupid']).' ';
       $i++;
     }
 } echo br(2);?>
 <?= form_submit('submit', 'Update Event') ?> <br/>
 </fieldset>
-<!--
+<!--<?php /*
 <table>
   <tr>
     <th>Event name: </th>
@@ -114,6 +115,6 @@ echo '</tr>';
     <td></td>
     <td><?= form_submit('submit', 'Update Event') ?></td>
   </tr>
-</table>
+  </table>*/?>
 -->
 <?= form_close() ?>

@@ -167,9 +167,24 @@ class JCalendar extends Model{
     }
   }
 
-  function update_event($eventid, $data, $userid, $groups){
+  function update_event($eventid, $data, $userid, $groupids){
     $this->db->where('eventid', $eventid);
     $this->db->update('events', $data);
+
+    $this->db->where('eventid', $eventid);
+    $this->db->delete('permissions');
+
+    if($userid){
+      $this->db->set('eventid', $eventid);
+      $this->db->set('userid', $userid);
+      $this->db->insert('permissions');
+    }
+    
+    foreach($groupids as $groupid){
+      $this->db->set('eventid', $eventid);
+      $this->db->set('groupid', $groupid);
+      $this->db->insert('permissions');
+    }
   }
 
   function delete_event($eventid){

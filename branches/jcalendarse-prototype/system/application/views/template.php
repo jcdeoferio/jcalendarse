@@ -14,7 +14,7 @@
 		</div>
 		<div id="content">
 			<div id="sidebar">
-   <?= isset($user)?"Welcome, ".(isset($user['firstname'])?$user['firstname']:$user['login']).'.'.br(2):'' ?>
+   <?= isset($user)?"Welcome, ".($user['firstname']?$user['firstname']:$user['login']).'.'.br(2):'' ?>
 				<?= isset($sidebar)?$sidebar:br(17)?>
 				<?= br(4)?>
 			</div>
