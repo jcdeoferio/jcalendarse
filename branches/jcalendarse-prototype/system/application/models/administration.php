@@ -15,7 +15,7 @@ class Administration extends Model{
     return($query->result_array());
   }
 
-  function search_all_users($userid, $studentnumber, $login, $lastname, $firstname, $middlename, $limit = 10, $offset = 0){
+  function search_all_users($userid, $studentnumber, $login, $lastname, $firstname, $middlename){
     $this->db->select('userid, login, studentnumber, firstname, middlename, lastname, collegename, coursename, collegeid, courseid, registered');
     $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
     if($userid) $this->db->where('userid', $userid);
@@ -25,7 +25,6 @@ class Administration extends Model{
     $this->db->like('firstname', $firstname);
     $this->db->like('middlename', $middlename);
     $this->db->order_by('login', 'asc');
-    $this->db->limit($limit, $offset);
 		
     $query = $this->db->get();
     return($query->result_array());
@@ -34,6 +33,18 @@ class Administration extends Model{
   function count_all_users(){
     $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
 		
+    return($this->db->count_all_results());
+  }
+
+  function count_all_matching($userid, $studentnumber, $login, $lastname, $firstname, $middlename){
+    $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
+    if($userid) $this->db->where('userid', $userid);
+    if($studentnumber) $this->db->where('studentnumber', $studentnumber);
+    $this->db->like('login', $login);
+    $this->db->like('lastname', $lastname);
+    $this->db->like('firstname', $firstname);
+    $this->db->like('middlename', $middlename);
+
     return($this->db->count_all_results());
   }
 	
