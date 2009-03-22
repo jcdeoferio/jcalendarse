@@ -6,8 +6,23 @@ class JCalendar extends Model{
   }
 
   function select_event_by_id($userid, $eventid){
-    $query = $this->db->query('select events.*, venues.venue_name from events left join venues using (venueid) inner join permissions p using (eventid), member_of m where ((p.groupid = m.groupid or p.userid = m.userid and m.userid = '.$userid.') or p.userid = -1) and eventid = '.$eventid);
+    $this->db->select('events.*, venues.venue_name');
+    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid) inner join member_of m using (groupid)');
+    $this->db->where('m.userid', $userid);
+    $this->db->or_where('m.groupid', -1, false);
+    $this->db->where('eventid', $eventid);
 
+    $query = $this->db->get();
+    $query = $query->row_arraY();
+    if($query)
+      return($query);
+
+    $this->db->select('events.*, venues.venue_name');
+    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid)');
+    $this->db->where('p.userid', $userid);
+    $this->db->where('eventid', $eventid);
+
+    $query = $this->db->get();
     return($query->row_array());
   }
 	
@@ -36,11 +51,43 @@ class JCalendar extends Model{
     //		echo br(1);
     return($query->result_array());
   }
+
+  function select_personal_eventsid_by_criteria($userid,$event_name,$start_date,$end_date,$venue,$date){
+    $this->db->select('events.eventid');
+    $this->db->distinct();
+    $this->db->from('events inner join permissions using (eventid) left join venues using (venueid)');
+    $this->db->where('userid',$userid);
+    if($event_name)
+      $this->db->where('eventname ilike', '%'.$event_name.'%');
+    if($start_date)
+      $this->db->where('start_date >=', $start_date);
+    if($end_date)
+      $this->db->where('end_date <=', $end_date);
+    if($venue)
+      $this->db->where('venueid', $venue);
+		
+    if($date){
+      $this->db->where('start_date <=',$date.' 23:59:59');
+      $this->db->where('end_date >=',$date.' 00:00:00');
+    }
+    $query = $this->db->get();
+    //		echo $this->db->last_query();
+    //		print_r($query->result_array());
+    //		echo br(1);
+    return($query->result_array());
+  }
+
   function select_events_by_criteria($userid=null, $event_name=null, $start_date=null, $end_date=null, $venue=null, $groups = null, $date = null){
+    //bobo ng php potek
+    $i = 0;
+    foreach($this->select_personal_eventsid_by_criteria($userid, $event_name, $start_date, $end_date, $venue, $groups, $date) as $personal_event)
+      $personal_events[$i++] = $personal_event['eventid'];
+
     $this->db->select('events.*, venues.venue_name');
     $this->db->distinct();
-    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid), member_of m');
-    $this->db->where('((p.groupid = m.groupid or p.userid = m.userid) and m.userid = '.$userid.')', null, false);
+    $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid) inner join member_of m using (groupid)');
+    $this->db->where('m.userid', $userid);
+    $this->db->where_not_in('eventid', $personal_events);
 
     if($event_name)
       $this->db->where('eventname ilike', '%'.$event_name.'%');

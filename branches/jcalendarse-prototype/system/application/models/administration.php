@@ -20,10 +20,10 @@ class Administration extends Model{
     $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
     if($userid) $this->db->where('userid', $userid);
     if($studentnumber) $this->db->where('studentnumber', $studentnumber);
-    $this->db->like('login', $login);
-    $this->db->like('lastname', $lastname);
-    $this->db->like('firstname', $firstname);
-    $this->db->like('middlename', $middlename);
+    $this->db->where('login ILIKE', '%'.$login.'%');
+    $this->db->where('lastname ILIKE', '%'.$lastname.'%');
+    $this->db->where('firstname ILIKE', '%'.$firstname.'%');
+    $this->db->where('middlename ILIKE', '%'.$middlename.'%');
     $this->db->order_by('login', 'asc');
 		
     $query = $this->db->get();
@@ -40,10 +40,10 @@ class Administration extends Model{
     $this->db->from('users left join userdetails using (userid) inner join courses using (courseid) inner join colleges using (collegeid)');
     if($userid) $this->db->where('userid', $userid);
     if($studentnumber) $this->db->where('studentnumber', $studentnumber);
-    $this->db->like('login', $login);
-    $this->db->like('lastname', $lastname);
-    $this->db->like('firstname', $firstname);
-    $this->db->like('middlename', $middlename);
+    $this->db->where('login ILIKE', '%'.$login.'%');
+    $this->db->where('lastname ILIKE', '%'.$lastname.'%');
+    $this->db->where('firstname ILIKE', '%'.$firstname.'%');
+    $this->db->where('middlename ILIKE', '%'.$middlename.'%');
 
     return($this->db->count_all_results());
   }
