@@ -109,6 +109,11 @@ class Admin extends Controller{
     }
   }
 
+  function delete_user($userid, $page = 0){
+    $this->Administration->delete_user($userid);
+    redirect('/admin/manage_users/'.$page);
+  }
+
   function manage_users($page = 0){
 #edited this function to use the pagination class in splitting the users  
     $data['users'] = $this->Administration->select_all_users($this->per_page, $page);
