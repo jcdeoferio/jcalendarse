@@ -295,8 +295,7 @@ class jcalendar2 extends Controller{
     $this->template['sidebar'] = 
 			(count($this->JCalendar->get_permissions($this->user['userid'],$eventid)) ?
 			        anchor('jcalendar2/update/'. $event['eventid'], 'update event').br(1).
-				anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1) : ''
-			).
+				anchor('jcalendar2/delete/' . $event['eventid'], 'delete event', array('onClick'=>"return (confirm('Are you sure you want to delete this event?'))")).br(1) : '').
       anchor('jcalendar2/index', 'back to calendar');
     $this->template['body'] = $this->load->view('/jcalendar/event', $data, TRUE);
     $this->load->view('template', $this->template);

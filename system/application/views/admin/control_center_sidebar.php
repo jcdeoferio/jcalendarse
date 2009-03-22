@@ -1,4 +1,4 @@
-<?=
+<?='<span id="eventName">Administration</span>'.br(1).
   anchor('/admin/add_user', 'Add User').br(1).
      anchor('/admin/manage_users', 'Manage Users').br(1).
      anchor('/admin/add_group', 'Add Group').br(1).

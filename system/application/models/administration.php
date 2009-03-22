@@ -173,6 +173,9 @@ class Administration extends Model{
 		
     $this->db->where('userid', $userid);
     $this->db->delete('member_of');
+
+    $this->db->where('userid', $userid);
+    $this->db->delete('userdetails');
 		
     $this->db->where('userid', $userid);
     $this->db->delete('users');
