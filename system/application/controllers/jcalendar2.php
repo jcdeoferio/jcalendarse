@@ -25,6 +25,16 @@ class jcalendar2 extends Controller{
     redirect('/jcalendar2/calendar');
   }
 
+  function test(){
+    $A = $this->JCalendar->select_events_by_criteria($this->user['userid'], 'to be', null, null, null, null, null);
+    $B = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], 'to be', null, null, null, null, null);
+    print_r($A);
+    echo br(1);
+    print_r($B);
+    echo br(1);
+    print_r(array_unique(array_merge_recursive($A, $B)));
+  }
+
   function calendar($mode = 'M', $year = CURRENT_YEAR, $month = CURRENT_MONTH, $day = null, $group = 'A', $sortby = 'eventid'){
     $events = array();
     if(!$day){
@@ -38,7 +48,7 @@ class jcalendar2 extends Controller{
 			if($group == 'P')
 				$events = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,null);
 			else if($group == 'A')
-				$events = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, null);
+			  $events = array_merge_recursive($this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, null), $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,null));
 			else
 				$events = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, null);
 			$permissions = array();
@@ -52,7 +62,7 @@ class jcalendar2 extends Controller{
 				if($group == 'P')
 					$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i);
 				else if($group == 'A')
-					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$i);
+				  $events[$i] = array_merge_recursive($this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$i), $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i));
 				else
 					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
@@ -62,7 +72,7 @@ class jcalendar2 extends Controller{
 				if($group == 'P')
 					$events[$i] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i);
 				else if($group == 'A')
-					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$i);
+				  $events[$i] = array_merge_recursive($this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$i), $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$i));
 				else
 					$events[$i] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$i);
       }
@@ -71,7 +81,7 @@ class jcalendar2 extends Controller{
 			if($group == 'P')
 				$events[$day] = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$day);
 			else if($group == 'A')
-				$events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$day);
+			  $events[$day] = array_merge_recursive($this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, null, $year.'-'.$month.'-'.$day), $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], null, null, null, null,$year.'-'.$month.'-'.$day));
 			else
 				$events[$day] = $this->JCalendar->select_events_by_criteria($this->user['userid'], null, null, null, null, $group?array(''=>$group):null, $year.'-'.$month.'-'.$day);
       break;
