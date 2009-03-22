@@ -1,6 +1,6 @@
 <?php
-	echo form_open($submit_url).validation_errors().form_fieldset('add group');
-	echo 'Group name: '.form_input(array('name'=>'groupname', 'size'=>'20', 'value'=>set_value('groupname')?set_value('groupname'):isset($groupname)? $groupname:''));
+echo form_open($submit_url).validation_errors().form_fieldset($new_group?'add group':'update group');
+echo 'Group name: '.(($new_group)?(form_input(array('name'=>'groupname', 'size'=>'20', 'value'=>set_value('groupname')?set_value('groupname'):isset($groupname)? $groupname:''))):$groupname);
 	echo form_fieldset_close();
 	$tmpl = array ( 'table_open'  => '<table id="events" border="1" cellpadding="4">' );
 	$this->table->set_template($tmpl);

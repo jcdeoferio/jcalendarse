@@ -127,21 +127,22 @@ class Admin extends Controller{
       $lastname = $this->input->post('lastname');
       $firstname = $this->input->post('firstname');
       $middlename = $this->input->post('middlename');
-      $data['users'] = $this->Administration->search_all_users($userid, $studentid, $login, $lastname, $firstname, $middlename, $this->per_page, $page);
+      $data['users'] = $this->Administration->search_all_users($userid, $studentid, $login, $lastname, $firstname, $middlename);
+      $data['pagination'] = false;
     }
     else{
 #edited this function to use the pagination class in splitting the users  
       $data['users'] = $this->Administration->select_all_users($this->per_page, $page);
+      $config['total_rows'] = $this->Administration->count_all_users();
       #		$data['pages'] = $this->Administration->count_all_users() / $this->per_page;
-    }
+      $data['pagination'] = true;
 #pagination
     $config['base_url'] = site_url('/admin/manage_users/');
-    $config['total_rows'] = count($data['users']);
     $config['per_page'] = $this->per_page; 
     $config['num_links'] = 3;
     $this->pagination->initialize($config);
 #pagination
-
+    }
     $data['userid'] = $userid;
     $data['studentid'] = $studentid;
     $data['login'] = $login;
@@ -177,9 +178,11 @@ class Admin extends Controller{
     }
     else{
       $this->template['title'] = 'Add Group';
-			$data['submit_url'] = 'admin/add_group/';
-			$data['users'] = $users;
-			$data['roles'] = $this->Administration->select_all_roles();
+      $data['submit_url'] = 'admin/add_group/';
+      $data['new_group'] = true;
+      $data['users'] = $users;
+      $data['roles'] = $this->Administration->select_all_roles();
+      $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
       $this->template['body'] = $this->load->view('admin/add_group', $data, true);
       $this->load->view('template', $this->template);
     }
@@ -187,7 +190,7 @@ class Admin extends Controller{
 
   function update_group($groupid){
     $this->form_validation->set_rules('groupname', 'Group Name', 'required|trim');
-		$users = $this->Administration->select_all_users(null);
+    $users = $this->Administration->select_all_users(null);
     if($this->form_validation->run()){
       $members = array();
       $i = 0;
@@ -202,13 +205,15 @@ class Admin extends Controller{
 			redirect('admin/manage_groups');
     }
     else{
-			$data['submit_url'] = 'admin/update_group/'.$groupid;
-			$data['member_of'] = $this->Administration->group_member_of($groupid);
-			$data['users'] = $users;
-			$data['roles'] = $this->Administration->select_all_roles();
-			$data['groupname'] = $this->db->query('SELECT groupname FROM groups WHERE groupid = '.$groupid)->row_array();
-			$data['groupname'] = $data['groupname']['groupname'];
+      $data['submit_url'] = 'admin/update_group/'.$groupid;
+      $data['new_group'] = false;
+      $data['member_of'] = $this->Administration->group_member_of($groupid);
+      $data['users'] = $users;
+      $data['roles'] = $this->Administration->select_all_roles();
+      $data['groupname'] = $this->db->query('SELECT groupname FROM groups WHERE groupid = '.$groupid)->row_array();
+      $data['groupname'] = $data['groupname']['groupname'];
       $this->template['title'] = 'Manage Group - '.$data['groupname'];
+      $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
       $this->template['body'] = $this->load->view('admin/add_group', $data, true);
       $this->load->view('template', $this->template);
     }
