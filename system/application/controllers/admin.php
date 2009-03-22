@@ -115,16 +115,39 @@ class Admin extends Controller{
   }
 
   function manage_users($page = 0){
+    $this->form_validation->set_rules('studentid', 'Student Number', 'trim|callback__studentnumber_check');
+    $this->form_validation->set_rules('userid', 'User ID', 'integer');
+
+    $userid = $studentid = $login = $lastname = $firstname = $middlename = '';
+
+    if($this->form_validation->run()){
+      $userid = $this->input->post('userid');
+      $studentid = $this->_validify_studentnumber($this->input->post('studentid'));
+      $login = $this->input->post('login');
+      $lastname = $this->input->post('lastname');
+      $firstname = $this->input->post('firstname');
+      $middlename = $this->input->post('middlename');
+      $data['users'] = $this->Administration->search_all_users($userid, $studentid, $login, $lastname, $firstname, $middlename, $this->per_page, $page);
+    }
+    else{
 #edited this function to use the pagination class in splitting the users  
-    $data['users'] = $this->Administration->select_all_users($this->per_page, $page);
-    #		$data['pages'] = $this->Administration->count_all_users() / $this->per_page;
+      $data['users'] = $this->Administration->select_all_users($this->per_page, $page);
+      #		$data['pages'] = $this->Administration->count_all_users() / $this->per_page;
+    }
 #pagination
     $config['base_url'] = site_url('/admin/manage_users/');
-    $config['total_rows'] = $this->Administration->count_all_users();
+    $config['total_rows'] = count($data['users']);
     $config['per_page'] = $this->per_page; 
     $config['num_links'] = 3;
     $this->pagination->initialize($config);
 #pagination
+
+    $data['userid'] = $userid;
+    $data['studentid'] = $studentid;
+    $data['login'] = $login;
+    $data['lastname'] = $lastname;
+    $data['firstname'] = $firstname;
+    $data['middlename'] = $middlename;
     $this->template['title'] = 'Admin - Manage Users';
     $this->template['sidebar'] = $this->load->view('admin/control_center_sidebar', '', true);
     $this->template['body'] = $this->load->view('admin/manage_users', $data, true);
@@ -220,11 +243,10 @@ class Admin extends Controller{
   }
 
   function _studentnumber_check($studentnumber){
-    if(!preg_match('/^\d{4}\D?\d{5}$/', $studentnumber)){
+    if($studentnumber && !preg_match('/^\d{4}\D?\d{5}$/', $studentnumber)){
       $this->form_validation->set_message('_studentnumber_check', 'Invalid student number format.');
       return(false);
     }
-
     return (true);
   }
 
