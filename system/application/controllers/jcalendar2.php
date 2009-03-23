@@ -54,7 +54,7 @@ class jcalendar2 extends Controller{
 			$permissions = array();
 			foreach($events as $event)
 				$permissions[$event['eventid']] = count($this->JCalendar->get_permissions($this->user['userid'],$event['eventid']));
-			$data['permissions'] = $permissions;
+			$data['permissions'] = isset($permissions)?$permissions:null;
 //      $events = $this->JCalendar->select_all_events($this->user['userid']);
       break;
     case 'M':
@@ -273,7 +273,7 @@ class jcalendar2 extends Controller{
 
       $data['venues'] = $venues;
       $data['groups'] = $groups;
-      $data['permissions'] = $permissions;
+      $data['permissions'] = isset($permissions)?$permissions:null;
       $data['user'] = $this->user;
       $this->template['title'] = 'Update Entry';
       $this->template['sidebar'] = $this->load->view('jcalendar/update_sidebar', '', true);
@@ -374,7 +374,7 @@ class jcalendar2 extends Controller{
 			
 			foreach($events as $event)
 				$permissions[$event['eventid']] = count($this->JCalendar->get_permissions($this->user['userid'],$event['eventid']));
-			$data['permissions'] = $permissions;
+			$data['permissions'] = isset($permissions)?$permissions:null;
     }
 		$groups = count($groups) == 0 ? null:$groups;
 //    $newgroups = array(''=>'');

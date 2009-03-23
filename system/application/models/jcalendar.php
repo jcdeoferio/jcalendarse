@@ -8,14 +8,14 @@ class JCalendar extends Model{
   function select_event_by_id($userid, $eventid){
     $this->db->select('events.*, venues.venue_name');
     $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid) inner join member_of m using (groupid)');
-    $this->db->where('m.userid', $userid);
-    $this->db->or_where('m.groupid', -1, false);
+    $this->db->where('(m.userid = '.$userid.' or m.groupid = -1)', '', false);
     $this->db->where('eventid', $eventid);
 
     $query = $this->db->get();
-    $query = $query->row_arraY();
+    $query = $query->row_array();
     if($query)
       return($query);
+
 
     $this->db->select('events.*, venues.venue_name');
     $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid)');
@@ -80,14 +80,16 @@ class JCalendar extends Model{
   function select_events_by_criteria($userid=null, $event_name=null, $start_date=null, $end_date=null, $venue=null, $groups = null, $date = null){
     //bobo ng php potek
     $i = 0;
-    foreach($this->select_personal_eventsid_by_criteria($userid, $event_name, $start_date, $end_date, $venue, $groups, $date) as $personal_event)
+    $personal_events = array();
+    foreach($this->select_personal_eventsid_by_criteria($userid, $event_name, $start_date, $end_date, $venue, $date) as $personal_event)
       $personal_events[$i++] = $personal_event['eventid'];
 
     $this->db->select('events.*, venues.venue_name');
     $this->db->distinct();
     $this->db->from('events left join venues using (venueid) inner join permissions p using (eventid) inner join member_of m using (groupid)');
     $this->db->where('m.userid', $userid);
-    $this->db->where_not_in('eventid', $personal_events);
+    if($personal_events)
+      $this->db->where_not_in('eventid', $personal_events);
 
     if($event_name)
       $this->db->where('eventname ilike', '%'.$event_name.'%');
