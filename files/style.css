@@ -1,0 +1,121 @@
+body{
+font-family: calibri,arial,sans-serif;
+text-align:center;
+}
+div#header{
+padding:10px;
+background: url(headerbg.png); /*#ABC550*/
+background-repeat: no-repeat;
+border-bottom: 0px #000 solid;
+}
+div#content{
+padding-left:9px;
+padding-right:9px;
+/*
+padding:16px;
+*/
+}
+div#main{
+background: url(bodybg.png) repeat-y top;
+margin: auto;
+width: 978px;
+text-align:left;
+}
+div#sidebar{
+overflow:auto;
+/*
+padding-top:7px;
+padding-left:5px;
+*/
+padding-left:5px;
+border-right: 0px #000 solid;
+width:187px;
+float:left;
+}
+div#body{
+background: url(med-face-trans.png) repeat-y 400px -150px;
+overflow:auto;
+/*
+padding-top:7px;
+padding-left:5px;
+*/
+width:768px;
+float:left;
+}
+div#footer{
+padding:0px;
+background: url(footerbg.png) no-repeat;
+clear:both;
+font-size: 10pt;
+text-align:center;
+line-height:70px;
+color:#ccc;
+
+}
+div#body a{
+color: #669900;/*#27abff;*/ 
+}
+div#sidebar a{
+color: #666;
+}
+img{
+border: 0;
+}
+table#groups{
+border-spacing:2px;
+border-width:0px;
+}
+table#groups th{
+background-color:#ccc;
+border-width:0px;
+}
+table#groups td{
+background-color:#eee;
+border-width:0px;
+padding: 7px;
+}
+table#users{
+border-spacing:2px;
+border-width:0px;
+}
+table#users th{
+background-color:#ccc;
+border-width:0px;
+}
+table#users td{
+background-color:#eee;
+border-width:0px;
+padding: 7px;
+}
+table#events{
+border-spacing:2px;
+border-width:0px;
+}
+table#events th{
+background-color:#ccc;
+border-width:0px;
+}
+table#events td{
+background-color:#eee;
+border-width:0px;
+padding: 7px;
+}
+span#eventName{
+color: #555;
+font-size: 16pt;
+}
+span#eventDate{
+font-size: 9pt;
+color: #222;
+}
+span#eventVenue{
+font-size: 9pt;
+color: #666;
+}
+span#eventDetails{
+font-size: 12pt;
+}
+span#formError{
+font-size: 10pt;
+color: #f00;
+}
