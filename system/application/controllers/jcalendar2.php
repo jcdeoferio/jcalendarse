@@ -351,7 +351,17 @@ class jcalendar2 extends Controller{
 			$i = 0;
 			foreach($groups as $grp)
 				if($this->input->post('group-'.$grp['groupid']))
-					$group[$i++] = $grp['groupid'];
+					$group[$i++] = $grp['groupid'];	
+			$events = array();
+			
+			if($this->input->post('personal_event')  or count($group) != 0){
+				if($this->input->post('personal_event'))
+					$events = $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], $event_name,$start_date,$end_date,null,null);
+				if(count($group) != 0)
+					$events = array_merge_recursive($events,$this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null, $group, null));
+			}else
+			  $events = array_merge_recursive($this->JCalendar->select_events_by_criteria($this->user['userid'], $event_name, $start_date, $end_date, null, null , null), $this->JCalendar->select_personal_events_by_criteria($this->user['userid'], $event_name,$start_date,$end_date,null,null));
+/*
 			if(count($group) == 0 && !$this->input->post('personal_event'))
 				$events = $this->JCalendar->select_events_by_criteria($this->user['userid'],$event_name,$start_date,$end_date);
 			else{
@@ -371,6 +381,7 @@ class jcalendar2 extends Controller{
 					}
 				}
 			}
+*/		
 			
 			foreach($events as $event)
 				$permissions[$event['eventid']] = count($this->JCalendar->get_permissions($this->user['userid'],$event['eventid']));
