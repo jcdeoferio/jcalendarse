@@ -7,6 +7,7 @@ padding:10px;
 background: url(headerbg.png); /*#ABC550*/
 background-repeat: no-repeat;
 border-bottom: 0px #000 solid;
+height: 165px;
 }
 div#content{
 padding-left:9px;
@@ -49,7 +50,7 @@ clear:both;
 font-size: 10pt;
 text-align:center;
 line-height:70px;
-color:#ccc;
+color:#ededed;
 
 }
 div#body a{
