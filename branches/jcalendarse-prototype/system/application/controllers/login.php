@@ -16,6 +16,7 @@ class Login extends Controller{
   }
 			
   function logg($page = 0){
+//	echo random_string('unique');
     if ($this->session->userdata('user')){
       redirect('/jcalendar2/index');
     }
