@@ -1,0 +1,1 @@
+A typical CS student's daily school life summarized in a calendar.
